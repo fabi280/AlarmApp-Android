@@ -9,3 +9,7 @@ app.stores.SmartphoneInfos = new Ext.data.JsonStore({
         {Name: 'Version',   Value: 'device.version'},
     ]
 });
+
+app.stores.UserInfos = new Ext.data.Store({
+	model: "UserInfo",
+});

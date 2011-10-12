@@ -45,8 +45,39 @@ app.views.AuthenticateView = Ext.extend(Ext.Panel, {
     					var email = Ext.getCmp('emailfield').getValue();
     					var password = Ext.getCmp('passwordfield').getValue();
     					
-    					
-    					alert("do login for " + email + " with password " + password );
+    					var loadingMask = new Ext.LoadMask(Ext.getBody(), {msg: "Bitte warten..."});
+    					loadingMask.show();
+    					AlarmService.login(email, 
+    							password,
+    							function(result) {
+    									var user = result.user
+    									var dept = result.fire_department
+    									
+    									app.stores.UserInfos.add(
+    									{
+    										UserId: 	user.id, 
+    										Firstname:	user.first_name, 
+    										Lastname:	user.last_name,
+    										FireDepartment: dept.name,
+    										FireDepartmentId: dept.id
+    									})
+    									
+    									app.stores.UserInfos.sync()
+    									
+    									loadingMask.hide();
+    									
+    									console.log("Hello " + result.user.first_name + " " + result.user.last_name)
+    									console.log("Your id is " + result.user.id)
+    									console.log("Your department is " + result.fire_department.name)
+    									console.log("Your departments id is " + result.fire_department.id)
+    									console.log(Ext.encode(result));
+    							},
+    							function(result) {
+    									loadingMask.hide();
+    									alert("Login failed: ");
+    									console.log(Ext.encode(result));
+    								});
+    					console.log("do login for " + email + " with password " + password );
     				}
     			}),
     			new Ext.Button({

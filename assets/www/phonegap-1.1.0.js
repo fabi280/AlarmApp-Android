@@ -725,7 +725,7 @@ PhoneGap.exec = function(success, fail, service, action, args) {
 
             // If error, then display error
             else {
-                console.log("Error: Status="+v.status+" Message="+v.message);
+                console.log("Error: Status="+v.status+" Message="+v.message + " Service=" + service);
 
                 // If there is a fail callback, then call it now with returned value
                 if (fail) {

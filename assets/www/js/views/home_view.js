@@ -14,6 +14,12 @@ app.views.HomeView = Ext.extend(Ext.Panel, {
     		}
     	}),
     	new Ext.Button({
+    		text:"C2DM",
+    		handler: function(button, tap) {
+    			Ext.getCmp('mainPanel').layout.setActiveItem('c2dm');
+    		}
+    	}),
+    	new Ext.Button({
     		text:"Smartphone erstellen",
     	}),
     ],
