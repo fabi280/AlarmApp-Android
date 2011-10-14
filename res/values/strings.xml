@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, AlarmAppActivity!</string>
     <string name="app_name">AlarmApp</string>
+    <string name="login_title">Anmeldung erforderlich</string>
 </resources>

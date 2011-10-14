@@ -1,4 +1,4 @@
-package de.alarmnotificationservice;
+package org.alarmapp;
 
 //--------------------------------------------------------
 //My knowledge came from
@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
-import com.plugin.c2dm.C2DMPlugin;
 
 public class C2DMReceiver extends C2DMBaseReceiver {
 
@@ -44,7 +43,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			// Send this JSON data to the JavaScript application above EVENT
 			// should be set to the msg type
 			// In this case this is the registration ID
-			C2DMPlugin.sendJavascript(json);
+			// C2DMPlugin.sendJavascript(json);
 
 		} catch (JSONException e) {
 			// No message to the user is sent, JSON failed
@@ -74,7 +73,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 				Log.v(ME + ":onMessage ", json.toString());
 
-				C2DMPlugin.sendJavascript(json);
+				// C2DMPlugin.sendJavascript(json);
 				// Send the MESSAGE to the Javascript application
 			} catch (JSONException e) {
 				Log.e(ME + ":onMessage", "JSON exception");
@@ -97,7 +96,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 			Log.e(ME + ":onError ", json.toString());
 
-			C2DMPlugin.sendJavascript(json);
+			// C2DMPlugin.sendJavascript(json);
 			// Send the MESSAGE to the Javascript application
 		} catch (JSONException e) {
 			Log.e(ME + ":onMessage", "JSON exception");

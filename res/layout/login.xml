@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+    <TextView android:id="@+id/textView1" android:text="@string/login_title" android:layout_height="wrap_content" android:layout_width="match_parent" android:textAppearance="?android:attr/textAppearanceLarge" android:gravity="center"></TextView>
+    <TextView android:id="@+id/textView2" android:text="Bitte melden Sie sich mit Ihren AlarmApp.org-Zugangsdaten an um Ihrem Gerät den Empfang von Alarmierungen zu ermöglichen." android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_marginBottom="10dip"></TextView>
+    <TableLayout android:id="@+id/tableLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">
+        <TableRow android:layout_width="match_parent" android:id="@+id/tableRow1" android:layout_height="0dp" android:layout_weight="1">
+            <TextView android:layout_height="wrap_content" android:id="@+id/textView3" android:text="Email-Adresse" android:layout_width="0dp" android:layout_marginLeft="5dip" android:layout_weight="0.6"></TextView>
+            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/etEmail">
+                <requestFocus></requestFocus>
+            </EditText>
+        </TableRow>
+        
+        <TableRow android:layout_width="match_parent" android:id="@+id/tableRow2" android:layout_height="0dp" android:layout_weight="1">
+            <TextView android:layout_height="wrap_content" android:id="@+id/textView4" android:text="Passwort" android:layout_width="0dp" android:layout_marginLeft="5dip" android:layout_weight="0.6"></TextView>
+            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/etPassword" android:inputType="textPassword"></EditText>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <ProgressBar android:layout_width="wrap_content" android:id="@+id/progressBar1" style="?android:attr/progressBarStyleSmall" android:layout_height="wrap_content" android:layout_marginLeft="15dip" android:layout_marginTop="15dip" android:layout_marginBottom="15dip"></ProgressBar>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView5" android:text="TextView" android:textAppearance="?android:attr/textAppearanceSmall" android:layout_marginLeft="3dip" android:layout_marginTop="15dip"></TextView>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="0dp">
+    		<Button android:text="Anmelden" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_marginLeft="5dip" android:layout_weight="1" android:id="@+id/btLogin"></Button>
+            <Button android:text="Account erstellen" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="0dp" android:id="@+id/btCreateAccount"></Button>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
