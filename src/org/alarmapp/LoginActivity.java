@@ -22,22 +22,30 @@ public class LoginActivity extends Activity {
 
 	OnClickListener onLoginClickListener = new OnClickListener() {
 		public void onClick(View v) {
+
+			LogEx.verbose("Login key down");
+			btLogin.setOnClickListener(null);
+
+			final String email = LoginActivity.this.etEmail.getText()
+					.toString();
+			final String password = LoginActivity.this.etPassword.getText()
+					.toString();
+
+			// TODO Do the login in back ground
 			try {
-				LogEx.verbose("Login key down");
-				btLogin.setOnClickListener(null);
+				final User user = Controller.getWebClient().login(email,
+						password);
 
-				String email = LoginActivity.this.etEmail.getText().toString();
-				String password = LoginActivity.this.etPassword.getText()
-						.toString();
-
-				User user = Controller.getWebClient().login(email, password);
 				onSuccessfulLogin(user);
-			} catch (WebException e) {
+			} catch (final WebException e) {
 				LogEx.exception("Der Login des Benutzers schlug fehl. ", e);
+
 				LoginActivity.this.displayError(e.getMessage());
+
 			} finally {
 				btLogin.setOnClickListener(onLoginClickListener);
 			}
+
 		}
 	};
 
