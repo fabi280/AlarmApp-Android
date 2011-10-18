@@ -4,6 +4,11 @@ import org.alarmapp.model.FireDepartment;
 
 public class FireDepartmentData implements FireDepartment {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public FireDepartmentData(int id, String name) {
 		super();
 		this.id = id;

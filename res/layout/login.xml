@@ -9,20 +9,25 @@
     <TableLayout android:id="@+id/tableLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">
         <TableRow android:layout_width="match_parent" android:id="@+id/tableRow1" android:layout_height="0dp" android:layout_weight="1">
             <TextView android:layout_height="wrap_content" android:id="@+id/textView3" android:text="Email-Adresse" android:layout_width="0dp" android:layout_marginLeft="5dip" android:layout_weight="0.6"></TextView>
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/etEmail">
+            <EditText android:layout_width="match_parent" android:text="frank" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/etEmail">
                 <requestFocus></requestFocus>
             </EditText>
         </TableRow>
         
         <TableRow android:layout_width="match_parent" android:id="@+id/tableRow2" android:layout_height="0dp" android:layout_weight="1">
             <TextView android:layout_height="wrap_content" android:id="@+id/textView4" android:text="Passwort" android:layout_width="0dp" android:layout_marginLeft="5dip" android:layout_weight="0.6"></TextView>
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/etPassword" android:inputType="textPassword"></EditText>
+            <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:text="eng88" android:layout_weight="1" android:id="@+id/etPassword" android:inputType="textPassword"></EditText>
         </TableRow>
         <TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content" android:layout_height="wrap_content">
         </TableRow>
         <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="0dp">
-    		<Button android:text="Anmelden" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_marginLeft="5dip" android:layout_weight="1" android:id="@+id/btLogin"></Button>
-            <Button android:text="Account erstellen" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="0dp" android:id="@+id/btCreateAccount"></Button>
+    		<Button android:text="Anmelden" android:layout_height="wrap_content" android:layout_width="0dp" android:layout_marginLeft="5dip" android:id="@+id/btLogin" android:layout_weight="1"></Button>
+            <Button android:text="Account erstellen" android:layout_height="wrap_content" android:layout_width="0dp" android:id="@+id/btCreateAccount" android:layout_weight="1" android:layout_marginRight="5dip"></Button>
         </TableRow>
     </TableLayout>
+    <ProgressBar android:layout_height="wrap_content" style="?android:attr/progressBarStyleHorizontal" android:layout_marginLeft="5dip" android:layout_marginRight="5dip" android:layout_width="match_parent" android:id="@+id/pbLogin" android:visibility="visible"></ProgressBar>
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1">
+        <TextView android:text="Aktion:" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="10dip" android:id="@+id/tvLoginProgress"></TextView>
+        <TextView android:text="anmelden" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="5dip" android:id="@+id/tvProgressStep"></TextView>
+    </LinearLayout>
 </LinearLayout>

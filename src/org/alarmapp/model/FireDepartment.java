@@ -1,6 +1,8 @@
 package org.alarmapp.model;
 
-public interface FireDepartment {
+import java.io.Serializable;
+
+public interface FireDepartment extends Serializable {
 	public int GetId();
 
 	public String GetName();

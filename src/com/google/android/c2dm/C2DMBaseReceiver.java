@@ -18,6 +18,8 @@ package com.google.android.c2dm;
 
 import java.io.IOException;
 
+import org.alarmapp.util.LogEx;
+
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
@@ -87,7 +89,7 @@ public abstract class C2DMBaseReceiver extends IntentService {
 	 */
 	public void onRegistered(Context context, String registrationId)
 			throws IOException {
-		System.out.println("onRegistered()");
+		LogEx.verbose("onRegistered");
 		// registrationId will also be saved
 	}
 
@@ -99,6 +101,7 @@ public abstract class C2DMBaseReceiver extends IntentService {
 
 	@Override
 	public final void onHandleIntent(Intent intent) {
+		LogEx.verbose("onHandleIntent");
 		try {
 			Context context = getApplicationContext();
 			if (intent.getAction().equals(REGISTRATION_CALLBACK_INTENT)) {
@@ -144,17 +147,23 @@ public abstract class C2DMBaseReceiver extends IntentService {
 
 	}
 
+	@Override
+	public void onCreate() {
+		LogEx.verbose("C2DMBaseReceiver onCreate");
+		super.onCreate();
+	}
+
 	private void handleRegistration(final Context context, Intent intent) {
 		final String registrationId = intent
 				.getStringExtra(EXTRA_REGISTRATION_ID);
 		String error = intent.getStringExtra(EXTRA_ERROR);
 		String removed = intent.getStringExtra(EXTRA_UNREGISTERED);
 
-		if (Log.isLoggable(TAG, Log.DEBUG)) {
-			Log.d("CSE Notifications", "dmControl: registrationId = "
-					+ registrationId + ", error = " + error + ", removed = "
-					+ removed);
-		}
+		// if (Log.isLoggable(TAG, Log.DEBUG)) {
+		Log.d("CSE Notifications", "dmControl: registrationId = "
+				+ registrationId + ", error = " + error + ", removed = "
+				+ removed);
+		// }
 
 		if (removed != null) {
 			// Remember we are unregistered

@@ -1,6 +1,8 @@
 package org.alarmapp.model;
 
-public interface User {
+import java.io.Serializable;
+
+public interface User extends Serializable {
 
 	public String GetFirstName();
 

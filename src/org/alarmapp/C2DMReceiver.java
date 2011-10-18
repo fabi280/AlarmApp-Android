@@ -6,6 +6,14 @@ package org.alarmapp;
 //http://www.vogella.de/articles/AndroidCloudToDeviceMessaging/article.html
 //--------------------------------------------------------
 
+import org.alarmapp.activities.AlarmActivity;
+import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmState;
+import org.alarmapp.model.classes.AlarmData;
+import org.alarmapp.util.Device;
+import org.alarmapp.util.IntentUtil;
+import org.alarmapp.util.LogEx;
+import org.alarmapp.web.WebException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,54 +37,44 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 	public void onRegistered(Context context, String registrationId)
 			throws java.io.IOException {
 
-		Log.v(ME + ":onRegistered", "Registration ID arrived!");
-		Log.v(ME + ":onRegistered", registrationId);
+		LogEx.verbose("Received registration id");
 
-		JSONObject json;
+		Broadcasts.sendC2DMRegisteredBroadcast(this, registrationId);
 
 		try {
-			json = new JSONObject().put("event", "registered");
-			json.put("regid", registrationId);
-
-			Log.v(ME + ":onRegisterd", json.toString());
-
-			// Send this JSON data to the JavaScript application above EVENT
-			// should be set to the msg type
-			// In this case this is the registration ID
-			// C2DMPlugin.sendJavascript(json);
-
-		} catch (JSONException e) {
-			// No message to the user is sent, JSON failed
-			Log.e(ME + ":onRegisterd", "JSON exception");
+			Controller.getWebClient().createSmartphone(
+					Controller.getUser(context).GetAuthToken(), registrationId,
+					Device.id(context), Device.name(context),
+					Device.platform(context), Device.version(context));
+		} catch (WebException e) {
+			LogEx.exception(e);
 		}
+
+		Broadcasts.sendSmartphoneCreatedBroadcast(context);
 	};
 
 	@Override
 	protected void onMessage(Context context, Intent intent) {
-		Log.v(ME + ":onMessage", "Message: Fantastic!!!");
-		// Extract the payload from the message
 		Bundle extras = intent.getExtras();
+
 		if (extras != null) {
-			try {
-				Log.v(ME + ":onMessage extras ", extras.getString("message"));
+			LogEx.info("Received push message " + intent);
 
-				JSONObject json;
-				json = new JSONObject().put("event", "message");
+			LogEx.verbose("Push message contains " + extras.keySet());
 
-				// My application on my host server sends back to "EXTRAS"
-				// variables msg and msgcnt
-				// Depending on how you build your server app you can specify
-				// what variables you want to send
-				//
-				json.put("msg", extras.getString("message"));
-				json.put("msgcnt", extras.getString("msgcnt"));
+			LogEx.verbose("Kind is " + extras.getString("kind"));
 
-				Log.v(ME + ":onMessage ", json.toString());
+			if (extras.getString("kind").equals("alarm")) {
+				Alarm alarm = AlarmData.Create(extras);
+				alarm.setState(AlarmState.Delivered);
+				LogEx.verbose("Display Alarm Activity.");
 
-				// C2DMPlugin.sendJavascript(json);
-				// Send the MESSAGE to the Javascript application
-			} catch (JSONException e) {
-				Log.e(ME + ":onMessage", "JSON exception");
+				IntentUtil.createAlarmStatusUpdateIntent(this, alarm);
+
+				Intent alarmIntent = new Intent(this, AlarmActivity.class);
+				alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				alarmIntent.putExtras(alarm.getBundle());
+				context.startActivity(alarmIntent);
 			}
 		}
 	}

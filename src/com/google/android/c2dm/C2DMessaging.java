@@ -15,7 +15,10 @@ package com.google.android.c2dm;
  * limitations under the License.
  */
 
+import org.alarmapp.util.LogEx;
+
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,7 +50,8 @@ public class C2DMessaging {
 		registrationIntent.putExtra(EXTRA_APPLICATION_PENDING_INTENT,
 				PendingIntent.getBroadcast(context, 0, new Intent(), 0));
 		registrationIntent.putExtra(EXTRA_SENDER, senderId);
-		context.startService(registrationIntent);
+		ComponentName name = context.startService(registrationIntent);
+		LogEx.info("Started service" + name);
 		// TODO: if intent not found, notification on need to have GSF
 	}
 

@@ -6,4 +6,10 @@ public class Ensure {
 			throw new IllegalArgumentException(
 					"The given Value shall not be <null>");
 	}
+
+	public static void valid(boolean expr) {
+		if (!expr)
+			throw new IllegalArgumentException(
+					"The given assertion does not hold");
+	}
 }

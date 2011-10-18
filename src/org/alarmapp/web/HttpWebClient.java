@@ -1,16 +1,15 @@
 package org.alarmapp.web;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 
+import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.FireDepartment;
 import org.alarmapp.model.User;
 import org.alarmapp.model.classes.AuthTokenData;
 import org.alarmapp.model.classes.FireDepartmentData;
 import org.alarmapp.model.classes.UserData;
+import org.alarmapp.util.DateUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.http.HttpUtil;
 import org.json.JSONException;
@@ -22,17 +21,8 @@ public class HttpWebClient implements WebClient {
 	private static String WEBSERVICE_URL = "http://alarmnotificationservice.appspot.com/";
 	private static String JSON_ERROR = "Fehler beim Verarbeiten der Web-Server-Antwort.";
 
-	private Date parseDate(String data) {
-		try {
-			String date = data.substring(0, data.indexOf('.'));
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss");
-			return formatter.parse(date);
-		} catch (ParseException e) {
-			LogEx.warning("Failed to parse the date string " + data
-					+ ". Using now.");
-			return new Date();
-		}
+	private static String url(String relativePart) {
+		return WEBSERVICE_URL + relativePart;
 	}
 
 	private AuthToken getAuthToken(String name, String password)
@@ -43,15 +33,15 @@ public class HttpWebClient implements WebClient {
 		data.put("password", password);
 		data.put("purpose", "AlarmApp Android");
 
-		String response = HttpUtil.request(WEBSERVICE_URL
-				+ "web_service/auth_token/generate/", data, null);
+		String response = HttpUtil.request(
+				url("web_service/auth_token/generate/"), data, null);
 
 		LogEx.verbose("auth_token/generate returned " + response);
 
 		try {
 			JSONObject json = new JSONObject(response);
 			AuthToken auth = new AuthTokenData(json.getString("auth_token"),
-					parseDate(json.getString("expired")));
+					DateUtil.parse(json.getString("expired")));
 
 			LogEx.verbose("Assigned Auth Token: " + auth);
 
@@ -61,13 +51,18 @@ public class HttpWebClient implements WebClient {
 		}
 	}
 
+	private HashMap<String, String> createAuthHeader(AuthToken auth) {
+		HashMap<String, String> headers = new HashMap<String, String>();
+		headers.put("Authorization", "Token " + auth.GetToken());
+		return headers;
+	}
+
 	public boolean checkAuthentication(AuthToken token) throws WebException {
 		try {
-			HashMap<String, String> headers = new HashMap<String, String>();
-			headers.put("Authorization", "Token " + token.GetToken());
+			String response = HttpUtil.request(
+					url("web_service/auth_token/check/"), null,
+					createAuthHeader(token));
 
-			String response = HttpUtil.request(WEBSERVICE_URL
-					+ "web_service/auth_token/check/", null, headers);
 			LogEx.verbose("auth_token/check returned" + response);
 			JSONObject obj = new JSONObject(response);
 			return obj.getString("result").equals("ok");
@@ -81,8 +76,8 @@ public class HttpWebClient implements WebClient {
 		data.put("username", name);
 		data.put("password", password);
 
-		String response = HttpUtil.request(WEBSERVICE_URL
-				+ "web_service/login/", data, null);
+		String response = HttpUtil.request(url("web_service/login/"), data,
+				null);
 
 		LogEx.verbose("login returned " + response);
 
@@ -115,5 +110,38 @@ public class HttpWebClient implements WebClient {
 		} catch (JSONException e) {
 			throw new WebException(JSON_ERROR, e);
 		}
+	}
+
+	public void createSmartphone(AuthToken token, String registrationId,
+			String deviceId, String name, String platform, String version)
+			throws WebException {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("uuid", deviceId);
+		data.put("version", version);
+		data.put("platform", platform);
+		data.put("name", name);
+		data.put("registrationid", registrationId);
+
+		String response = HttpUtil.request(
+				url("web_service/smartphone/create/"), data,
+				createAuthHeader(token));
+
+		// [{"pk": 26004, "model": "AlarmService.smartphone", "fields":
+		// {"RegistrationId":
+		// "APA91bFVprgJrcUTtvdN_IoZU5qpRf04sk-l1X5HS0gXHl3zlyh29nmuAbhdCwJVHXI4gbNnvZxKyQWjeL6l32mQ7Zsqa3Low6axWUakFUIv0CfgoRe-RoyPZdENRLokZo9ZLlZGRTSa",
+		// "Name": "n1", "Platform": "android", "Version": "1.2.3.4", "Owner":
+		// 4001, "UUID": "259748ba-d53b-47cf-b667-7beb3af26e7d"}}]
+
+		LogEx.verbose("Create Smartphone returned " + response);
+	}
+
+	public void setAlarmStatus(AuthToken authToken, Alarm alarm)
+			throws WebException {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("Status", alarm.getState().getName());
+		String response = HttpUtil.request(
+				url("web_service/alarm_notification/" + alarm.getOperationId()
+						+ "/"), data, createAuthHeader(authToken));
+		LogEx.verbose("Set alarm state returned " + response);
 	}
 }

@@ -6,6 +6,11 @@ import org.alarmapp.model.AuthToken;
 
 public class AuthTokenData implements AuthToken {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public AuthTokenData(String token, Date expireDate) {
 		super();
 		this.token = token;
