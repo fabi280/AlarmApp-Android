@@ -26,27 +26,27 @@ public class UserData implements User {
 		this.id = id;
 	}
 
-	public String GetFirstName() {
+	public String getFirstName() {
 		return this.firstName;
 	}
 
-	public AuthToken GetAuthToken() {
+	public AuthToken getAuthToken() {
 		return this.authToken;
 	}
 
-	public void SetAuthToken(AuthToken token) {
+	public void setAuthToken(AuthToken token) {
 		this.authToken = token;
 	}
 
-	public String GetLastName() {
+	public String getLastName() {
 		return this.lastName;
 	}
 
-	public FireDepartment GetFireDepartment() {
+	public FireDepartment getFireDepartment() {
 		return this.department;
 	}
 
-	public int GetId() {
+	public int getId() {
 		return this.id;
 	}
 
@@ -54,6 +54,10 @@ public class UserData implements User {
 	public String toString() {
 		return String.format("%d - %s, %s, %s", id, lastName, firstName,
 				department);
+	}
+
+	public boolean canViewAlarmStatus() {
+		return true;
 	}
 
 }

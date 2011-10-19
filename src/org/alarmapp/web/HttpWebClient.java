@@ -100,9 +100,9 @@ public class HttpWebClient implements WebClient {
 
 			LogEx.info("Authenticated as User " + userObj);
 
-			userObj.SetAuthToken(this.getAuthToken(name, password));
+			userObj.setAuthToken(this.getAuthToken(name, password));
 
-			if (!this.checkAuthentication(userObj.GetAuthToken()))
+			if (!this.checkAuthentication(userObj.getAuthToken()))
 				throw new WebException(AUTH_TOKEN_INVALID);
 
 			return userObj;

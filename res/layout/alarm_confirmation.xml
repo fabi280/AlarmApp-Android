@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent" android:weightSum="1"
-  android:padding="10dip"
-  >
-        <LinearLayout android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
-            <TextView android:id="@+id/tvTitle" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:text="Title" android:layout_width="match_parent"></TextView>
-    		<TextView android:id="@+id/tvText" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_width="wrap_content" android:text="Text"></TextView>
-    		<TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:text="Date" android:id="@+id/tvDate"></TextView>
-       
-       <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    		android:layout_width="fill_parent" android:layout_height="fill_parent" >
-        	<LinearLayout android:id="@+id/llButtonBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_gravity="center">
-    		<Button android:text="Akzeptieren" android:layout_height="wrap_content" android:layout_width="156dp" android:id="@+id/btAccept"></Button>
-    		<Button android:layout_height="wrap_content" android:text="Ablehnen" android:layout_width="169dp" android:id="@+id/btReject"></Button>
-        	</LinearLayout>
-    		<ListView android:layout_height="wrap_content" android:id="@+id/lvAlarmDetails" android:layout_width="match_parent" android:layout_above="@id/llButtonBar" ></ListView>
-    </RelativeLayout>
-    
-        </LinearLayout>
-    
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent" android:weightSum="1">
+	
+		<TextView android:id="@+id/tvTitle" android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="Title" android:layout_width="match_parent"
+			android:gravity="center" android:layout_margin="10dip"></TextView>
+		<TextView android:id="@+id/tvText" android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_width="wrap_content" android:text="Text" android:layout_margin="10dip"></TextView>
+		<TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/textView1" android:text="Details" style="?android:attr/listSeparatorTextViewStyle"></TextView>
+			
+
+			<ListView android:layout_height="wrap_content" android:id="@+id/lvAlarmDetails"
+				android:layout_width="match_parent" android:layout_weight="1" android:layout_marginLeft="10dip" android:layout_marginRight="10dip"></ListView>
+			<LinearLayout android:id="@+id/llButtonBar" style="@android:style/ButtonBar"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:orientation="horizontal">
+				<Button android:text="Akzeptieren" android:layout_height="wrap_content"
+					android:id="@+id/btAccept" android:layout_weight="1" android:layout_width="0dp"></Button>
+				<Button android:layout_height="wrap_content" android:text="Ablehnen"
+					android:id="@+id/btReject" android:layout_weight="1" android:layout_width="0dp"></Button>
+			<Button android:text="Einsatzstatus" android:layout_height="wrap_content" android:id="@+id/btSwitchToStatus" android:layout_weight="1" android:layout_width="0dp" android:visibility="gone"></Button>
+		
+					
+			</LinearLayout>
+
+
+
 </LinearLayout>

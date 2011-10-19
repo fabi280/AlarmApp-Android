@@ -59,7 +59,7 @@ public class SyncService extends Service {
 									+ alarm.getState());
 							Controller.getWebClient().setAlarmStatus(
 									Controller.getUser(SyncService.this)
-											.GetAuthToken(), alarm);
+											.getAuthToken(), alarm);
 							operationSuccessful = true;
 						} catch (WebException e) {
 							if (e.isPermanentFailure()) {

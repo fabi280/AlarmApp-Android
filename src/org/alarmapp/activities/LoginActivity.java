@@ -153,7 +153,7 @@ public class LoginActivity extends Activity {
 
 	private void onSuccessfulLogin() {
 		Controller.setUser(this, user);
-		displayToastInUIThread("Hallo " + user.GetFirstName(), 10);
+		displayToastInUIThread("Hallo " + user.getFirstName(), 10);
 	}
 
 	private void displayError(String errorMessage) {

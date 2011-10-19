@@ -4,15 +4,17 @@ import java.io.Serializable;
 
 public interface User extends Serializable {
 
-	public String GetFirstName();
+	public String getFirstName();
 
-	public String GetLastName();
+	public String getLastName();
 
-	public FireDepartment GetFireDepartment();
+	public FireDepartment getFireDepartment();
 
-	public AuthToken GetAuthToken();
+	public AuthToken getAuthToken();
 
-	public void SetAuthToken(AuthToken token);
+	public void setAuthToken(AuthToken token);
 
-	public int GetId();
+	public int getId();
+
+	public boolean canViewAlarmStatus();
 }

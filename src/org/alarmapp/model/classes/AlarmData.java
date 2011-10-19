@@ -30,6 +30,7 @@ public class AlarmData implements Alarm {
 			add("alarmed");
 			add("title");
 			add("text");
+			add("operation_status");
 		}
 	};
 
@@ -48,6 +49,24 @@ public class AlarmData implements Alarm {
 			b.putString(key, extraValues.get(key));
 
 		return b;
+	}
+
+	private AlarmData() {
+
+	}
+
+	public AlarmData(String operationId, Date alarmed, String title,
+			String text, AlarmState state, HashMap<String, String> extras) {
+		this.operation_id = operationId;
+		this.state = state;
+		this.text = text;
+		this.title = title;
+		this.alarmed = alarmed;
+
+		if (extras != null)
+			this.extraValues = new HashMap<String, String>(extras);
+		else
+			this.extraValues = new HashMap<String, String>();
 	}
 
 	public static AlarmData Create(Bundle extra) {

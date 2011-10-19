@@ -1,16 +1,21 @@
 package org.alarmapp.activities;
 
-import org.alarmapp.Actions;
+import java.util.Date;
+import java.util.HashMap;
+
 import org.alarmapp.Controller;
 import org.alarmapp.R;
-import org.alarmapp.services.SyncService;
+import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmState;
+import org.alarmapp.model.classes.AlarmData;
+import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class AlarmAppActivity extends Activity {
+public class MainActivity extends Activity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -22,17 +27,15 @@ public class AlarmAppActivity extends Activity {
 			return;
 		} else {
 
-			Intent intent = new Intent(this, SyncService.class);
-			intent.putExtra("text", "Einsatz für die Feuerwehr Kleinkahl");
-			intent.putExtra("title", "Einsatz");
-			intent.putExtra("operation_id", "25008");
-			intent.putExtra("alarmed", "2011-10-17 14:29:12");
-			intent.putExtra("groups",
-					"First Responder, Fahrer, Atemschutzträger");
-			intent.putExtra("fire_fighters", "5");
+			HashMap<String, String> extra = new HashMap<String, String>();
+			extra.put("groups", "Probealarm");
+			extra.put("fire_fighter_count", "13");
+			Alarm a = new AlarmData("1", new Date(), "Probealarm",
+					"Probealarm für die Feuerwehr Kleinkahl",
+					AlarmState.Accepted, extra);
 
-			intent.setAction(Actions.UPDATE_ALARM_STATUS);
-			this.startService(intent);
+			IntentUtil.createDisplayAlarmIntent(this, a);
+
 		}
 		setContentView(R.layout.main);
 	}

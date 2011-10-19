@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
+  android:orientation="horizontal"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
-    <TextView android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_width="wrap_content" android:text="TextView" android:id="@+id/tvTitle"></TextView>
-    <TextView android:id="@+id/tvSubtitle" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="TextView"></TextView>
+  android:layout_height="match_parent" android:padding="5dip">
+    <TextView android:layout_height="wrap_content"  
+    android:textAppearance="?android:attr/textAppearanceLarge" 
+    android:text="TextView" 
+    android:id="@+id/tvTitle"  android:layout_width="wrap_content"></TextView>
+    
+    <TextView android:id="@+id/tvSubtitle" 
+    android:textAppearance="?android:attr/textAppearanceLarge" 
+    android:layout_height="wrap_content" 
+    android:text="TextView"  android:gravity="right" android:layout_width="match_parent"></TextView>
     
 </LinearLayout>

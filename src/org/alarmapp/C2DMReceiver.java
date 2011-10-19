@@ -6,7 +6,6 @@ package org.alarmapp;
 //http://www.vogella.de/articles/AndroidCloudToDeviceMessaging/article.html
 //--------------------------------------------------------
 
-import org.alarmapp.activities.AlarmActivity;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.classes.AlarmData;
@@ -43,7 +42,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		try {
 			Controller.getWebClient().createSmartphone(
-					Controller.getUser(context).GetAuthToken(), registrationId,
+					Controller.getUser(context).getAuthToken(), registrationId,
 					Device.id(context), Device.name(context),
 					Device.platform(context), Device.version(context));
 		} catch (WebException e) {
@@ -71,10 +70,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 				IntentUtil.createAlarmStatusUpdateIntent(this, alarm);
 
-				Intent alarmIntent = new Intent(this, AlarmActivity.class);
-				alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				alarmIntent.putExtras(alarm.getBundle());
-				context.startActivity(alarmIntent);
+				IntentUtil.createDisplayAlarmIntent(this, alarm);
 			}
 		}
 	}

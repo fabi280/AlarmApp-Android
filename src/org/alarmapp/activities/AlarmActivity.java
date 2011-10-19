@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -33,22 +35,30 @@ public class AlarmActivity extends Activity {
 	private ListView lvOperationDetails;
 	private TextView tvTitle;
 	private TextView tvText;
-	private TextView tvAlarmed;
 	private Button btAccept;
 	private Button btReject;
+	private Button btSwitchToStatus;
 	private Vibrator vibrator;
 	private MediaPlayer mediaPlayer;
 
 	private Alarm alarm;
 
+	private final HashMap<String, String> extraNames = new HashMap<String, String>() {
+		{
+			put("fire_fighter_count", "Einsatzkräfte:");
+			put("alarmed", "Alarmzeit:");
+			put("groups", "Alarmgruppen:");
+
+		}
+	};
+
 	private OnClickListener acceptClick = new OnClickListener() {
 		public void onClick(View v) {
 			alarm.setState(AlarmState.Accepted);
 			IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this, alarm);
-			setButtonVisibility(View.INVISIBLE);
 
-			vibrator.cancel();
-			mediaPlayer.stop();
+			updateButtonBarVisibility();
+			stopRingingAndVibrating();
 		}
 	};
 
@@ -57,10 +67,9 @@ public class AlarmActivity extends Activity {
 		public void onClick(View v) {
 			alarm.setState(AlarmState.Rejeced);
 			IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this, alarm);
-			setButtonVisibility(View.INVISIBLE);
 
-			vibrator.cancel();
-			mediaPlayer.stop();
+			updateButtonBarVisibility();
+			stopRingingAndVibrating();
 		}
 	};
 
@@ -71,9 +80,9 @@ public class AlarmActivity extends Activity {
 		this.lvOperationDetails = (ListView) findViewById(R.id.lvAlarmDetails);
 		this.tvTitle = (TextView) findViewById(R.id.tvTitle);
 		this.tvText = (TextView) findViewById(R.id.tvText);
-		this.tvAlarmed = (TextView) findViewById(R.id.tvDate);
 		this.btAccept = (Button) findViewById(R.id.btAccept);
 		this.btReject = (Button) findViewById(R.id.btReject);
+		this.btSwitchToStatus = (Button) findViewById(R.id.btSwitchToStatus);
 		this.mediaPlayer = new MediaPlayer();
 
 		this.btAccept.setOnClickListener(acceptClick);
@@ -81,21 +90,88 @@ public class AlarmActivity extends Activity {
 		this.vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		alarm = AlarmData.Create(getIntent().getExtras());
+
 		displayAlarm();
 	}
 
-	private void setButtonVisibility(final int visibility) {
+	private void setButtonVisibility(final int visibility,
+			final Button... buttons) {
 		runOnUiThread(new Runnable() {
 
 			public void run() {
-				btAccept.setVisibility(visibility);
-				btReject.setVisibility(visibility);
+				for (Button b : buttons)
+					b.setVisibility(visibility);
 			}
 		});
 	}
 
+	private void putEntryToList(List<Map<String, String>> items, String key,
+			String value) {
+		HashMap<String, String> m = new HashMap<String, String>();
+		if (this.extraNames.containsKey(key))
+			m.put("key", this.extraNames.get(key));
+		else
+			m.put("key", key);
+		m.put("value", value);
+		items.add(m);
+	}
+
 	private void displayAlarm() {
 
+		LogEx.info("Displaying the alarm!");
+
+		if (alarm.getState() == AlarmState.Delivered) {
+			makeActivityVisible();
+			ringAndVibrate();
+		}
+
+		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
+
+		for (Map.Entry<String, String> item : alarm.getAdditionalValues()
+				.entrySet()) {
+			putEntryToList(items, item.getKey(), item.getValue());
+		}
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("H:mm:ss");
+		putEntryToList(items, "alarmed",
+				dateFormatter.format(alarm.getAlarmed()));
+
+		SimpleAdapter adapter = new SimpleAdapter(this, items,
+				R.layout.list_layout, new String[] { "key", "value" },
+				new int[] { R.id.tvTitle, R.id.tvSubtitle });
+		this.lvOperationDetails.setAdapter(adapter);
+		this.lvOperationDetails.smoothScrollToPosition(0);
+
+		this.tvTitle.setText(alarm.getTitle());
+		this.tvText.setText(alarm.getText());
+
+		updateButtonBarVisibility();
+	}
+
+	private void updateButtonBarVisibility() {
+		if (alarm.getState().isFinal()) {
+			setButtonVisibility(View.GONE, btAccept, btReject);
+			setButtonVisibility(View.VISIBLE, btSwitchToStatus);
+		} else {
+			setButtonVisibility(View.VISIBLE, btAccept, btReject);
+			setButtonVisibility(View.GONE, btSwitchToStatus);
+		}
+	}
+
+	private void makeActivityVisible() {
+		Window w = this.getWindow(); // in Activity's onCreate() for instance
+		int flags = /*
+					 * WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+					 */WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
+		w.setFlags(flags, flags);
+	}
+
+	private void stopRingingAndVibrating() {
+		vibrator.cancel();
+		mediaPlayer.stop();
+	}
+
+	private void ringAndVibrate() {
 		int dot = 200; // Length of a Morse Code "dot" in milliseconds
 		int short_gap = 200; // Length of Gap Between dots/dashes
 		int medium_gap = 500; // Length of Gap Between Letters
@@ -120,34 +196,5 @@ public class AlarmActivity extends Activity {
 		} catch (Exception e) {
 			LogEx.exception(e);
 		}
-
-		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
-
-		for (Map.Entry<String, String> item : alarm.getAdditionalValues()
-				.entrySet()) {
-			HashMap<String, String> m = new HashMap<String, String>();
-			m.put("key", item.getKey());
-			m.put("value", item.getValue());
-			items.add(m);
-		}
-
-		SimpleAdapter adapter = new SimpleAdapter(this, items,
-				R.layout.list_layout, new String[] { "key", "value" },
-				new int[] { R.id.tvTitle, R.id.tvSubtitle });
-		this.lvOperationDetails.setAdapter(adapter);
-		this.lvOperationDetails.smoothScrollToPosition(0);
-
-		this.tvTitle.setText(alarm.getTitle());
-		this.tvText.setText(alarm.getText());
-
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("H:m:s");
-
-		this.tvAlarmed.setText("Alarmzeit: "
-				+ dateFormatter.format(alarm.getAlarmed()));
-
-		if (!alarm.isFinal())
-			setButtonVisibility(View.VISIBLE);
-		else
-			setButtonVisibility(View.INVISIBLE);
 	}
 }

@@ -22,10 +22,12 @@ public class HttpUtil {
 	private static final String HTTP_POST_ERROR = "Fehler beim Senden von Daten an die URL ";
 	private static final String HTTP_GET_ERROR = "Fehler beim Abrufen der URL ";
 	private static final String TEMPORAL_SERVER_ERROR = "Der Web-Service ist momentan nicht verfügbar. Versuchen Sie es später erneut";
+
 	private static final String UNKNOWN_HTTP_STATUS_ERROR = "Der HTTP-Status-Code ist unbekannt:";
 	private static final String RESSOURCE_DOES_NOT_EXIST_ERROR = "Die angeforderte Ressource existiert nicht.";
 	private static final String NETWORK_ERROR = "Der Webserver ist nicht erreichbar.";
 	private static final String INTERNAL_SERVER_ERROR = "Probelem beim Verarbeiten der Anfrage durch den Web-Server.";
+	private static final String SLOW_NETWORK_SERVER_ERROR = "Verbindung zum Server zu langsam";
 
 	private static String read(InputStream stream) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(stream));
@@ -86,6 +88,10 @@ public class HttpUtil {
 		{
 			LogEx.warning("Web Service returned " + read(http.getErrorStream()));
 			throw new WebException(false, TEMPORAL_SERVER_ERROR);
+		} else if (statusCode == 504) // Slow network
+		{
+			LogEx.warning("Web Service returned " + read(http.getErrorStream()));
+			throw new WebException(false, SLOW_NETWORK_SERVER_ERROR);
 		} else if (statusCode >= 200 && statusCode < 300) {
 			return read(http.getInputStream());
 		} else if (statusCode == 409) {
