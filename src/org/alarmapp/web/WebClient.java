@@ -15,4 +15,7 @@ public interface WebClient {
 
 	public void setAlarmStatus(AuthToken authToken, Alarm alarm)
 			throws WebException;
+
+	public Alarm getAlarmStatus(AuthToken authToken, String operation_id)
+			throws WebException;
 }

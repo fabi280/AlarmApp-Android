@@ -1,6 +1,8 @@
 package org.alarmapp;
 
+import org.alarmapp.model.AlarmStore;
 import org.alarmapp.model.User;
+import org.alarmapp.model.classes.PersistentAlarmStore;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.util.Store;
 import org.alarmapp.web.HttpWebClient;
@@ -27,6 +29,18 @@ public class Controller {
 
 		LogEx.info("User is " + user);
 
+	}
+
+	private static AlarmStore alarmStore = null;
+	private static Context alarmStoreContext = null;
+
+	public static AlarmStore getAlarmStore(Context ctxt) {
+		if (alarmStore == null || alarmStoreContext != ctxt) {
+			alarmStore = new PersistentAlarmStore(ctxt);
+			alarmStoreContext = ctxt;
+		}
+
+		return alarmStore;
 	}
 
 	private static WebClient webClient = null;

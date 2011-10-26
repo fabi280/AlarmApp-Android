@@ -10,6 +10,7 @@ import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
+import org.alarmapp.web.WebException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +27,14 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, LoginActivity.class));
 			return;
 		} else {
+
+			try {
+				Controller.getWebClient().getAlarmStatus(
+						Controller.getUser(this).getAuthToken(), "38008");
+			} catch (WebException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			HashMap<String, String> extra = new HashMap<String, String>();
 			extra.put("groups", "Probealarm");

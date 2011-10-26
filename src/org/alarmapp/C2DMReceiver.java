@@ -53,7 +53,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 	};
 
 	@Override
-	protected void onMessage(Context context, Intent intent) {
+	protected synchronized void onMessage(Context context, Intent intent) {
 		Bundle extras = intent.getExtras();
 
 		if (extras != null) {
@@ -64,15 +64,28 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			LogEx.verbose("Kind is " + extras.getString("kind"));
 
 			if (extras.getString("kind").equals("alarm")) {
-				Alarm alarm = AlarmData.Create(extras);
-				alarm.setState(AlarmState.Delivered);
-				LogEx.verbose("Display Alarm Activity.");
-
-				IntentUtil.createAlarmStatusUpdateIntent(this, alarm);
-
-				IntentUtil.createDisplayAlarmIntent(this, alarm);
+				handleAlarmMessage(context, extras);
 			}
 		}
+	}
+
+	private void handleAlarmMessage(Context context, Bundle extras) {
+		Alarm alarm = AlarmData.Create(extras);
+
+		if (Controller.getAlarmStore(context).contains(
+				alarm.getOperationId())) {
+			LogEx.warning("The Alarm " + alarm
+					+ " does already exist. Aborting");
+			return;
+		}
+		Controller.getAlarmStore(context).put(alarm);
+		alarm.setState(AlarmState.Delivered);
+
+		LogEx.verbose("Display Alarm Activity.");
+
+		IntentUtil.createDisplayAlarmIntent(this, alarm);
+
+		IntentUtil.createAlarmStatusUpdateIntent(this, alarm);
 	}
 
 	@Override

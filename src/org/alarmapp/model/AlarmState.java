@@ -39,4 +39,8 @@ public enum AlarmState {
 	public boolean isFinal() {
 		return nextStates.length == 0;
 	}
+
+	public boolean isUserActionRequired() {
+		return id == Delivered.id;
+	}
 }

@@ -54,22 +54,24 @@ public class AlarmActivity extends Activity {
 
 	private OnClickListener acceptClick = new OnClickListener() {
 		public void onClick(View v) {
+			stopRingingAndVibrating();
+
 			alarm.setState(AlarmState.Accepted);
 			IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this, alarm);
 
 			updateButtonBarVisibility();
-			stopRingingAndVibrating();
 		}
 	};
 
 	private OnClickListener rejectClick = new OnClickListener() {
 
 		public void onClick(View v) {
+			stopRingingAndVibrating();
+
 			alarm.setState(AlarmState.Rejeced);
 			IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this, alarm);
 
 			updateButtonBarVisibility();
-			stopRingingAndVibrating();
 		}
 	};
 
@@ -107,20 +109,21 @@ public class AlarmActivity extends Activity {
 
 	private void putEntryToList(List<Map<String, String>> items, String key,
 			String value) {
-		HashMap<String, String> m = new HashMap<String, String>();
-		if (this.extraNames.containsKey(key))
+
+		// Only display Keys with Human readable Names
+		if (this.extraNames.containsKey(key)) {
+			HashMap<String, String> m = new HashMap<String, String>();
 			m.put("key", this.extraNames.get(key));
-		else
-			m.put("key", key);
-		m.put("value", value);
-		items.add(m);
+			m.put("value", value);
+			items.add(m);
+		}
 	}
 
 	private void displayAlarm() {
 
 		LogEx.info("Displaying the alarm!");
 
-		if (alarm.getState() == AlarmState.Delivered) {
+		if (alarm.getState().isUserActionRequired()) {
 			makeActivityVisible();
 			ringAndVibrate();
 		}
@@ -168,7 +171,11 @@ public class AlarmActivity extends Activity {
 
 	private void stopRingingAndVibrating() {
 		vibrator.cancel();
+		mediaPlayer.pause();
 		mediaPlayer.stop();
+
+		LogEx.verbose("Ringing and vibrating for Operation "
+				+ alarm.getOperationId() + " stopped");
 	}
 
 	private void ringAndVibrate() {
@@ -193,6 +200,9 @@ public class AlarmActivity extends Activity {
 				mediaPlayer.prepare();
 				mediaPlayer.start();
 			}
+
+			LogEx.verbose("Ringing and vibrating for Operation "
+					+ alarm.getOperationId() + " started");
 		} catch (Exception e) {
 			LogEx.exception(e);
 		}
