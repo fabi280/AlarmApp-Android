@@ -8,8 +8,11 @@ package org.alarmapp;
 
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
+import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.classes.AlarmData;
+import org.alarmapp.model.classes.AlarmedUserData;
 import org.alarmapp.util.Device;
+import org.alarmapp.util.Ensure;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebException;
@@ -66,14 +69,27 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			if (extras.getString("kind").equals("alarm")) {
 				handleAlarmMessage(context, extras);
 			}
+			if (extras.getString("kind").equals("alarm_status")) {
+				handleAlarmStatusMessage(context, extras);
+			}
 		}
 	}
 
-	private void handleAlarmMessage(Context context, Bundle extras) {
-		Alarm alarm = AlarmData.Create(extras);
+	private void handleAlarmStatusMessage(Context context, Bundle extras) {
+		Ensure.valid(AlarmedUserData.isAlarmedUserDataBundle(extras));
+		AlarmedUser user = AlarmedUserData.create(extras);
 
-		if (Controller.getAlarmStore(context).contains(
-				alarm.getOperationId())) {
+		Broadcasts.sendAlarmstatusChangedBroadcast(context, user);
+		LogEx.verbose("Sent AlarmStatus change Broadcast for Firefighter "
+				+ user.getFirstName() + " " + user.getLastName()
+				+ ". Firefighter is " + user.getAlarmState());
+	}
+
+	private void handleAlarmMessage(Context context, Bundle extras) {
+		Ensure.valid(AlarmData.isAlarmDataBundle(extras));
+		Alarm alarm = AlarmData.create(extras);
+
+		if (Controller.getAlarmStore(context).contains(alarm.getOperationId())) {
 			LogEx.warning("The Alarm " + alarm
 					+ " does already exist. Aborting");
 			return;

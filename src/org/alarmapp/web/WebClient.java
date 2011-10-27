@@ -1,6 +1,9 @@
 package org.alarmapp.web;
 
+import java.util.Collection;
+
 import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.User;
 
@@ -16,6 +19,6 @@ public interface WebClient {
 	public void setAlarmStatus(AuthToken authToken, Alarm alarm)
 			throws WebException;
 
-	public Alarm getAlarmStatus(AuthToken authToken, String operation_id)
-			throws WebException;
+	public Collection<AlarmedUser> getAlarmStatus(AuthToken authToken,
+			String operation_id) throws WebException;
 }

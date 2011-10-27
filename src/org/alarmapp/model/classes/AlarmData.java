@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
+import org.alarmapp.util.BundleUtil;
 import org.alarmapp.util.DateUtil;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.LogEx;
@@ -17,6 +17,21 @@ import android.os.Bundle;
 
 public class AlarmData implements Alarm {
 
+	private static final String OPERATION_STATUS = "operation_status";
+
+	private static final String TEXT = "text";
+
+	private static final String TITLE = "title";
+
+	private static final String ALARMED = "alarmed";
+
+	private static final String OPERATION_ID = "operation_id";
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private String operation_id;
 	private Date alarmed;
 	private String title;
@@ -24,26 +39,27 @@ public class AlarmData implements Alarm {
 	private AlarmState state = AlarmState.Delivered;
 	private HashMap<String, String> extraValues = new HashMap<String, String>();
 
-	private static Set<String> keySet = new HashSet<String>() {
+	private static HashSet<String> keySet = new HashSet<String>() {
+		private static final long serialVersionUID = 1L;
+
 		{
-			add("operation_id");
-			add("alarmed");
-			add("title");
-			add("text");
-			add("operation_status");
+			add(OPERATION_ID);
+			add(ALARMED);
+			add(TITLE);
+			add(TEXT);
+			add(OPERATION_STATUS);
 		}
 	};
 
 	public Bundle getBundle() {
 		Bundle b = new Bundle();
-		b.putString("title", this.title);
-		b.putString("text", this.text);
-		b.putString("alarmed", DateUtil.format(this.alarmed));
-		b.putString("operation_id", this.operation_id);
-		b.putInt("operation_status", state.getId());
+		b.putString(TITLE, this.title);
+		b.putString(TEXT, this.text);
+		b.putString(ALARMED, DateUtil.format(this.alarmed));
+		b.putString(OPERATION_ID, this.operation_id);
+		b.putInt(OPERATION_STATUS, state.getId());
 
-		LogEx.verbose("AlarmData Extra status is "
-				+ b.getInt("operation_status"));
+		LogEx.verbose("AlarmData Extra status is " + b.getInt(OPERATION_STATUS));
 
 		for (String key : extraValues.keySet())
 			b.putString(key, extraValues.get(key));
@@ -69,19 +85,25 @@ public class AlarmData implements Alarm {
 			this.extraValues = new HashMap<String, String>();
 	}
 
-	public static AlarmData Create(Bundle extra) {
+	public static boolean isAlarmDataBundle(Bundle extra) {
+		return BundleUtil
+				.containsAll(extra, OPERATION_ID, TITLE, TEXT, ALARMED);
+	}
+
+	public static AlarmData create(Bundle extra) {
 
 		AlarmData a = new AlarmData();
-		a.operation_id = extra.getString("operation_id");
-		a.alarmed = DateUtil.parse(extra.getString("alarmed"));
-		a.title = extra.getString("title");
-		a.text = extra.getString("text");
+
+		a.operation_id = extra.getString(OPERATION_ID);
+		a.alarmed = DateUtil.parse(extra.getString(ALARMED));
+		a.title = extra.getString(TITLE);
+		a.text = extra.getString(TEXT);
 
 		LogEx.verbose("AlarmData Extra status is "
-				+ extra.getInt("operation_status"));
+				+ extra.getInt(OPERATION_STATUS));
 
-		if (extra.containsKey("operation_status"))
-			a.state = AlarmState.create(extra.getInt("operation_status"));
+		if (extra.containsKey(OPERATION_STATUS))
+			a.state = AlarmState.create(extra.getInt(OPERATION_STATUS));
 
 		for (String key : extra.keySet())
 			if (isExtra(key))

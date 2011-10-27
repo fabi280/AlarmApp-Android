@@ -3,9 +3,8 @@ package org.alarmapp.activities;
 import org.alarmapp.Broadcasts;
 import org.alarmapp.Controller;
 import org.alarmapp.R;
-import org.alarmapp.R.id;
-import org.alarmapp.R.layout;
 import org.alarmapp.model.User;
+import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebException;
 
@@ -98,12 +97,7 @@ public class LoginActivity extends Activity {
 								"Der Login des Benutzers schlug fehl. ", e);
 
 						LoginActivity.this.displayError(e.getMessage());
-
-					} finally {
-						btLogin.setOnClickListener(onLoginClickListener);
-						setVisibility(View.INVISIBLE);
 					}
-
 				}
 			}).start();
 
@@ -154,10 +148,18 @@ public class LoginActivity extends Activity {
 	private void onSuccessfulLogin() {
 		Controller.setUser(this, user);
 		displayToastInUIThread("Hallo " + user.getFirstName(), 10);
+
+		btLogin.setOnClickListener(onLoginClickListener);
+		setVisibility(View.INVISIBLE);
+
+		IntentUtil.createMainIntent(this);
 	}
 
 	private void displayError(String errorMessage) {
 		displayToastInUIThread(errorMessage, 15);
+
+		btLogin.setOnClickListener(onLoginClickListener);
+		setVisibility(View.INVISIBLE);
 	}
 
 	@Override

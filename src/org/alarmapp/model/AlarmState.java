@@ -2,7 +2,8 @@ package org.alarmapp.model;
 
 public enum AlarmState {
 	Accepted(0, "PACK"), Rejeced(1, "NACK"), Delivered(2, "DEL",
-			AlarmState.Accepted, AlarmState.Rejeced);
+			AlarmState.Accepted, AlarmState.Rejeced), New(3, "NEW",
+			AlarmState.Delivered);
 
 	private final AlarmState[] nextStates;
 	private final String name;
@@ -34,6 +35,14 @@ public enum AlarmState {
 			if (val.id == id)
 				return val;
 		throw new IllegalArgumentException("There is no state with id " + id);
+	}
+
+	public static AlarmState create(String name) {
+		for (AlarmState val : AlarmState.values())
+			if (val.name.equals(name))
+				return val;
+
+		throw new IllegalArgumentException("There is no state named  " + name);
 	}
 
 	public boolean isFinal() {

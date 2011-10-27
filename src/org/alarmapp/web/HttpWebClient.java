@@ -1,8 +1,12 @@
 package org.alarmapp.web;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmState;
+import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.FireDepartment;
 import org.alarmapp.model.User;
@@ -147,12 +151,14 @@ public class HttpWebClient implements WebClient {
 		LogEx.verbose("Set alarm state returned " + response);
 	}
 
-	public Alarm getAlarmStatus(AuthToken authToken, String operation_id)
-			throws WebException {
+	public Collection<AlarmedUser> getAlarmStatus(AuthToken authToken,
+			String operation_id) throws WebException {
 
 		String response = HttpUtil
 				.request(url("web_service/operation/" + operation_id
 						+ "/status/"), null, createAuthHeader(authToken));
+
+		ArrayList<AlarmedUser> result = new ArrayList<AlarmedUser>();
 
 		try {
 			JSONArray array = new JSONArray(response);
@@ -160,15 +166,16 @@ public class HttpWebClient implements WebClient {
 			for (int i = 0; i < array.length(); i++) {
 				JSONObject obj = array.getJSONObject(i);
 				String fireFighter = obj.getString("fire_fighter");
-				new AlarmedUserData(obj.getString("first_name"), obj.getString("last_name"), obj.getString(""), state, ackDate)
+				result.add(new AlarmedUserData(operation_id, fireFighter, obj
+						.getString("fire_fighter_id"), AlarmState.create(obj
+						.getString("status_id")), DateUtil.parse(obj
+						.getString("acknowledged"))));
 			}
 
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new WebException(JSON_ERROR, e);
 		}
 
-		LogEx.verbose(response);
-		return null;
+		return result;
 	}
 }

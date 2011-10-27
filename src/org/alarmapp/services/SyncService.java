@@ -44,7 +44,7 @@ public class SyncService extends Service {
 	}
 
 	private Runnable buildUpdateAlarmStatusRunnable(Bundle extras) {
-		final Alarm alarm = AlarmData.Create(extras);
+		final Alarm alarm = AlarmData.create(extras);
 
 		return new Runnable() {
 

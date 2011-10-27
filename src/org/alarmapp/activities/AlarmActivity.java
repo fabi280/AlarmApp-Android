@@ -10,6 +10,7 @@ import org.alarmapp.R;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.classes.AlarmData;
+import org.alarmapp.util.Ensure;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 
@@ -44,6 +45,8 @@ public class AlarmActivity extends Activity {
 	private Alarm alarm;
 
 	private final HashMap<String, String> extraNames = new HashMap<String, String>() {
+		private static final long serialVersionUID = 1L;
+
 		{
 			put("fire_fighter_count", "Einsatzkräfte:");
 			put("alarmed", "Alarmzeit:");
@@ -75,9 +78,19 @@ public class AlarmActivity extends Activity {
 		}
 	};
 
+	private OnClickListener switchToClick = new OnClickListener() {
+
+		public void onClick(View v) {
+			LogEx.info("Clicked on the Switch to Alarm Status button");
+			IntentUtil.createDisplayAlarmStatusUpdateIntent(AlarmActivity.this,
+					alarm);
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		this.setContentView(R.layout.alarm_confirmation);
 		this.lvOperationDetails = (ListView) findViewById(R.id.lvAlarmDetails);
 		this.tvTitle = (TextView) findViewById(R.id.tvTitle);
@@ -89,9 +102,16 @@ public class AlarmActivity extends Activity {
 
 		this.btAccept.setOnClickListener(acceptClick);
 		this.btReject.setOnClickListener(rejectClick);
+		this.btSwitchToStatus.setOnClickListener(switchToClick);
+
 		this.vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		alarm = AlarmData.Create(getIntent().getExtras());
+		if (AlarmData.isAlarmDataBundle(savedInstanceState))
+			alarm = AlarmData.create(savedInstanceState);
+		else {
+			Ensure.valid(AlarmData.isAlarmDataBundle(getIntent().getExtras()));
+			alarm = AlarmData.create(getIntent().getExtras());
+		}
 
 		displayAlarm();
 	}
@@ -105,6 +125,19 @@ public class AlarmActivity extends Activity {
 					b.setVisibility(visibility);
 			}
 		});
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		LogEx.verbose("Saved state of Alarm " + this.alarm.getOperationId());
+		outState.putAll(this.alarm.getBundle());
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		stopRingingAndVibrating();
 	}
 
 	private void putEntryToList(List<Map<String, String>> items, String key,
@@ -170,12 +203,15 @@ public class AlarmActivity extends Activity {
 	}
 
 	private void stopRingingAndVibrating() {
-		vibrator.cancel();
-		mediaPlayer.pause();
-		mediaPlayer.stop();
 
-		LogEx.verbose("Ringing and vibrating for Operation "
-				+ alarm.getOperationId() + " stopped");
+		vibrator.cancel();
+		if (mediaPlayer.isPlaying()) {
+			mediaPlayer.pause();
+			mediaPlayer.stop();
+
+			LogEx.verbose("Ringing and vibrating for Operation "
+					+ alarm.getOperationId() + " stopped");
+		}
 	}
 
 	private void ringAndVibrate() {
