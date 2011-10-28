@@ -2,17 +2,17 @@ package org.alarmapp.activities;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
 
 import org.alarmapp.Broadcasts;
 import org.alarmapp.Controller;
 import org.alarmapp.R;
+import org.alarmapp.activities.list_adapters.AlarmedUserAdapter;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.model.classes.AlarmedUserData;
+import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebException;
@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 public class AlarmStatusActivity extends Activity {
 
@@ -63,70 +62,72 @@ public class AlarmStatusActivity extends Activity {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						displayAlarmStatusView(alarmedUsers);
-
 					}
 				});
 
-			} catch (WebException e) {
+			} catch (final WebException e) {
 				LogEx.exception("Failed to load the user list", e);
+
+				runOnUiThread(new Runnable() {
+					public void run() {
+						cancelProgressBar();
+						displayError(e.getMessage());
+					}
+				});
 			}
 
 		}
 	};
 
-	private void putEntryToList(List<Map<String, String>> items, String key,
-			String value) {
+	private HashSet<AlarmedUser> alarmedUsers = new HashSet<AlarmedUser>();
 
-		HashMap<String, String> m = new HashMap<String, String>();
-		m.put("name", key);
-		m.put("state", value);
-		items.add(m);
-
-	}
-
-	private List<Map<String, String>> itemRenderer(Collection<AlarmedUser> users) {
-		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
-		for (AlarmedUser u : users) {
-			putEntryToList(items, u.getUserId() + " " + u.getLastName() + ", "
-					+ u.getFirstName(), u.getAlarmState().getName());
+	private void addUser(AlarmedUser user) {
+		if (alarmedUsers.contains(user)) {
+			alarmedUsers.remove(user);
 		}
-		return items;
-	}
+		alarmedUsers.add(user);
 
-	private Map<String, AlarmedUser> userMap;
-
-	private void fillUserMap(Collection<AlarmedUser> users) {
-		userMap = new HashMap<String, AlarmedUser>();
-
-		for (AlarmedUser user : users)
-			userMap.put(user.getUserId(), user);
+		LogEx.verbose("Added " + user + ". Hash is " + alarmedUsers.hashCode()
+				+ ". User id is " + user.getUserId());
 	}
 
 	private void displayAlarmStatusView(Collection<AlarmedUser> users) {
+		LogEx.verbose("Display the alarm status for " + users.size()
+				+ " fire fighters");
+
 		this.cancelProgressBar();
-		fillUserMap(users);
+
+		for (AlarmedUser u : users)
+			addUser(u);
+
+		LogEx.verbose("Alarmed user collection contains " + alarmedUsers.size()
+				+ " elements");
+
 		fillAlarmStatusView();
 	}
 
 	private void fillAlarmStatusView() {
-		SimpleAdapter adapter = new SimpleAdapter(this,
-				itemRenderer(userMap.values()), R.layout.list_layout,
-				new String[] { "name", "state" }, new int[] { R.id.tvTitle,
-						R.id.tvSubtitle });
+		AlarmedUserAdapter adapter = new AlarmedUserAdapter(this,
+				new ArrayList<AlarmedUser>(this.alarmedUsers));
+
 		this.lvAlarmedUsers.setAdapter(adapter);
 	}
 
 	private void refreshAlarmStatusView(AlarmedUser changedUser) {
-		LogEx.verbose("Received Alarm status Update for User "
-				+ changedUser.getFirstName() + " " + changedUser.getLastName());
+		LogEx.verbose("Received Alarm status Update for User " + changedUser);
 
-		userMap.put(changedUser.getUserId(), changedUser);
+		if (!this.alarmedUsers.contains(changedUser))
+			LogEx.warning("Alarmed User does not contain user " + changedUser);
+
+		addUser(changedUser);
 		fillAlarmStatusView();
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		LogEx.info("Started AlarmStatusActivity");
 
 		setContentView(R.layout.alarm_status);
 
@@ -140,6 +141,10 @@ public class AlarmStatusActivity extends Activity {
 				alarmStatusReceiver);
 
 		startFetchAlarmStatus();
+	}
+
+	private void displayError(String message) {
+		ActivityUtil.displayToast(this, message, 15);
 	}
 
 	private void startFetchAlarmStatus() {

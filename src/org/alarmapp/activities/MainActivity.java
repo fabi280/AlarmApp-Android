@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
 					"Probealarm für die Feuerwehr Kleinkahl",
 					AlarmState.Accepted, extra);
 
-			IntentUtil.createDisplayAlarmIntent(this, a);
+			IntentUtil.createDisplayAlarmStatusUpdateIntent(this, a);
 
 		}
 		setContentView(R.layout.main);

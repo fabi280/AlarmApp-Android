@@ -18,4 +18,6 @@ public interface AlarmedUser {
 	public Date getAcknowledgeDate();
 
 	public Bundle getBundle();
+
+	public String getFullName();
 }

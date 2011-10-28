@@ -100,9 +100,39 @@ public class AlarmedUserData implements AlarmedUser {
 		return this.operationId;
 	}
 
+	@Override
+	public int hashCode() {
+		return operationId.hashCode() + 31 * this.userId.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o != null && o instanceof AlarmedUser
+				&& this.equals((AlarmedUser) o);
+	}
+
+	public boolean equals(AlarmedUser other) {
+		if (other == null)
+			return false;
+
+		return this.operationId.equals(other.getOperationId())
+				&& this.userId.equals(other.getUserId());
+	}
+
 	public Date getAcknowledgeDate() {
 
 		return this.ackDate;
+	}
+
+	public String getFullName() {
+		return this.lastName + ", " + this.firstName;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return this.getFullName() + " Operation #" + this.getOperationId()
+				+ ", state = " + this.state;
 	}
 
 }

@@ -4,6 +4,7 @@ import org.alarmapp.Broadcasts;
 import org.alarmapp.Controller;
 import org.alarmapp.R;
 import org.alarmapp.model.User;
+import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebException;
@@ -20,7 +21,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.c2dm.C2DMessaging;
 
@@ -134,20 +134,9 @@ public class LoginActivity extends Activity {
 		});
 	}
 
-	private void displayToastInUIThread(final String text, final int duration) {
-		this.runOnUiThread(new Runnable() {
-
-			public void run() {
-				Toast toast = Toast
-						.makeText(LoginActivity.this, text, duration);
-				toast.show();
-			}
-		});
-	}
-
 	private void onSuccessfulLogin() {
 		Controller.setUser(this, user);
-		displayToastInUIThread("Hallo " + user.getFirstName(), 10);
+		ActivityUtil.displayToast(this, "Hallo " + user.getFirstName(), 10);
 
 		btLogin.setOnClickListener(onLoginClickListener);
 		setVisibility(View.INVISIBLE);
@@ -156,7 +145,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void displayError(String errorMessage) {
-		displayToastInUIThread(errorMessage, 15);
+		ActivityUtil.displayToast(this, errorMessage, 15);
 
 		btLogin.setOnClickListener(onLoginClickListener);
 		setVisibility(View.INVISIBLE);

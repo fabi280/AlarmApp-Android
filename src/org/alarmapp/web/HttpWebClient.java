@@ -167,7 +167,7 @@ public class HttpWebClient implements WebClient {
 				JSONObject obj = array.getJSONObject(i);
 				String fireFighter = obj.getString("fire_fighter");
 				result.add(new AlarmedUserData(operation_id, fireFighter, obj
-						.getString("fire_fighter_id"), AlarmState.create(obj
+						.getString("user_id"), AlarmState.create(obj
 						.getString("status_id")), DateUtil.parse(obj
 						.getString("acknowledged"))));
 			}
