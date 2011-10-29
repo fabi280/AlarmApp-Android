@@ -10,6 +10,10 @@ import org.alarmapp.model.User;
 public interface WebClient {
 	public User login(String name, String password) throws WebException;
 
+	public AuthToken getAuth();
+
+	public void setAuth(AuthToken token);
+
 	public boolean checkAuthentication(AuthToken token) throws WebException;
 
 	public void createSmartphone(AuthToken token, String registrationId,

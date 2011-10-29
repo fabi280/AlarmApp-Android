@@ -1,12 +1,14 @@
 package org.alarmapp.activities;
 
+import org.alarmapp.AlarmApp;
 import org.alarmapp.Broadcasts;
-import org.alarmapp.Controller;
 import org.alarmapp.R;
 import org.alarmapp.model.User;
 import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
+import org.alarmapp.web.HttpWebClient;
+import org.alarmapp.web.WebClient;
 import org.alarmapp.web.WebException;
 
 import android.app.Activity;
@@ -80,8 +82,9 @@ public class LoginActivity extends Activity {
 
 				public void run() {
 					try {
-						user = Controller.getWebClient().login(email, password);
-						Controller.setUser(LoginActivity.this, user);
+						WebClient client = new HttpWebClient();
+						user = client.login(email, password);
+						AlarmApp.setUser(user);
 
 						runOnUiThread(displayProgress("Push-Dienst starten"));
 						Broadcasts.registerForC2DMRegisteredBroadcast(
@@ -135,7 +138,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void onSuccessfulLogin() {
-		Controller.setUser(this, user);
+		AlarmApp.setUser(user);
 		ActivityUtil.displayToast(this, "Hallo " + user.getFirstName(), 10);
 
 		btLogin.setOnClickListener(onLoginClickListener);

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.alarmapp.AlarmApp;
 import org.alarmapp.Broadcasts;
-import org.alarmapp.Controller;
 import org.alarmapp.R;
 import org.alarmapp.activities.list_adapters.AlarmedUserAdapter;
 import org.alarmapp.model.Alarm;
@@ -23,12 +23,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 public class AlarmStatusActivity extends Activity {
 
 	Alarm alarm;
 	ListView lvAlarmedUsers;
+	ImageButton btRefresh;
+
+	private final OnClickListener refreshListener = new OnClickListener() {
+
+		public void onClick(View v) {
+			startFetchAlarmStatus();
+		}
+	};
 
 	private final BroadcastReceiver alarmStatusReceiver = new BroadcastReceiver() {
 
@@ -53,11 +66,8 @@ public class AlarmStatusActivity extends Activity {
 
 		public void run() {
 			try {
-				final Collection<AlarmedUser> alarmedUsers = Controller
-						.getWebClient()
-						.getAlarmStatus(
-								Controller.getUser(AlarmStatusActivity.this)
-										.getAuthToken(), alarm.getOperationId());
+				final Collection<AlarmedUser> alarmedUsers = AlarmApp
+						.getWebClient().getAlarmStatus(alarm.getOperationId());
 
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -132,6 +142,7 @@ public class AlarmStatusActivity extends Activity {
 		setContentView(R.layout.alarm_status);
 
 		this.lvAlarmedUsers = (ListView) findViewById(R.id.lvAlarmedUserList);
+		this.btRefresh = (ImageButton) findViewById(R.id.btRefresh);
 
 		Ensure.valid(AlarmData.isAlarmDataBundle(getIntent().getExtras()));
 		alarm = AlarmData.create(getIntent().getExtras());
@@ -140,7 +151,19 @@ public class AlarmStatusActivity extends Activity {
 		Broadcasts.registerForAlarmstatusChangedBroadcast(this,
 				alarmStatusReceiver);
 
+		btRefresh.setOnClickListener(refreshListener);
+
 		startFetchAlarmStatus();
+		makeActivityVisible();
+	}
+
+	private void makeActivityVisible() {
+		Window w = this.getWindow(); // in Activity's onCreate() for instance
+		int flags = /*
+					 * WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+					 */WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
+		w.setFlags(flags, flags);
 	}
 
 	private void displayError(String message) {

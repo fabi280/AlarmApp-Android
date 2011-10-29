@@ -4,7 +4,18 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-    <TextView android:id="@+id/textView1" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="wrap_content" android:text="Einsatzstatus"></TextView>
+    <LinearLayout android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_height="wrap_content">
+    	<TextView android:id="@+id/textView1" 
+    	android:layout_height="wrap_content" 
+    	android:textAppearance="?android:attr/textAppearanceLarge" 
+    	android:text="Einsatzstatus"  
+    	android:layout_width="wrap_content" android:layout_gravity="center_vertical"></TextView>
+    	<ImageButton android:layout_height="wrap_content" 
+    	android:layout_width="wrap_content" android:gravity="right"
+    	android:src="@drawable/ic_refresh"
+    	android:id="@+id/btRefresh"></ImageButton>
+    </LinearLayout>
     <ListView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/lvAlarmedUserList"></ListView>
     
 </LinearLayout>
+ 

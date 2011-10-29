@@ -3,7 +3,7 @@ package org.alarmapp.activities;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.alarmapp.Controller;
+import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
@@ -40,6 +40,6 @@ public class MainActivity extends Activity {
 	}
 
 	private boolean isUserAvailable() {
-		return Controller.getUser(this) != null;
+		return AlarmApp.getUser() != null;
 	}
 }

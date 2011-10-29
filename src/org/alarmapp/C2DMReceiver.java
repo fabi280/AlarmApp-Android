@@ -44,8 +44,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Broadcasts.sendC2DMRegisteredBroadcast(this, registrationId);
 
 		try {
-			Controller.getWebClient().createSmartphone(
-					Controller.getUser(context).getAuthToken(), registrationId,
+			AlarmApp.getWebClient().createSmartphone(registrationId,
 					Device.id(context), Device.name(context),
 					Device.platform(context), Device.version(context));
 		} catch (WebException e) {
@@ -89,12 +88,12 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Ensure.valid(AlarmData.isAlarmDataBundle(extras));
 		Alarm alarm = AlarmData.create(extras);
 
-		if (Controller.getAlarmStore(context).contains(alarm.getOperationId())) {
+		if (AlarmApp.getAlarmStore().contains(alarm.getOperationId())) {
 			LogEx.warning("The Alarm " + alarm
 					+ " does already exist. Aborting");
 			return;
 		}
-		Controller.getAlarmStore(context).put(alarm);
+		AlarmApp.getAlarmStore().put(alarm);
 		alarm.setState(AlarmState.Delivered);
 
 		LogEx.verbose("Display Alarm Activity.");

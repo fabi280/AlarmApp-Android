@@ -178,4 +178,14 @@ public class HttpWebClient implements WebClient {
 
 		return result;
 	}
+
+	private AuthToken token;
+
+	public AuthToken getAuth() {
+		return this.token;
+	}
+
+	public void setAuth(AuthToken token) {
+		this.token = token;
+	}
 }

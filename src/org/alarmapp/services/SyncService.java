@@ -1,7 +1,7 @@
 package org.alarmapp.services;
 
 import org.alarmapp.Actions;
-import org.alarmapp.Controller;
+import org.alarmapp.AlarmApp;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.util.LogEx;
@@ -57,9 +57,7 @@ public class SyncService extends Service {
 						try {
 							LogEx.verbose("Set Alarm Status to "
 									+ alarm.getState());
-							Controller.getWebClient().setAlarmStatus(
-									Controller.getUser(SyncService.this)
-											.getAuthToken(), alarm);
+							AlarmApp.getWebClient().setAlarmStatus(alarm);
 							operationSuccessful = true;
 						} catch (WebException e) {
 							if (e.isPermanentFailure()) {
