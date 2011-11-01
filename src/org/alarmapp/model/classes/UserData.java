@@ -60,4 +60,8 @@ public class UserData implements User {
 		return true;
 	}
 
+	public String getFullName() {
+		return getFirstName() + " " + getLastName();
+	}
+
 }

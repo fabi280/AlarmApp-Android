@@ -5,10 +5,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import org.alarmapp.AlarmApp;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
+import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.util.BundleUtil;
+import org.alarmapp.util.CollectionUtil;
 import org.alarmapp.util.DateUtil;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.LogEx;
@@ -16,6 +20,8 @@ import org.alarmapp.util.LogEx;
 import android.os.Bundle;
 
 public class AlarmData implements Alarm {
+
+	private static final String ALARMED_USER_LIST = "alarmed_user_list";
 
 	private static final String OPERATION_STATUS = "operation_status";
 
@@ -39,17 +45,8 @@ public class AlarmData implements Alarm {
 	private AlarmState state = AlarmState.Delivered;
 	private HashMap<String, String> extraValues = new HashMap<String, String>();
 
-	private static HashSet<String> keySet = new HashSet<String>() {
-		private static final long serialVersionUID = 1L;
-
-		{
-			add(OPERATION_ID);
-			add(ALARMED);
-			add(TITLE);
-			add(TEXT);
-			add(OPERATION_STATUS);
-		}
-	};
+	private static Set<String> keySet = CollectionUtil.asSet(OPERATION_ID,
+			ALARMED, TITLE, TEXT, OPERATION_STATUS, ALARMED_USER_LIST);
 
 	public Bundle getBundle() {
 		Bundle b = new Bundle();
@@ -58,6 +55,7 @@ public class AlarmData implements Alarm {
 		b.putString(ALARMED, DateUtil.format(this.alarmed));
 		b.putString(OPERATION_ID, this.operation_id);
 		b.putInt(OPERATION_STATUS, state.getId());
+		b.putSerializable(ALARMED_USER_LIST, this.alarmedUsers);
 
 		LogEx.verbose("AlarmData Extra status is " + b.getInt(OPERATION_STATUS));
 
@@ -72,7 +70,7 @@ public class AlarmData implements Alarm {
 	}
 
 	public AlarmData(String operationId, Date alarmed, String title,
-			String text, AlarmState state, HashMap<String, String> extras) {
+			String text, AlarmState state, Map<String, String> extras) {
 		this.operation_id = operationId;
 		this.state = state;
 		this.text = text;
@@ -90,6 +88,7 @@ public class AlarmData implements Alarm {
 				.containsAll(extra, OPERATION_ID, TITLE, TEXT, ALARMED);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static AlarmData create(Bundle extra) {
 
 		AlarmData a = new AlarmData();
@@ -98,6 +97,8 @@ public class AlarmData implements Alarm {
 		a.alarmed = DateUtil.parse(extra.getString(ALARMED));
 		a.title = extra.getString(TITLE);
 		a.text = extra.getString(TEXT);
+		a.alarmedUsers = (HashSet<AlarmedUser>) extra
+				.getSerializable(ALARMED_USER_LIST);
 
 		LogEx.verbose("AlarmData Extra status is "
 				+ extra.getInt(OPERATION_STATUS));
@@ -155,5 +156,31 @@ public class AlarmData implements Alarm {
 				+ this.state.getName());
 
 		this.state = newState;
+	}
+
+	private HashSet<AlarmedUser> alarmedUsers;
+
+	public Set<AlarmedUser> getAlarmedUsers() {
+		return alarmedUsers;
+	}
+
+	public void setAlarmedUsers(Set<AlarmedUser> users) {
+		if (users != null)
+			this.alarmedUsers = new HashSet<AlarmedUser>(users);
+		else
+			this.alarmedUsers = new HashSet<AlarmedUser>();
+	}
+
+	public void updateAlarmedUser(AlarmedUser user) {
+		if (alarmedUsers == null)
+			this.alarmedUsers = new HashSet<AlarmedUser>();
+
+		if (alarmedUsers.contains(user))
+			alarmedUsers.remove(user);
+		alarmedUsers.add(user);
+	}
+
+	public void save() {
+		AlarmApp.getAlarmStore().save();
 	}
 }

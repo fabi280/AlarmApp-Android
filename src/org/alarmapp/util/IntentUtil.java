@@ -1,7 +1,9 @@
 package org.alarmapp.util;
 
 import org.alarmapp.Actions;
+import org.alarmapp.AlarmApp;
 import org.alarmapp.activities.AlarmActivity;
+import org.alarmapp.activities.AlarmListActivity;
 import org.alarmapp.activities.AlarmStatusActivity;
 import org.alarmapp.activities.MainActivity;
 import org.alarmapp.model.Alarm;
@@ -39,8 +41,27 @@ public class IntentUtil {
 		context.startActivity(alarmIntent);
 	}
 
+	public static void sendFeedbackEmailIntent(Context context) {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		// TODO insert a valid email address before publishing
+		intent.putExtra(Intent.EXTRA_EMAIL,
+				new String[] { "info@frank-englert.de" });
+		intent.putExtra(Intent.EXTRA_SUBJECT,
+				"Feedback für die Android AlarmApp von "
+						+ AlarmApp.getUser().getFullName());
+		intent.setType("message/rfc822");
+		context.startActivity(Intent.createChooser(intent,
+				"Bitte wählen Sie eine Anwendung"));
+
+	}
+
 	public static void createMainIntent(Context context) {
 		Intent mainIntent = new Intent(context, MainActivity.class);
 		context.startActivity(mainIntent);
+	}
+
+	public static void createDisplayAlarmListIntent(Context context) {
+		Intent alarmListIntent = new Intent(context, AlarmListActivity.class);
+		context.startActivity(alarmListIntent);
 	}
 }

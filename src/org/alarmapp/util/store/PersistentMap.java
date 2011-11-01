@@ -43,7 +43,7 @@ public class PersistentMap<A, B> implements Map<A, B> {
 		return new PersistentMap<KEY, VAL>(map, store);
 	}
 
-	private void sync() {
+	public synchronized void sync() {
 		store.write(innerMap);
 	}
 

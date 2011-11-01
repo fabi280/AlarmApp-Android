@@ -4,45 +4,30 @@ import java.util.List;
 
 import org.alarmapp.R;
 import org.alarmapp.model.AlarmedUser;
-import org.alarmapp.util.LogEx;
+import org.alarmapp.util.adapter.AbstractArrayAdapter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AlarmedUserAdapter extends ArrayAdapter<AlarmedUser> {
-
-	private final Activity context;
+public class AlarmedUserAdapter extends AbstractArrayAdapter<AlarmedUser> {
 
 	public AlarmedUserAdapter(Activity context, List<AlarmedUser> users) {
-		super((Context) context, R.layout.list_layout, users);
-		this.context = context;
+		super(context, R.layout.list_layout_alarm_status, users);
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-
-		View row = convertView;
-
-		if (row == null) {
-			LayoutInflater inflater = context.getLayoutInflater();
-			row = inflater.inflate(R.layout.list_layout, parent, false);
-		}
-
+	public View getView(AlarmedUser item, View row, ViewGroup parent) {
 		TextView tvName = (TextView) row.findViewById(R.id.tvTitle);
-		TextView status = (TextView) row.findViewById(R.id.tvSubtitle);
+		// TextView status = (TextView) row.findViewById(R.id.tvSubtitle);
+		ImageView ivStatus = (ImageView) row.findViewById(R.id.ivStatus);
 
-		tvName.setText(getItem(position).getFullName());
-
-		status.setText(getItem(position).getAlarmState().name());
-		LogEx.info("Item at pos " + position + " is "
-				+ getItem(position).getLastName());
+		tvName.setText(item.getFullName());
+		// status.setText(item.getAlarmState().name());
+		ivStatus.setImageLevel(item.getAlarmState().getId());
 
 		return (row);
-
 	}
 }

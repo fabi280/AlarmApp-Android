@@ -1,10 +1,11 @@
 package org.alarmapp.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import android.os.Bundle;
 
-public interface AlarmedUser {
+public interface AlarmedUser extends Serializable {
 	public String getFirstName();
 
 	public String getLastName();

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
@@ -41,7 +42,6 @@ public class AlarmActivity extends Activity {
 	private Button btSwitchToStatus;
 	private Vibrator vibrator;
 	private MediaPlayer mediaPlayer;
-
 	private Alarm alarm;
 
 	private final HashMap<String, String> extraNames = new HashMap<String, String>() {
@@ -51,35 +51,28 @@ public class AlarmActivity extends Activity {
 			put("fire_fighter_count", "Einsatzkräfte:");
 			put("alarmed", "Alarmzeit:");
 			put("groups", "Alarmgruppen:");
-
 		}
 	};
 
-	private OnClickListener acceptClick = new OnClickListener() {
-		public void onClick(View v) {
-			stopRingingAndVibrating();
+	private OnClickListener onUpdateAlarmStatusClick(final AlarmState newState) {
+		return new OnClickListener() {
+			public void onClick(View v) {
+				stopRingingAndVibrating();
 
-			alarm.setState(AlarmState.Accepted);
-			IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this, alarm);
+				alarm.setState(newState);
+				Alarm storedAlarm = AlarmApp.getAlarmStore().get(
+						alarm.getOperationId());
+				storedAlarm.setState(newState);
+				storedAlarm.save();
+				IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this,
+						alarm);
 
-			updateButtonBarVisibility();
-		}
-	};
-
-	private OnClickListener rejectClick = new OnClickListener() {
-
-		public void onClick(View v) {
-			stopRingingAndVibrating();
-
-			alarm.setState(AlarmState.Rejeced);
-			IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this, alarm);
-
-			updateButtonBarVisibility();
-		}
-	};
+				updateButtonBarVisibility();
+			}
+		};
+	}
 
 	private OnClickListener switchToClick = new OnClickListener() {
-
 		public void onClick(View v) {
 			LogEx.info("Clicked on the Switch to Alarm Status button");
 			IntentUtil.createDisplayAlarmStatusUpdateIntent(AlarmActivity.this,
@@ -91,6 +84,8 @@ public class AlarmActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		LogEx.verbose("AlarmActivity onCreate");
+
 		this.setContentView(R.layout.alarm_confirmation);
 		this.lvOperationDetails = (ListView) findViewById(R.id.lvAlarmDetails);
 		this.tvTitle = (TextView) findViewById(R.id.tvTitle);
@@ -98,10 +93,14 @@ public class AlarmActivity extends Activity {
 		this.btAccept = (Button) findViewById(R.id.btAccept);
 		this.btReject = (Button) findViewById(R.id.btReject);
 		this.btSwitchToStatus = (Button) findViewById(R.id.btSwitchToStatus);
-		this.mediaPlayer = new MediaPlayer();
 
-		this.btAccept.setOnClickListener(acceptClick);
-		this.btReject.setOnClickListener(rejectClick);
+		this.mediaPlayer = new MediaPlayer();
+		initMediaPlayer();
+
+		this.btAccept
+				.setOnClickListener(onUpdateAlarmStatusClick(AlarmState.Accepted));
+		this.btReject
+				.setOnClickListener(onUpdateAlarmStatusClick(AlarmState.Rejeced));
 		this.btSwitchToStatus.setOnClickListener(switchToClick);
 
 		this.vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -114,6 +113,30 @@ public class AlarmActivity extends Activity {
 		}
 
 		displayAlarm();
+	}
+
+	private void initMediaPlayer() {
+		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+		try {
+			mediaPlayer.setDataSource(this, alert);
+			mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+			mediaPlayer.setLooping(true);
+			mediaPlayer.prepare();
+		} catch (Exception e) {
+			LogEx.exception(e);
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		LogEx.verbose("AlarmActivity onResume. State is " + alarm.getState());
+
+		if (alarm.getState().isUserActionRequired()) {
+			makeActivityVisible();
+			ringAndVibrate();
+		}
 	}
 
 	private void setButtonVisibility(final int visibility,
@@ -129,7 +152,8 @@ public class AlarmActivity extends Activity {
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		LogEx.verbose("Saved state of Alarm " + this.alarm.getOperationId());
+		LogEx.verbose("AlarmActivity onSaveInstance "
+				+ this.alarm.getOperationId());
 		outState.putAll(this.alarm.getBundle());
 		super.onSaveInstanceState(outState);
 	}
@@ -137,6 +161,9 @@ public class AlarmActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+
+		LogEx.verbose("AlarmActivity onPause");
+
 		stopRingingAndVibrating();
 	}
 
@@ -207,7 +234,6 @@ public class AlarmActivity extends Activity {
 		vibrator.cancel();
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
-			mediaPlayer.stop();
 
 			LogEx.verbose("Ringing and vibrating for Operation "
 					+ alarm.getOperationId() + " stopped");
@@ -224,23 +250,13 @@ public class AlarmActivity extends Activity {
 		// Only perform this pattern one time (-1 means "do not repeat")
 		vibrator.vibrate(pattern, 0);
 
-		try {
-			Uri alert = RingtoneManager
-					.getDefaultUri(RingtoneManager.TYPE_ALARM);
-
-			mediaPlayer.setDataSource(this, alert);
-			final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-			if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-				mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-				mediaPlayer.setLooping(true);
-				mediaPlayer.prepare();
+		final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+			if (!mediaPlayer.isPlaying())
 				mediaPlayer.start();
-			}
-
-			LogEx.verbose("Ringing and vibrating for Operation "
-					+ alarm.getOperationId() + " started");
-		} catch (Exception e) {
-			LogEx.exception(e);
 		}
+
+		LogEx.verbose("Ringing and vibrating for Operation "
+				+ alarm.getOperationId() + " started");
 	}
 }

@@ -82,6 +82,12 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		LogEx.verbose("Sent AlarmStatus change Broadcast for Firefighter "
 				+ user.getFirstName() + " " + user.getLastName()
 				+ ". Firefighter is " + user.getAlarmState());
+
+		if (AlarmApp.getAlarmStore().contains(user.getOperationId())) {
+			Alarm a = AlarmApp.getAlarmStore().get(user.getOperationId());
+			a.updateAlarmedUser(user);
+			a.save();
+		}
 	}
 
 	private void handleAlarmMessage(Context context, Bundle extras) {

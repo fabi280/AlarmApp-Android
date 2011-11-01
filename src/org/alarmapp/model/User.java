@@ -8,6 +8,8 @@ public interface User extends Serializable {
 
 	public String getLastName();
 
+	public String getFullName();
+
 	public FireDepartment getFireDepartment();
 
 	public AuthToken getAuthToken();

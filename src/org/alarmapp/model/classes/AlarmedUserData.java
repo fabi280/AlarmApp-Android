@@ -12,6 +12,8 @@ import android.os.Bundle;
 
 public class AlarmedUserData implements AlarmedUser {
 
+	private static final long serialVersionUID = 1L;
+
 	private static final String OPERATION_ID = "operation_id";
 	private static final String ACK_DATE = "ack_date";
 	private static final String STATE = "status";

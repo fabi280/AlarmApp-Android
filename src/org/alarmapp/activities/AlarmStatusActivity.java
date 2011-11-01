@@ -2,7 +2,8 @@ package org.alarmapp.activities;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.alarmapp.AlarmApp;
 import org.alarmapp.Broadcasts;
@@ -89,15 +90,10 @@ public class AlarmStatusActivity extends Activity {
 		}
 	};
 
-	private HashSet<AlarmedUser> alarmedUsers = new HashSet<AlarmedUser>();
-
 	private void addUser(AlarmedUser user) {
-		if (alarmedUsers.contains(user)) {
-			alarmedUsers.remove(user);
-		}
-		alarmedUsers.add(user);
+		this.alarm.updateAlarmedUser(user);
 
-		LogEx.verbose("Added " + user + ". Hash is " + alarmedUsers.hashCode()
+		LogEx.verbose("Added " + user + ". Hash is " + user.hashCode()
 				+ ". User id is " + user.getUserId());
 	}
 
@@ -110,15 +106,24 @@ public class AlarmStatusActivity extends Activity {
 		for (AlarmedUser u : users)
 			addUser(u);
 
-		LogEx.verbose("Alarmed user collection contains " + alarmedUsers.size()
-				+ " elements");
+		alarm.save();
+		LogEx.verbose("Alarmed user collection contains "
+				+ alarm.getAlarmedUsers().size() + " elements");
 
 		fillAlarmStatusView();
 	}
 
+	Comparator<AlarmedUser> comparator = new Comparator<AlarmedUser>() {
+		public int compare(AlarmedUser lhs, AlarmedUser rhs) {
+			return lhs.getFullName().compareTo(rhs.getFullName());
+		}
+	};
+
 	private void fillAlarmStatusView() {
-		AlarmedUserAdapter adapter = new AlarmedUserAdapter(this,
-				new ArrayList<AlarmedUser>(this.alarmedUsers));
+		ArrayList<AlarmedUser> usersList = new ArrayList<AlarmedUser>(
+				this.alarm.getAlarmedUsers());
+		Collections.sort(usersList, comparator);
+		AlarmedUserAdapter adapter = new AlarmedUserAdapter(this, usersList);
 
 		this.lvAlarmedUsers.setAdapter(adapter);
 	}
@@ -126,10 +131,9 @@ public class AlarmStatusActivity extends Activity {
 	private void refreshAlarmStatusView(AlarmedUser changedUser) {
 		LogEx.verbose("Received Alarm status Update for User " + changedUser);
 
-		if (!this.alarmedUsers.contains(changedUser))
-			LogEx.warning("Alarmed User does not contain user " + changedUser);
-
 		addUser(changedUser);
+		alarm.save();
+
 		fillAlarmStatusView();
 	}
 
@@ -144,17 +148,40 @@ public class AlarmStatusActivity extends Activity {
 		this.lvAlarmedUsers = (ListView) findViewById(R.id.lvAlarmedUserList);
 		this.btRefresh = (ImageButton) findViewById(R.id.btRefresh);
 
-		Ensure.valid(AlarmData.isAlarmDataBundle(getIntent().getExtras()));
-		alarm = AlarmData.create(getIntent().getExtras());
+		if (AlarmData.isAlarmDataBundle(savedInstanceState)) {
+			alarm = AlarmData.create(savedInstanceState);
+			fillAlarmStatusView();
+		} else {
+			Ensure.valid(AlarmData.isAlarmDataBundle(getIntent().getExtras()));
+			alarm = AlarmData.create(getIntent().getExtras());
 
-		// Todo: listen for status changes
-		Broadcasts.registerForAlarmstatusChangedBroadcast(this,
-				alarmStatusReceiver);
+			startFetchAlarmStatus();
+		}
 
 		btRefresh.setOnClickListener(refreshListener);
-
-		startFetchAlarmStatus();
 		makeActivityVisible();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		outState.putAll(alarm.getBundle());
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		Broadcasts.registerForAlarmstatusChangedBroadcast(this,
+				alarmStatusReceiver);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		this.unregisterReceiver(alarmStatusReceiver);
 	}
 
 	private void makeActivityVisible() {
