@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RingtonePreference android:ringtoneType="alarm" android:showDefault="true" android:showSilent="true" android:key="alarm_ringtone" android:title="Klingelton" android:summary="Klingelton der beim Alarm abgespielt werden soll"/>
+    <CheckBoxPreference android:key="alarm_vibrate" android:title="Vibrieren" android:summary="Bei einem Alarm vibrieren" android:defaultValue="true"/> 
+</PreferenceScreen>

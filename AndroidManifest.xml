@@ -60,9 +60,11 @@ android:versionName="1.0">
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity android:name=".activities.InformationActivity"></activity>
 		<activity android:name=".activities.AlarmListActivity"></activity>
 		<activity android:name=".activities.LoginActivity"></activity>
 		<activity android:name=".activities.AlarmActivity"></activity>
 		<activity android:name=".activities.AlarmStatusActivity"></activity>
+		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
 	</application>
 </manifest>

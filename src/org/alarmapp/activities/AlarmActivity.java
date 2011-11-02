@@ -115,8 +115,24 @@ public class AlarmActivity extends Activity {
 		displayAlarm();
 	}
 
+	private Uri getRingtone() {
+		try {
+
+			String uri = AlarmApp.getPreferences().getString("alarm_ringtone",
+					null);
+
+			return Uri.parse(uri);
+		} catch (Exception e) {
+			LogEx.exception(
+					"Failed to load the ringtone from pref. Using default one",
+					e);
+			return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+		}
+	}
+
 	private void initMediaPlayer() {
-		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+		Uri alert = getRingtone();
+
 		try {
 			mediaPlayer.setDataSource(this, alert);
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
@@ -241,6 +257,7 @@ public class AlarmActivity extends Activity {
 	}
 
 	private void ringAndVibrate() {
+
 		int dot = 200; // Length of a Morse Code "dot" in milliseconds
 		int short_gap = 200; // Length of Gap Between dots/dashes
 		int medium_gap = 500; // Length of Gap Between Letters
@@ -248,7 +265,8 @@ public class AlarmActivity extends Activity {
 				dot, short_gap, dot, short_gap, dot, medium_gap };
 
 		// Only perform this pattern one time (-1 means "do not repeat")
-		vibrator.vibrate(pattern, 0);
+		if (AlarmApp.getPreferences().getBoolean("alarm_vibrate", true))
+			vibrator.vibrate(pattern, 0);
 
 		final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {

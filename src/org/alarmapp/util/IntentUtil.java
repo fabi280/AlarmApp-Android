@@ -4,7 +4,9 @@ import org.alarmapp.Actions;
 import org.alarmapp.AlarmApp;
 import org.alarmapp.activities.AlarmActivity;
 import org.alarmapp.activities.AlarmListActivity;
+import org.alarmapp.activities.AlarmPreferenceActivity;
 import org.alarmapp.activities.AlarmStatusActivity;
+import org.alarmapp.activities.InformationActivity;
 import org.alarmapp.activities.MainActivity;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.services.SyncService;
@@ -63,5 +65,15 @@ public class IntentUtil {
 	public static void createDisplayAlarmListIntent(Context context) {
 		Intent alarmListIntent = new Intent(context, AlarmListActivity.class);
 		context.startActivity(alarmListIntent);
+	}
+
+	public static void createDisplayInformationsIntent(Context context) {
+		Intent intent = new Intent(context, InformationActivity.class);
+		context.startActivity(intent);
+	}
+
+	public static void createDisplayPreferencesIntent(Context context) {
+		Intent intent = new Intent(context, AlarmPreferenceActivity.class);
+		context.startActivity(intent);
 	}
 }

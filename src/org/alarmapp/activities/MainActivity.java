@@ -77,6 +77,22 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	private Runnable infoClick = new Runnable() {
+
+		public void run() {
+			IntentUtil.createDisplayInformationsIntent(MainActivity.this);
+
+		}
+	};
+
+	private Runnable prefsClick = new Runnable() {
+
+		public void run() {
+			IntentUtil.createDisplayPreferencesIntent(MainActivity.this);
+
+		}
+	};
+
 	private Runnable alarmListClick = new Runnable() {
 
 		public void run() {
@@ -106,10 +122,10 @@ public class MainActivity extends Activity {
 				MenuEntry.COLOR_BLUE, alarmListClick));
 		entries.add(new MenuEntry("Informationen",
 				"Zeigt Infos zu Ihrere Feuerwehr und Ihrem Benutzeraccount ",
-				MenuEntry.COLOR_GREEN, null));
+				MenuEntry.COLOR_GREEN, infoClick));
 		entries.add(new MenuEntry("Einstellungen",
 				"Einstellungen der AlarmApp anzeigen und ändern.",
-				MenuEntry.COLOR_YELLOW, null));
+				MenuEntry.COLOR_YELLOW, prefsClick));
 		entries.add(new MenuEntry("Feedback",
 				"Verbesserungsvorschläge oder Fehler melden.",
 				MenuEntry.COLOR_RED, feedbackClick));

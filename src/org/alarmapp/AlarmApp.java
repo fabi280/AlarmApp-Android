@@ -11,6 +11,8 @@ import org.alarmapp.web.AuthWebClient;
 import org.alarmapp.web.HttpWebClient;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class AlarmApp extends Application {
 
@@ -74,9 +76,15 @@ public class AlarmApp extends Application {
 		return alarmStore;
 	}
 
+	public static SharedPreferences getPreferences() {
+		Ensure.notNull(instance);
+		return PreferenceManager.getDefaultSharedPreferences(instance);
+	}
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 	}
 }
