@@ -1,5 +1,8 @@
 package org.alarmapp;
 
+import org.acra.ACRA;
+import org.acra.ErrorReporter;
+import org.acra.annotation.ReportsCrashes;
 import org.alarmapp.model.AlarmStore;
 import org.alarmapp.model.User;
 import org.alarmapp.model.classes.PersistentAlarmStore;
@@ -14,6 +17,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+//dFRiRHVCbGVxVzNva0NkdHB0NVN5Q0E6MQ
+@ReportsCrashes(formKey = "dFRiRHVCbGVxVzNva0NkdHB0NVN5Q0E6MQ")
 public class AlarmApp extends Application {
 
 	private static AlarmApp instance;
@@ -51,6 +56,19 @@ public class AlarmApp extends Application {
 			Store<User> userStore = new Store<User>(instance, "USER");
 			user = userStore.read();
 			LogEx.verbose("Loaded the user " + user + " from local storage");
+
+			if (user != null) {
+
+				ErrorReporter.getInstance().putCustomData("UserId",
+						Integer.toString(user.getId()));
+				ErrorReporter.getInstance().putCustomData("User Name",
+						user.getFullName());
+
+				if (user.getFireDepartment() != null)
+					ErrorReporter.getInstance().putCustomData(
+							"Fire Department",
+							user.getFireDepartment().GetName());
+			}
 		}
 		return user;
 	}
@@ -73,6 +91,8 @@ public class AlarmApp extends Application {
 		if (alarmStore == null)
 			alarmStore = new PersistentAlarmStore(instance);
 
+		// throw new NullPointerException();
+
 		return alarmStore;
 	}
 
@@ -83,6 +103,7 @@ public class AlarmApp extends Application {
 
 	@Override
 	public void onCreate() {
+		ACRA.init(this);
 		super.onCreate();
 		instance = this;
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
