@@ -10,6 +10,7 @@ import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.FireDepartment;
 import org.alarmapp.model.User;
+import org.alarmapp.model.WayPoint;
 import org.alarmapp.model.classes.AlarmedUserData;
 import org.alarmapp.model.classes.AuthTokenData;
 import org.alarmapp.model.classes.FireDepartmentData;
@@ -98,7 +99,9 @@ public class HttpWebClient implements WebClient {
 			JSONObject dept = obj.getJSONObject("fire_department");
 
 			FireDepartment fireDepartment = new FireDepartmentData(
-					dept.getInt("id"), dept.getString("name"));
+					dept.getInt("id"), dept.getString("name"),
+					(float) dept.getDouble("lon"),
+					(float) dept.getDouble("lat"));
 
 			User userObj = new UserData(user.getInt("id"),
 					user.getString("first_name"), user.getString("last_name"),
@@ -187,5 +190,27 @@ public class HttpWebClient implements WebClient {
 
 	public void setAuth(AuthToken token) {
 		this.token = token;
+	}
+
+	public void addAlarmStatusPosition(AuthToken authToken, WayPoint position)
+			throws WebException {
+		HashMap<String, String> data = new HashMap<String, String>();
+
+		LogEx.verbose("Date string is"
+				+ DateUtil.isoFormat(position.getMeasureDateTime()));
+
+		data.put("date", DateUtil.isoFormat(position.getMeasureDateTime()));
+		data.put("lat", Float.toString(position.getPosition().getLatitude()));
+		data.put("lon", Float.toString(position.getPosition().getLongitude()));
+		data.put("direction", Float.toString(position.getDirection()));
+		data.put("speed", Float.toString(position.getSpeed()));
+		data.put("precision", Float.toString(position.getPrecision()));
+		data.put("source", position.getMeasurementMethod().toString());
+
+		String response = HttpUtil.request(
+				url("/web_service/alarm_notification/"
+						+ position.getOperationId() + "/add_position/"), data,
+				createAuthHeader(authToken));
+		LogEx.verbose("Set alarm state returned " + response);
 	}
 }

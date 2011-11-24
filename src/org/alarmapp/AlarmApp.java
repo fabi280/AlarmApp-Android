@@ -67,7 +67,7 @@ public class AlarmApp extends Application {
 				if (user.getFireDepartment() != null)
 					ErrorReporter.getInstance().putCustomData(
 							"Fire Department",
-							user.getFireDepartment().GetName());
+							user.getFireDepartment().getName());
 			}
 		}
 		return user;

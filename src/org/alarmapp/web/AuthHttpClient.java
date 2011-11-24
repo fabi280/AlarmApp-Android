@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
+import org.alarmapp.model.WayPoint;
 import org.alarmapp.util.Ensure;
 
 public class AuthHttpClient implements AuthWebClient {
@@ -43,6 +44,10 @@ public class AuthHttpClient implements AuthWebClient {
 	public Collection<AlarmedUser> getAlarmStatus(String operation_id)
 			throws WebException {
 		return client.getAlarmStatus(token, operation_id);
+	}
+
+	public void addAlarmStatusPosition(WayPoint wayPoint) throws WebException {
+		client.addAlarmStatusPosition(token, wayPoint);
 	}
 
 }

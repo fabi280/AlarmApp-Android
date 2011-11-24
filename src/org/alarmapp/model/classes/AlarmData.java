@@ -21,6 +21,8 @@ import android.os.Bundle;
 
 public class AlarmData implements Alarm {
 
+	private static final String IS_ALARMSTATUS_VIEWER = "is_alarmstatus_viewer";
+
 	private static final String ALARMED_USER_LIST = "alarmed_user_list";
 
 	private static final String OPERATION_STATUS = "operation_status";
@@ -43,6 +45,7 @@ public class AlarmData implements Alarm {
 	private String title;
 	private String text;
 	private AlarmState state = AlarmState.Delivered;
+	private boolean isAlarmstatusViewer = false;
 	private HashMap<String, String> extraValues = new HashMap<String, String>();
 
 	private static Set<String> keySet = CollectionUtil.asSet(OPERATION_ID,
@@ -56,11 +59,14 @@ public class AlarmData implements Alarm {
 		b.putString(OPERATION_ID, this.operation_id);
 		b.putInt(OPERATION_STATUS, state.getId());
 		b.putSerializable(ALARMED_USER_LIST, this.alarmedUsers);
+		b.putString(IS_ALARMSTATUS_VIEWER,
+				Boolean.toString(isAlarmstatusViewer));
 
 		LogEx.verbose("AlarmData Extra status is " + b.getInt(OPERATION_STATUS));
 
-		for (String key : extraValues.keySet())
+		for (String key : extraValues.keySet()) {
 			b.putString(key, extraValues.get(key));
+		}
 
 		return b;
 	}
@@ -100,15 +106,23 @@ public class AlarmData implements Alarm {
 		a.alarmedUsers = (HashSet<AlarmedUser>) extra
 				.getSerializable(ALARMED_USER_LIST);
 
+		if (extra.containsKey(IS_ALARMSTATUS_VIEWER))
+			a.isAlarmstatusViewer = Boolean.parseBoolean(extra.getString(
+					IS_ALARMSTATUS_VIEWER).toLowerCase());
+
 		LogEx.verbose("AlarmData Extra status is "
 				+ extra.getInt(OPERATION_STATUS));
 
 		if (extra.containsKey(OPERATION_STATUS))
 			a.state = AlarmState.create(extra.getInt(OPERATION_STATUS));
 
-		for (String key : extra.keySet())
-			if (isExtra(key))
+		for (String key : extra.keySet()) {
+			if (isExtra(key)) {
 				a.extraValues.put(key, extra.getString(key));
+				LogEx.debug("Additional Data " + key + " = "
+						+ extra.getString(key));
+			}
+		}
 		return a;
 	}
 
@@ -182,5 +196,9 @@ public class AlarmData implements Alarm {
 
 	public void save() {
 		AlarmApp.getAlarmStore().save();
+	}
+
+	public boolean isAlarmStatusViewer() {
+		return isAlarmstatusViewer;
 	}
 }

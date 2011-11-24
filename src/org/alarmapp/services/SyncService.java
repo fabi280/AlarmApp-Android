@@ -2,11 +2,14 @@ package org.alarmapp.services;
 
 import org.alarmapp.Actions;
 import org.alarmapp.AlarmApp;
-import org.alarmapp.model.Alarm;
 import org.alarmapp.model.classes.AlarmData;
+import org.alarmapp.model.classes.WayPointData;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.util.LooperThread;
 import org.alarmapp.web.WebException;
+import org.alarmapp.web.sync.AlarmStatusSyncCommand;
+import org.alarmapp.web.sync.PositionSyncCommand;
+import org.alarmapp.web.sync.SyncCommand;
 
 import android.app.Service;
 import android.content.Intent;
@@ -36,15 +39,20 @@ public class SyncService extends Service {
 
 		Bundle bundle = intent.getExtras();
 		if (intent.getAction().equals(Actions.UPDATE_ALARM_STATUS)) {
-			LogEx.info("Adding Work Item to Looper Queue");
-			looper.addWorkItem(buildUpdateAlarmStatusRunnable(bundle));
+			LogEx.info("Adding AlarmStatus update to Looper Queue");
+			looper.addWorkItem(buildUpdateAlarmStatusRunnable(new AlarmStatusSyncCommand(
+					AlarmData.create(bundle))));
+		} else if (intent.getAction().equals(Actions.START_TRACKING)) {
+			LogEx.info("Adding Position to Looper Queue");
+			looper.addWorkItem(buildUpdateAlarmStatusRunnable(new PositionSyncCommand(
+					WayPointData.create(bundle))));
 		}
 
 		return START_NOT_STICKY;
 	}
 
-	private Runnable buildUpdateAlarmStatusRunnable(Bundle extras) {
-		final Alarm alarm = AlarmData.create(extras);
+	private Runnable buildUpdateAlarmStatusRunnable(
+			final SyncCommand syncCommand) {
 
 		return new Runnable() {
 
@@ -55,14 +63,12 @@ public class SyncService extends Service {
 					while (!operationSuccessful) {
 
 						try {
-							LogEx.verbose("Set Alarm Status to "
-									+ alarm.getState());
-							AlarmApp.getWebClient().setAlarmStatus(alarm);
+							syncCommand.Execute(AlarmApp.getWebClient());
 							operationSuccessful = true;
 						} catch (WebException e) {
 							if (e.isPermanentFailure()) {
 								LogEx.exception(
-										"Failed to update the alarm status. Aborting.",
+										"Failed to perform the synchronization. Aborting.",
 										e);
 								break;
 							}
@@ -88,7 +94,6 @@ public class SyncService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return mBinder;
 	}
 

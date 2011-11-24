@@ -5,7 +5,7 @@ import java.util.Date;
 
 import android.os.Bundle;
 
-public interface AlarmedUser extends Serializable {
+public interface AlarmedUser extends Serializable, Bundable {
 	public String getFirstName();
 
 	public String getLastName();

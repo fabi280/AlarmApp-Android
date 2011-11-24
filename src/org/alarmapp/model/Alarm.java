@@ -14,7 +14,7 @@ import android.os.Bundle;
  * @author frank
  * 
  */
-public interface Alarm extends Serializable {
+public interface Alarm extends Serializable, Bundable {
 	public String getTitle();
 
 	public String getText();
@@ -26,6 +26,8 @@ public interface Alarm extends Serializable {
 	public Map<String, String> getAdditionalValues();
 
 	public boolean isFinal();
+
+	public boolean isAlarmStatusViewer();
 
 	public AlarmState getState();
 

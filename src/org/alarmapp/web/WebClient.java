@@ -6,6 +6,7 @@ import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.User;
+import org.alarmapp.model.WayPoint;
 
 public interface WebClient {
 	public User login(String name, String password) throws WebException;
@@ -21,6 +22,9 @@ public interface WebClient {
 			throws WebException;
 
 	public void setAlarmStatus(AuthToken authToken, Alarm alarm)
+			throws WebException;
+
+	public void addAlarmStatusPosition(AuthToken authToken, WayPoint position)
 			throws WebException;
 
 	public Collection<AlarmedUser> getAlarmStatus(AuthToken authToken,

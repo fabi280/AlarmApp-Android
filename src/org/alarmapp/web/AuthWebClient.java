@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
+import org.alarmapp.model.WayPoint;
 
 public interface AuthWebClient {
 	public AuthToken getAuthToken();
@@ -18,4 +19,6 @@ public interface AuthWebClient {
 
 	public Collection<AlarmedUser> getAlarmStatus(String operation_id)
 			throws WebException;
+
+	public void addAlarmStatusPosition(WayPoint wayPoint) throws WebException;
 }

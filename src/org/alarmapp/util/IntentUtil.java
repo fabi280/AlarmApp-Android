@@ -9,6 +9,8 @@ import org.alarmapp.activities.AlarmStatusActivity;
 import org.alarmapp.activities.InformationActivity;
 import org.alarmapp.activities.MainActivity;
 import org.alarmapp.model.Alarm;
+import org.alarmapp.model.WayPoint;
+import org.alarmapp.services.PositionService;
 import org.alarmapp.services.SyncService;
 
 import android.content.Context;
@@ -22,6 +24,27 @@ public class IntentUtil {
 		statusUpdateIntent.putExtras(a.getBundle());
 		statusUpdateIntent.setAction(Actions.UPDATE_ALARM_STATUS);
 		c.startService(statusUpdateIntent);
+	}
+
+	public static void createPositionAddIntent(Context c, WayPoint w) {
+		Ensure.notNull(c);
+		Ensure.notNull(w);
+
+		Intent statusUpdateIntent = new Intent(c, SyncService.class);
+		statusUpdateIntent.putExtras(w.getBundle());
+		statusUpdateIntent.setAction(Actions.START_TRACKING);
+		c.startService(statusUpdateIntent);
+	}
+
+	public static void startPositionService(Context c, Alarm alarm) {
+		Ensure.notNull(c);
+		Ensure.notNull(alarm);
+
+		Intent startPositionServiceIntent = new Intent(c, PositionService.class);
+		startPositionServiceIntent.setAction(Actions.START_TRACKING);
+		startPositionServiceIntent.putExtras(alarm.getBundle());
+
+		c.startService(startPositionServiceIntent);
 	}
 
 	public static void createDisplayAlarmStatusUpdateIntent(Context context,

@@ -93,6 +93,15 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	private Runnable syncClick = new Runnable() {
+
+		public void run() {
+			IntentUtil.startPositionService(MainActivity.this, AlarmApp
+					.getAlarmStore().getLastAlarms().get(0));
+
+		}
+	};
+
 	private Runnable alarmListClick = new Runnable() {
 
 		public void run() {
@@ -129,6 +138,9 @@ public class MainActivity extends Activity {
 		entries.add(new MenuEntry("Feedback",
 				"Verbesserungsvorschläge oder Fehler melden.",
 				MenuEntry.COLOR_RED, feedbackClick));
+		entries.add(new MenuEntry("Sync Starten",
+				"Zeichnet den Weg für den letzten Einsatz auf",
+				MenuEntry.COLOR_RED, syncClick));
 
 		this.lvMainItems.setAdapter(new BinderAdapter<MenuEntry>(this,
 				R.layout.list_layout_main, binder, entries));

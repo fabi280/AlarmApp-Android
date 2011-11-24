@@ -3,7 +3,11 @@ package org.alarmapp.model;
 import java.io.Serializable;
 
 public interface FireDepartment extends Serializable {
-	public int GetId();
+	public int getId();
 
-	public String GetName();
+	public LonLat getPosition();
+
+	public void setPosition(LonLat newPosition);
+
+	public String getName();
 }

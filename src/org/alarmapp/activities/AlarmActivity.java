@@ -1,6 +1,5 @@
 package org.alarmapp.activities;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +22,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -46,9 +46,8 @@ public class AlarmActivity extends Activity {
 
 	private final HashMap<String, String> extraNames = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
-
 		{
-			put("fire_fighter_count", "Einsatzkräfte:");
+			put("ff_count", "Einsatzkräfte:");
 			put("alarmed", "Alarmzeit:");
 			put("groups", "Alarmgruppen:");
 		}
@@ -66,6 +65,10 @@ public class AlarmActivity extends Activity {
 				storedAlarm.save();
 				IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this,
 						alarm);
+
+				if (newState == AlarmState.Accepted) {
+					IntentUtil.startPositionService(AlarmActivity.this, alarm);
+				}
 
 				updateButtonBarVisibility();
 			}
@@ -210,7 +213,7 @@ public class AlarmActivity extends Activity {
 				.entrySet()) {
 			putEntryToList(items, item.getKey(), item.getValue());
 		}
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("H:mm:ss");
+		java.text.DateFormat dateFormatter = DateFormat.getTimeFormat(this);
 		putEntryToList(items, "alarmed",
 				dateFormatter.format(alarm.getAlarmed()));
 
@@ -229,7 +232,10 @@ public class AlarmActivity extends Activity {
 	private void updateButtonBarVisibility() {
 		if (alarm.getState().isFinal()) {
 			setButtonVisibility(View.GONE, btAccept, btReject);
-			setButtonVisibility(View.VISIBLE, btSwitchToStatus);
+
+			if (alarm.isAlarmStatusViewer())
+				setButtonVisibility(View.VISIBLE, btSwitchToStatus);
+
 		} else {
 			setButtonVisibility(View.VISIBLE, btAccept, btReject);
 			setButtonVisibility(View.GONE, btSwitchToStatus);

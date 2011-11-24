@@ -44,13 +44,15 @@ public class InformationActivity extends ListActivity {
 	private List<Info> collectInformations() {
 		User u = AlarmApp.getUser();
 		return CollectionUtil.asList(new Info("Feuerwehr", u
-				.getFireDepartment().GetName()),
+				.getFireDepartment().getName()),
 				new Info("Angemeldet als", u.getFullName()), new Info(
 						"Darf Alarmstatus ansehen?",
 						u.canViewAlarmStatus() ? "ja" : "nein"), new Info(
 						"Zugangskennung", u.getAuthToken().GetToken()),
 				new Info("Ablaufdatum der Zugangskennung", u.getAuthToken()
-						.GetExpireDate().toLocaleString()));
+						.GetExpireDate().toLocaleString()), new Info(
+						"Standort Feuerwehrhaus", u.getFireDepartment()
+								.getPosition().toString()));
 	}
 
 	@Override
