@@ -6,9 +6,6 @@ import org.alarmapp.model.User;
 
 public class UserData implements User {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private String firstName;

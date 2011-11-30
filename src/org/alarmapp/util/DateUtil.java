@@ -44,4 +44,8 @@ public class DateUtil {
 	public static String format(Date date) {
 		return getFormatter().format(date);
 	}
+
+	public static Date parseIso(String date) {
+		return parse(date.replace('T', ' '));
+	}
 }

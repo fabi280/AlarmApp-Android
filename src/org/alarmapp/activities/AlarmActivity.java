@@ -120,17 +120,16 @@ public class AlarmActivity extends Activity {
 
 	private Uri getRingtone() {
 		try {
-
-			String uri = AlarmApp.getPreferences().getString("alarm_ringtone",
-					null);
-
-			return Uri.parse(uri);
+			if (AlarmApp.getPreferences().contains("alarm_ringtone")) {
+				return Uri.parse(AlarmApp.getPreferences().getString(
+						"alarm_ringtone", null));
+			}
 		} catch (Exception e) {
 			LogEx.exception(
 					"Failed to load the ringtone from pref. Using default one",
 					e);
-			return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 		}
+		return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 	}
 
 	private void initMediaPlayer() {

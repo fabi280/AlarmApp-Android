@@ -4,7 +4,7 @@
   android:orientation="horizontal"
   android:layout_width="match_parent"
   android:layout_height="match_parent" android:padding="5dip">
-    <ImageView android:layout_width="wrap_content" android:src="@drawable/bar" android:layout_height="match_parent" android:adjustViewBounds="true" android:scaleType="fitXY" android:id="@+id/ivStatus"></ImageView>
+    <ImageView android:layout_width="wrap_content" android:src="@drawable/bar_alarm_status" android:layout_height="match_parent" android:adjustViewBounds="true" android:scaleType="fitXY" android:id="@+id/ivStatus"></ImageView>
     <TextView android:layout_height="wrap_content"  
     android:textAppearance="?android:attr/textAppearanceLarge" 
     android:text="TextView" 

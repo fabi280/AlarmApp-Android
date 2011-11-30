@@ -49,7 +49,8 @@ public class AlarmData implements Alarm {
 	private HashMap<String, String> extraValues = new HashMap<String, String>();
 
 	private static Set<String> keySet = CollectionUtil.asSet(OPERATION_ID,
-			ALARMED, TITLE, TEXT, OPERATION_STATUS, ALARMED_USER_LIST);
+			ALARMED, TITLE, TEXT, OPERATION_STATUS, ALARMED_USER_LIST,
+			IS_ALARMSTATUS_VIEWER);
 
 	public Bundle getBundle() {
 		Bundle b = new Bundle();
@@ -175,6 +176,8 @@ public class AlarmData implements Alarm {
 	private HashSet<AlarmedUser> alarmedUsers;
 
 	public Set<AlarmedUser> getAlarmedUsers() {
+		if (alarmedUsers == null)
+			return new HashSet<AlarmedUser>();
 		return alarmedUsers;
 	}
 
@@ -194,7 +197,8 @@ public class AlarmData implements Alarm {
 		alarmedUsers.add(user);
 	}
 
-	public void save() {
+	public synchronized void save() {
+		AlarmApp.getAlarmStore().put(this);
 		AlarmApp.getAlarmStore().save();
 	}
 

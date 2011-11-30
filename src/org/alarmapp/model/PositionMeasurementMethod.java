@@ -1,7 +1,7 @@
 package org.alarmapp.model;
 
 public enum PositionMeasurementMethod {
-	WLAN("WLAN"), GPS("GPS");
+	WLAN("WLAN"), GPS("GPS"), UNKNWON("?");
 
 	private final String type;
 

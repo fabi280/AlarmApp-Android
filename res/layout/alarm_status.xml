@@ -5,12 +5,29 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="top">
-    	<TextView android:id="@+id/textView1" 
-    	android:textAppearance="?android:attr/textAppearanceLarge" 
-    	android:text="Einsatzstatus"  
-    	android:layout_width="match_parent"
-    	android:layout_weight="1"
-    	android:layout_height="match_parent" android:gravity="center_vertical"></TextView>
+    	<LinearLayout android:layout_width="match_parent" android:layout_weight="1" android:layout_height="match_parent" android:orientation="vertical">
+	    	<TextView android:id="@+id/textView1" 
+	    	android:textAppearance="?android:attr/textAppearanceLarge" 
+	    	android:text="Einsatzstatus"  
+	    	android:layout_width="match_parent"
+	    	android:layout_weight="1"
+	    	android:layout_height="wrap_content" android:gravity="center_vertical"></TextView>
+
+	    	<TextView
+	    	    android:id="@+id/tvAcceptCount"
+	    	    android:layout_width="wrap_content"
+	    	    android:layout_height="wrap_content"
+	    	    android:layout_weight="1"
+	    	    android:text="n haben akzeptiert"
+	    	    android:textAppearance="?android:attr/textAppearanceMedium" />
+	    	
+    	</LinearLayout>
+    	<ImageButton android:layout_height="wrap_content" 
+    	android:layout_width="wrap_content" 
+    	android:src="@drawable/ic_compass"
+    	android:layout_weight="0"
+    	android:id="@+id/btMap"
+    	></ImageButton>
     	<ImageButton android:layout_height="wrap_content" 
     	android:layout_width="wrap_content" 
     	android:src="@drawable/ic_refresh"

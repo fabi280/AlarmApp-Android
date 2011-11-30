@@ -8,6 +8,7 @@ import org.alarmapp.activities.AlarmPreferenceActivity;
 import org.alarmapp.activities.AlarmStatusActivity;
 import org.alarmapp.activities.InformationActivity;
 import org.alarmapp.activities.MainActivity;
+import org.alarmapp.activities.map.AlarmMapActivity;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.WayPoint;
 import org.alarmapp.services.PositionService;
@@ -45,6 +46,14 @@ public class IntentUtil {
 		startPositionServiceIntent.putExtras(alarm.getBundle());
 
 		c.startService(startPositionServiceIntent);
+	}
+
+	public static void createDisplayAlarmMapActivity(Context context, Alarm alarm) {
+		Ensure.notNull(alarm);
+
+		Intent intent = new Intent(context, AlarmMapActivity.class);
+		intent.putExtras(alarm.getBundle());
+		context.startActivity(intent);
 	}
 
 	public static void createDisplayAlarmStatusUpdateIntent(Context context,

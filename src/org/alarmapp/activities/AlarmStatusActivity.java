@@ -1,6 +1,7 @@
 package org.alarmapp.activities;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +16,7 @@ import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.model.classes.AlarmedUserData;
 import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.Ensure;
+import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebException;
 
@@ -26,16 +28,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class AlarmStatusActivity extends Activity {
 
 	Alarm alarm;
 	ListView lvAlarmedUsers;
+	TextView tvAcceptCount;
 	ImageButton btRefresh;
+	ImageButton btMap;
 
 	private final OnClickListener refreshListener = new OnClickListener() {
 
@@ -60,7 +63,6 @@ public class AlarmStatusActivity extends Activity {
 				});
 			}
 		}
-
 	};
 
 	private Runnable loadAlarmStatus = new Runnable() {
@@ -93,8 +95,22 @@ public class AlarmStatusActivity extends Activity {
 	private void addUser(AlarmedUser user) {
 		this.alarm.updateAlarmedUser(user);
 
+		LogEx.verbose("Number of positions: " + user.getPositions().size());
+
 		LogEx.verbose("Added " + user + ". Hash is " + user.hashCode()
 				+ ". User id is " + user.getUserId());
+	}
+
+	private void displaySummary() {
+		int accepted = 0;
+
+		for (AlarmedUser u : alarm.getAlarmedUsers()) {
+			if (u.hasAccepted()) {
+				accepted++;
+			}
+		}
+
+		this.tvAcceptCount.setText("akzeptiert: " + accepted);
 	}
 
 	private void displayAlarmStatusView(Collection<AlarmedUser> users) {
@@ -118,14 +134,24 @@ public class AlarmStatusActivity extends Activity {
 			return lhs.getFullName().compareTo(rhs.getFullName());
 		}
 	};
+	private OnClickListener mapClickListener = new OnClickListener() {
+
+		public void onClick(View v) {
+			IntentUtil.createDisplayAlarmMapActivity(AlarmStatusActivity.this,
+					alarm);
+
+		}
+	};
 
 	private void fillAlarmStatusView() {
 		ArrayList<AlarmedUser> usersList = new ArrayList<AlarmedUser>(
 				this.alarm.getAlarmedUsers());
-		Collections.sort(usersList, comparator);
+		Collections.sort(usersList, AlarmedUserData.StatusComparator);
 		AlarmedUserAdapter adapter = new AlarmedUserAdapter(this, usersList);
 
 		this.lvAlarmedUsers.setAdapter(adapter);
+
+		displaySummary();
 	}
 
 	private void refreshAlarmStatusView(AlarmedUser changedUser) {
@@ -147,6 +173,8 @@ public class AlarmStatusActivity extends Activity {
 
 		this.lvAlarmedUsers = (ListView) findViewById(R.id.lvAlarmedUserList);
 		this.btRefresh = (ImageButton) findViewById(R.id.btRefresh);
+		this.btMap = (ImageButton) findViewById(R.id.btMap);
+		this.tvAcceptCount = (TextView) findViewById(R.id.tvAcceptCount);
 
 		if (AlarmData.isAlarmDataBundle(savedInstanceState)) {
 			alarm = AlarmData.create(savedInstanceState);
@@ -154,12 +182,21 @@ public class AlarmStatusActivity extends Activity {
 		} else {
 			Ensure.valid(AlarmData.isAlarmDataBundle(getIntent().getExtras()));
 			alarm = AlarmData.create(getIntent().getExtras());
+			fillAlarmStatusView();
 
-			startFetchAlarmStatus();
+			if (isAlarmStatusUpdateRequired())
+				startFetchAlarmStatus();
 		}
 
 		btRefresh.setOnClickListener(refreshListener);
-		makeActivityVisible();
+		btMap.setOnClickListener(mapClickListener);
+	}
+
+	private boolean isAlarmStatusUpdateRequired() {
+		Calendar tenMinutesBeforNow = Calendar.getInstance();
+		tenMinutesBeforNow.add(Calendar.MINUTE, -10);
+
+		return alarm.getAlarmed().after(tenMinutesBeforNow.getTime());
 	}
 
 	@Override
@@ -182,15 +219,6 @@ public class AlarmStatusActivity extends Activity {
 		super.onPause();
 
 		this.unregisterReceiver(alarmStatusReceiver);
-	}
-
-	private void makeActivityVisible() {
-		Window w = this.getWindow(); // in Activity's onCreate() for instance
-		int flags = /*
-					 * WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-					 */WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
-		w.setFlags(flags, flags);
 	}
 
 	private void displayError(String message) {

@@ -50,4 +50,17 @@ public class LonLatData implements LonLat {
 		return Float.toString(this.lon) + "L, " + Float.toString(this.lat)
 				+ "B";
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof LonLat)
+			return this.equals((LonLat) o);
+		return false;
+	}
+
+	public boolean equals(LonLat other) {
+		return other != null
+				&& Math.abs(other.getLatitude() - this.getLatitude()) < 0.00001
+				&& Math.abs(other.getLongitude() - this.getLongitude()) < 0.00001;
+	}
 }

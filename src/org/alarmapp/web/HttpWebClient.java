@@ -1,24 +1,19 @@
 package org.alarmapp.web;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import org.alarmapp.model.Alarm;
-import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
-import org.alarmapp.model.FireDepartment;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
-import org.alarmapp.model.classes.AlarmedUserData;
 import org.alarmapp.model.classes.AuthTokenData;
-import org.alarmapp.model.classes.FireDepartmentData;
-import org.alarmapp.model.classes.UserData;
 import org.alarmapp.util.DateUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.http.HttpUtil;
-import org.json.JSONArray;
+import org.alarmapp.web.json.JsonResult;
+import org.alarmapp.web.json.JsonUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -89,24 +84,14 @@ public class HttpWebClient implements WebClient {
 		LogEx.verbose("login returned " + response);
 
 		try {
-			JSONObject obj = new JSONObject(response);
-			if (!obj.getString("result").equals("ok")) {
+			JsonResult<User> login = JsonUtil.parseLoginResult(response);
+
+			if (login.wasSuccessful()) {
 				throw new WebException(
 						"Login fehlgeschlagen. Bitte überprüfen Sie ihren Benutzernamen und Ihr Passwort und stellen Sie sicher, dass Ihr Account aktiviert wurde.");
 			}
 
-			JSONObject user = obj.getJSONObject("user");
-			JSONObject dept = obj.getJSONObject("fire_department");
-
-			FireDepartment fireDepartment = new FireDepartmentData(
-					dept.getInt("id"), dept.getString("name"),
-					(float) dept.getDouble("lon"),
-					(float) dept.getDouble("lat"));
-
-			User userObj = new UserData(user.getInt("id"),
-					user.getString("first_name"), user.getString("last_name"),
-					fireDepartment);
-
+			User userObj = login.getValue();
 			LogEx.info("Authenticated as User " + userObj);
 
 			userObj.setAuthToken(this.getAuthToken(name, password));
@@ -161,25 +146,11 @@ public class HttpWebClient implements WebClient {
 				.request(url("web_service/operation/" + operation_id
 						+ "/status/"), null, createAuthHeader(authToken));
 
-		ArrayList<AlarmedUser> result = new ArrayList<AlarmedUser>();
-
 		try {
-			JSONArray array = new JSONArray(response);
-
-			for (int i = 0; i < array.length(); i++) {
-				JSONObject obj = array.getJSONObject(i);
-				String fireFighter = obj.getString("fire_fighter");
-				result.add(new AlarmedUserData(operation_id, fireFighter, obj
-						.getString("user_id"), AlarmState.create(obj
-						.getString("status_id")), DateUtil.parse(obj
-						.getString("acknowledged"))));
-			}
-
+			return JsonUtil.parseAlarmedUserList(response, operation_id);
 		} catch (JSONException e) {
 			throw new WebException(JSON_ERROR, e);
 		}
-
-		return result;
 	}
 
 	private AuthToken token;

@@ -1,9 +1,15 @@
 package org.alarmapp.model.classes;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
+import org.alarmapp.model.WayPoint;
 import org.alarmapp.util.BundleUtil;
 import org.alarmapp.util.DateUtil;
 import org.alarmapp.util.Ensure;
@@ -11,6 +17,8 @@ import org.alarmapp.util.Ensure;
 import android.os.Bundle;
 
 public class AlarmedUserData implements AlarmedUser {
+
+	private static final String FIREFIGHTER_POSITIONS = "positions";
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,13 +34,14 @@ public class AlarmedUserData implements AlarmedUser {
 	private String userId;
 	private AlarmState state;
 	private Date ackDate;
+	private ArrayList<WayPoint> positions;
 
 	private AlarmedUserData() {
 
 	}
 
 	public AlarmedUserData(String operation_id, String name, String userId,
-			AlarmState state, Date ackDate) {
+			AlarmState state, Date ackDate, ArrayList<WayPoint> positions) {
 		super();
 		String[] parts = name.split(", ");
 
@@ -45,6 +54,7 @@ public class AlarmedUserData implements AlarmedUser {
 		this.state = state;
 		this.ackDate = ackDate;
 		this.operationId = operation_id;
+		this.positions = positions;
 	}
 
 	public String getFirstName() {
@@ -72,6 +82,7 @@ public class AlarmedUserData implements AlarmedUser {
 				OPERATION_ID, STATE, USER_ID);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static AlarmedUserData create(Bundle bundle) {
 		Ensure.bundleHasKeys(bundle, OPERATION_ID, USER_ID, STATE, FIRST_NAME,
 				LAST_NAME, ACK_DATE);
@@ -84,6 +95,12 @@ public class AlarmedUserData implements AlarmedUser {
 		a.userId = bundle.getString(USER_ID);
 		a.operationId = bundle.getString(OPERATION_ID);
 
+		if (bundle.containsKey(FIREFIGHTER_POSITIONS)) {
+			Serializable list = bundle.getSerializable(FIREFIGHTER_POSITIONS);
+			if (list instanceof ArrayList<?>)
+				a.positions = (ArrayList<WayPoint>) list;
+		}
+
 		return a;
 	}
 
@@ -95,6 +112,7 @@ public class AlarmedUserData implements AlarmedUser {
 		bundle.putString(STATE, this.state.getName());
 		bundle.putString(ACK_DATE, DateUtil.format(this.ackDate));
 		bundle.putString(OPERATION_ID, this.operationId);
+		bundle.putSerializable(FIREFIGHTER_POSITIONS, this.positions);
 		return bundle;
 	}
 
@@ -132,9 +150,30 @@ public class AlarmedUserData implements AlarmedUser {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return this.getFullName() + " Operation #" + this.getOperationId()
 				+ ", state = " + this.state;
 	}
 
+	public List<WayPoint> getPositions() {
+		if (this.positions != null)
+			return Collections.unmodifiableList(this.positions);
+		return new ArrayList<WayPoint>();
+	}
+
+	public boolean hasAccepted() {
+		return this.state == AlarmState.Accepted;
+	}
+
+	public boolean hasRejected() {
+		return this.state == AlarmState.Rejeced;
+	}
+
+	public static Comparator<AlarmedUser> StatusComparator = new Comparator<AlarmedUser>() {
+
+		public int compare(AlarmedUser lhs, AlarmedUser rhs) {
+
+			return (lhs.getAlarmState().getId() - rhs.getAlarmState().getId())
+					* 1000 + lhs.getFullName().compareTo(rhs.getFullName());
+		}
+	};
 }
