@@ -12,9 +12,9 @@ public class UserData implements User {
 	private String lastName;
 	private FireDepartment department;
 	private AuthToken authToken;
-	private int id;
+	private String id;
 
-	public UserData(int id, String firstName, String lastName,
+	public UserData(String id, String firstName, String lastName,
 			FireDepartment department) {
 		super();
 		this.firstName = firstName;
@@ -43,7 +43,7 @@ public class UserData implements User {
 		return this.department;
 	}
 
-	public int getId() {
+	public String getId() {
 		return this.id;
 	}
 

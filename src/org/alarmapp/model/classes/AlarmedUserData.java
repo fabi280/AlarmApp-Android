@@ -136,7 +136,7 @@ public class AlarmedUserData implements AlarmedUser {
 			return false;
 
 		return this.operationId.equals(other.getOperationId())
-				&& this.userId.equals(other.getUserId());
+				&& this.userId.equals(other.getId());
 	}
 
 	public Date getAcknowledgeDate() {
@@ -176,4 +176,13 @@ public class AlarmedUserData implements AlarmedUser {
 					* 1000 + lhs.getFullName().compareTo(rhs.getFullName());
 		}
 	};
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.alarmapp.model.AlarmedUser#getId()
+	 */
+	public String getId() {
+		return this.userId;
+	}
 }

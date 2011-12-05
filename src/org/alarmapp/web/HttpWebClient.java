@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
+import org.alarmapp.model.Person;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
 import org.alarmapp.model.classes.AuthTokenData;
@@ -14,6 +15,7 @@ import org.alarmapp.util.LogEx;
 import org.alarmapp.web.http.HttpUtil;
 import org.alarmapp.web.json.JsonResult;
 import org.alarmapp.web.json.JsonUtil;
+import org.alarmapp.web.json.WebResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -86,7 +88,7 @@ public class HttpWebClient implements WebClient {
 		try {
 			JsonResult<User> login = JsonUtil.parseLoginResult(response);
 
-			if (login.wasSuccessful()) {
+			if (!login.wasSuccessful()) {
 				throw new WebException(
 						"Login fehlgeschlagen. Bitte überprüfen Sie ihren Benutzernamen und Ihr Passwort und stellen Sie sicher, dass Ihr Account aktiviert wurde.");
 			}
@@ -183,5 +185,43 @@ public class HttpWebClient implements WebClient {
 						+ position.getOperationId() + "/add_position/"), data,
 				createAuthHeader(authToken));
 		LogEx.verbose("Set alarm state returned " + response);
+	}
+
+	public WebResult checkUserName(String username) throws WebException {
+
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("user", username);
+		String response = HttpUtil.request(
+				url("/web_service/username/not_used/"), data, null);
+		try {
+			return JsonUtil.parseResult(response);
+		} catch (JSONException ex) {
+			throw new WebException(JSON_ERROR, ex);
+		}
+	}
+
+	public WebResult checkEmailAdress(String email) throws WebException {
+
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("email", email);
+		String response = HttpUtil.request(url("/web_service/email/not_used/"),
+				data, null);
+		try {
+			return JsonUtil.parseResult(response);
+		} catch (JSONException ex) {
+			throw new WebException(JSON_ERROR, ex);
+		}
+	}
+
+	public JsonResult<Person> createUser(String username, String firstName,
+			String lastName, String email, String password,
+			String passwordConfirmation) throws WebException {
+		// TODO Benutzer erzeugen
+		return null;
+	}
+
+	public void getAccountStatus(String userId) throws WebException {
+		// TODO Auto-generated method stub
+
 	}
 }

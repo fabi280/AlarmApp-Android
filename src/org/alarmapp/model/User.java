@@ -2,7 +2,7 @@ package org.alarmapp.model;
 
 import java.io.Serializable;
 
-public interface User extends Serializable {
+public interface User extends Serializable, Person {
 
 	public String getFirstName();
 
@@ -16,7 +16,7 @@ public interface User extends Serializable {
 
 	public void setAuthToken(AuthToken token);
 
-	public int getId();
+	public String getId();
 
 	public boolean canViewAlarmStatus();
 }

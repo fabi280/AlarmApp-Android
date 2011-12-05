@@ -12,6 +12,7 @@ import org.alarmapp.util.Store;
 import org.alarmapp.web.AuthHttpClient;
 import org.alarmapp.web.AuthWebClient;
 import org.alarmapp.web.HttpWebClient;
+import org.alarmapp.web.WebClient;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -24,13 +25,14 @@ public class AlarmApp extends Application {
 	private static AlarmApp instance;
 
 	private static AuthWebClient webClient = null;
+	private static WebClient client = null;
 
 	/***
 	 * @throws IllegalStateException
 	 *             if the user did not log in yet
 	 * @return A web client for accessing the alarm web service
 	 */
-	public static AuthWebClient getWebClient() {
+	public static AuthWebClient getAuthWebClient() {
 		Ensure.notNull(instance);
 
 		if (getUser() == null)
@@ -38,9 +40,19 @@ public class AlarmApp extends Application {
 					"Kein Benutzer verfügbar. Sie müssen sich erst einloggen!");
 
 		if (webClient == null)
-			webClient = new AuthHttpClient(new HttpWebClient(), getUser()
+			webClient = new AuthHttpClient(getWebClient(), getUser()
 					.getAuthToken());
 		return webClient;
+	}
+
+	/**
+	 * 
+	 * @return Instance of the WebClient to access the web service
+	 */
+	public static WebClient getWebClient() {
+		if (client == null)
+			client = new HttpWebClient();
+		return client;
 	}
 
 	private static User user = null;
@@ -60,7 +72,7 @@ public class AlarmApp extends Application {
 			if (user != null) {
 
 				ErrorReporter.getInstance().putCustomData("UserId",
-						Integer.toString(user.getId()));
+						user.getId());
 				ErrorReporter.getInstance().putCustomData("User Name",
 						user.getFullName());
 

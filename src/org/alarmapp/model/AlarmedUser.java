@@ -6,12 +6,12 @@ import java.util.List;
 
 import android.os.Bundle;
 
-public interface AlarmedUser extends Serializable, Bundable {
+public interface AlarmedUser extends Serializable, Bundable, Person {
 	public String getFirstName();
 
 	public String getLastName();
 
-	public String getUserId();
+	public String getId();
 
 	public String getFullName();
 

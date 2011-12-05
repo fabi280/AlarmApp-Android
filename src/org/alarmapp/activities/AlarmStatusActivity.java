@@ -70,7 +70,7 @@ public class AlarmStatusActivity extends Activity {
 		public void run() {
 			try {
 				final Collection<AlarmedUser> alarmedUsers = AlarmApp
-						.getWebClient().getAlarmStatus(alarm.getOperationId());
+						.getAuthWebClient().getAlarmStatus(alarm.getOperationId());
 
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -98,7 +98,7 @@ public class AlarmStatusActivity extends Activity {
 		LogEx.verbose("Number of positions: " + user.getPositions().size());
 
 		LogEx.verbose("Added " + user + ". Hash is " + user.hashCode()
-				+ ". User id is " + user.getUserId());
+				+ ". User id is " + user.getId());
 	}
 
 	private void displaySummary() {

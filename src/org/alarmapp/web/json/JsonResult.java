@@ -6,14 +6,31 @@ public class JsonResult<T> implements WebResult<T> {
 
 	private boolean wasSuccessful;
 	private T value;
+	private String message;
+	private String tag;
 
-	public JsonResult(boolean wasSuccessful, T value) {
-		this.wasSuccessful = wasSuccessful;
+	public JsonResult(T value) {
+		this.wasSuccessful = true;
 		this.value = value;
+	}
+
+	public JsonResult(String tag, String message) {
+		this.wasSuccessful = false;
+		this.value = null;
+		this.message = message;
+		this.tag = tag;
 	}
 
 	public boolean wasSuccessful() {
 		return wasSuccessful;
+	}
+
+	public String getErrorMesssage() {
+		return message;
+	}
+
+	public String getErrorTag() {
+		return tag;
 	}
 
 	public T getValue() {

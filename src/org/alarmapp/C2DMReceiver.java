@@ -44,7 +44,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Broadcasts.sendC2DMRegisteredBroadcast(this, registrationId);
 
 		try {
-			AlarmApp.getWebClient().createSmartphone(registrationId,
+			AlarmApp.getAuthWebClient().createSmartphone(registrationId,
 					Device.id(context), Device.name(context),
 					Device.platform(context), Device.version(context));
 		} catch (WebException e) {

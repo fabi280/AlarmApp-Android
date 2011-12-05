@@ -63,7 +63,7 @@ public class SyncService extends Service {
 					while (!operationSuccessful) {
 
 						try {
-							syncCommand.Execute(AlarmApp.getWebClient());
+							syncCommand.Execute(AlarmApp.getAuthWebClient());
 							operationSuccessful = true;
 						} catch (WebException e) {
 							if (e.isPermanentFailure()) {

@@ -56,7 +56,8 @@ public class JsonUtil {
 			throws JSONException {
 		JSONObject obj = new JSONObject(jsonDocument);
 		if (!obj.getString("result").equals("ok")) {
-			return new JsonResult<User>(false, null);
+			return new JsonResult<User>(obj.getString("msg"),
+					obj.getString("error_kind"));
 		}
 
 		JSONObject user = obj.getJSONObject("user");
@@ -66,11 +67,21 @@ public class JsonUtil {
 				dept.getInt("id"), dept.getString("name"),
 				(float) dept.getDouble("lon"), (float) dept.getDouble("lat"));
 
-		User userObj = new UserData(user.getInt("id"),
+		User userObj = new UserData(user.getString("id"),
 				user.getString("first_name"), user.getString("last_name"),
 				fireDepartment);
 
-		return new JsonResult<User>(true, userObj);
+		return new JsonResult<User>(userObj);
+	}
+
+	public static WebResult parseResult(String jsonDocument)
+			throws JSONException {
+		JSONObject obj = new JSONObject(jsonDocument);
+		if (obj.getString("result").equals("ok")) {
+			return WebResult.Successful;
+		}
+
+		return new WebResult(obj.getString("msg"), obj.getString("error_kind"));
 	}
 
 	private static ArrayList<WayPoint> parsePositions(String operationId,
