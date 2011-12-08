@@ -11,6 +11,7 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
+import org.alarmapp.model.BindableConverter;
 import org.alarmapp.util.BundleUtil;
 import org.alarmapp.util.CollectionUtil;
 import org.alarmapp.util.DateUtil;
@@ -204,5 +205,22 @@ public class AlarmData implements Alarm {
 
 	public boolean isAlarmStatusViewer() {
 		return isAlarmstatusViewer;
+	}
+
+	public BindableConverter<AlarmData> getConverter() {
+		return new BindableConverter<AlarmData>() {
+
+			public boolean canConvert(Bundle b) {
+				return isAlarmDataBundle(b);
+			}
+
+			public Bundle convert(AlarmData obj) {
+				return obj.getBundle();
+			}
+
+			public AlarmData convert(Bundle b) {
+				return AlarmData.create(b);
+			}
+		};
 	}
 }

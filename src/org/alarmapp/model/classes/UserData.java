@@ -49,7 +49,7 @@ public class UserData implements User {
 
 	@Override
 	public String toString() {
-		return String.format("%d - %s, %s, %s", id, lastName, firstName,
+		return String.format("%s - %s, %s, %s", id, lastName, firstName,
 				department);
 	}
 

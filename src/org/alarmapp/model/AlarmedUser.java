@@ -6,7 +6,7 @@ import java.util.List;
 
 import android.os.Bundle;
 
-public interface AlarmedUser extends Serializable, Bundable, Person {
+public interface AlarmedUser extends Serializable, Bindable, Person {
 	public String getFirstName();
 
 	public String getLastName();
@@ -28,4 +28,6 @@ public interface AlarmedUser extends Serializable, Bundable, Person {
 	public boolean hasAccepted();
 
 	public boolean hasRejected();
+
+	public BindableConverter<? extends AlarmedUser> getConverter();
 }

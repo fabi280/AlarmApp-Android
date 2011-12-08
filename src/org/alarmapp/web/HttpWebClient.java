@@ -6,10 +6,10 @@ import java.util.HashMap;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
-import org.alarmapp.model.Person;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
 import org.alarmapp.model.classes.AuthTokenData;
+import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.DateUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.http.HttpUtil;
@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 public class HttpWebClient implements WebClient {
 
+	private static final String USER_ACCOUNT_NOT_CREATED = "Das Erzeugen des Benutzers ist fehlgeschlagen.";
 	private static final String AUTH_TOKEN_INVALID = "Das vom Webservice erzeugte Authentifizierungstoken ist nicht gültig.";
 	private static String WEBSERVICE_URL = "http://alarmnotificationservice.appspot.com/";
 	private static String JSON_ERROR = "Fehler beim Verarbeiten der Web-Server-Antwort.";
@@ -213,7 +214,7 @@ public class HttpWebClient implements WebClient {
 		}
 	}
 
-	public JsonResult<Person> createUser(String username, String firstName,
+	public PersonData createUser(String username, String firstName,
 			String lastName, String email, String password,
 			String passwordConfirmation) throws WebException {
 
@@ -228,7 +229,19 @@ public class HttpWebClient implements WebClient {
 		String response = HttpUtil.request(url("/web_service/account/create/"),
 				data, null);
 
-		return null;
+		try {
+			JsonResult<String> user_id = JsonUtil
+					.parseCreateUserResult(response);
+
+			if (!user_id.wasSuccessful())
+				throw new WebException(USER_ACCOUNT_NOT_CREATED);
+
+			return new PersonData(user_id.getValue(), firstName, lastName,
+					username, email, password);
+
+		} catch (JSONException e) {
+			throw new WebException(JSON_ERROR, e);
+		}
 	}
 
 	public void getAccountStatus(String userId) throws WebException {

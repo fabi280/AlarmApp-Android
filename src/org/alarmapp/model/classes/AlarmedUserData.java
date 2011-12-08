@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
+import org.alarmapp.model.BindableConverter;
 import org.alarmapp.model.WayPoint;
 import org.alarmapp.util.BundleUtil;
 import org.alarmapp.util.DateUtil;
@@ -177,11 +178,24 @@ public class AlarmedUserData implements AlarmedUser {
 		}
 	};
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.alarmapp.model.AlarmedUser#getId()
-	 */
+	public BindableConverter<AlarmedUserData> getConverter() {
+		return new BindableConverter<AlarmedUserData>() {
+
+			public AlarmedUserData convert(Bundle b) {
+				return AlarmedUserData.create(b);
+			}
+
+			public Bundle convert(AlarmedUserData obj) {
+				return obj.getBundle();
+			}
+
+			public boolean canConvert(Bundle b) {
+				return isAlarmedUserDataBundle(b);
+			}
+		};
+
+	};
+
 	public String getId() {
 		return this.userId;
 	}

@@ -5,7 +5,7 @@ import java.util.Date;
 
 import android.os.Bundle;
 
-public interface WayPoint extends Serializable, Bundable {
+public interface WayPoint extends Serializable, Bindable {
 
 	public LonLat getPosition();
 
@@ -22,4 +22,6 @@ public interface WayPoint extends Serializable, Bundable {
 	public PositionMeasurementMethod getMeasurementMethod();
 
 	public Bundle getBundle();
+
+	public BindableConverter<? extends WayPoint> getConverter();
 }

@@ -23,7 +23,6 @@ import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebClient;
 import org.alarmapp.web.WebException;
-import org.alarmapp.web.json.JsonResult;
 import org.alarmapp.web.json.WebResult;
 
 import android.app.Activity;
@@ -79,24 +78,16 @@ public class AccountCreateActivity extends Activity {
 			String passwordConfirmation = etPassword2.getText().toString();
 
 			try {
-				final JsonResult<Person> p = AlarmApp.getWebClient()
-						.createUser(username, firstName, lastName, email,
-								password, passwordConfirmation);
+				final Person p = AlarmApp.getWebClient().createUser(username,
+						firstName, lastName, email, password,
+						passwordConfirmation);
 
-				if (!p.wasSuccessful()) {
-					LogEx.warning("Creating a new user failed. Error Message: "
-							+ p.getErrorMesssage() + " Tag: " + p.getErrorTag());
-					displayError(CREATE_USER_FAILED_ERROR);
-				}
+				runOnUiThread(new Runnable() {
 
-				if (p.wasSuccessful()) {
-					runOnUiThread(new Runnable() {
-
-						public void run() {
-							userCreateSuccessful(p.getValue());
-						}
-					});
-				}
+					public void run() {
+						userCreateSuccessful(p);
+					}
+				});
 			} catch (WebException e) {
 				LogEx.exception("Creating a new User failed!", e);
 				displayError(CREATE_USER_FAILED_ERROR);

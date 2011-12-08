@@ -2,6 +2,7 @@ package org.alarmapp.model.classes;
 
 import java.util.Date;
 
+import org.alarmapp.model.BindableConverter;
 import org.alarmapp.model.LonLat;
 import org.alarmapp.model.PositionMeasurementMethod;
 import org.alarmapp.model.WayPoint;
@@ -106,5 +107,22 @@ public class WayPointData implements WayPoint {
 
 	public String getOperationId() {
 		return this.operationId;
+	}
+
+	public BindableConverter<WayPointData> getConverter() {
+		return new BindableConverter<WayPointData>() {
+
+			public boolean canConvert(Bundle b) {
+				return WayPointData.isWayPointBundle(b);
+			}
+
+			public Bundle convert(WayPointData obj) {
+				return obj.getBundle();
+			}
+
+			public WayPointData convert(Bundle b) {
+				return WayPointData.create(b);
+			}
+		};
 	}
 }

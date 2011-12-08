@@ -8,7 +8,6 @@ import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.Person;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
-import org.alarmapp.web.json.JsonResult;
 import org.alarmapp.web.json.WebResult;
 
 public interface WebClient {
@@ -34,7 +33,7 @@ public interface WebClient {
 
 	public WebResult checkEmailAdress(String email) throws WebException;
 
-	public JsonResult<Person> createUser(String username, String firstName,
+	public Person createUser(String username, String firstName,
 			String lastName, String email, String password,
 			String passwordConfirmation) throws WebException;
 

@@ -14,7 +14,7 @@ import android.os.Bundle;
  * @author frank
  * 
  */
-public interface Alarm extends Serializable, Bundable {
+public interface Alarm extends Serializable, Bindable {
 	public String getTitle();
 
 	public String getText();
@@ -42,4 +42,6 @@ public interface Alarm extends Serializable, Bundable {
 	public void save();
 
 	public Bundle getBundle();
+
+	public BindableConverter<? extends Alarm> getConverter();
 }

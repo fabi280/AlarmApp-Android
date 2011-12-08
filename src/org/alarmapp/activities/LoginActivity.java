@@ -9,7 +9,6 @@ import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.HttpWebClient;
 import org.alarmapp.web.WebClient;
-import org.alarmapp.web.WebException;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -98,7 +97,7 @@ public class LoginActivity extends Activity {
 						LogEx.info("C2DMessaging.Register");
 						C2DMessaging.register(LoginActivity.this,
 								"f.englert@gmail.com");
-					} catch (final WebException e) {
+					} catch (final Exception e) {
 						LogEx.exception(
 								"Der Login des Benutzers schlug fehl. ", e);
 
