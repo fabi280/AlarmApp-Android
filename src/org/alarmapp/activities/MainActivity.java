@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
 	private Runnable infoClick = new Runnable() {
 
 		public void run() {
-			IntentUtil.createDisplayInformationsIntent(MainActivity.this);
+			IntentUtil.displayInformationsActivity(MainActivity.this);
 
 		}
 	};
@@ -88,16 +88,7 @@ public class MainActivity extends Activity {
 	private Runnable prefsClick = new Runnable() {
 
 		public void run() {
-			IntentUtil.createDisplayPreferencesIntent(MainActivity.this);
-
-		}
-	};
-
-	private Runnable syncClick = new Runnable() {
-
-		public void run() {
-			IntentUtil.startPositionService(MainActivity.this, AlarmApp
-					.getAlarmStore().getLastAlarms().get(0));
+			IntentUtil.displayPreferencesActivity(MainActivity.this);
 
 		}
 	};
@@ -105,7 +96,7 @@ public class MainActivity extends Activity {
 	private Runnable alarmListClick = new Runnable() {
 
 		public void run() {
-			IntentUtil.createDisplayAlarmListIntent(MainActivity.this);
+			IntentUtil.displayAlarmListActivity(MainActivity.this);
 		}
 	};
 
@@ -122,6 +113,7 @@ public class MainActivity extends Activity {
 		this.lvMainItems = (ListView) findViewById(R.id.lvMainItems);
 		this.lvMainItems.setOnItemClickListener(itemClick);
 		displayMenu();
+		IntentUtil.displayAccountCreateActivity(this);
 	}
 
 	private void displayMenu() {
@@ -138,9 +130,6 @@ public class MainActivity extends Activity {
 		entries.add(new MenuEntry("Feedback",
 				"Verbesserungsvorschläge oder Fehler melden.",
 				MenuEntry.COLOR_RED, feedbackClick));
-		// entries.add(new MenuEntry("Sync Starten",
-		// "Zeichnet den Weg für den letzten Einsatz auf",
-		// MenuEntry.COLOR_RED, syncClick));
 
 		this.lvMainItems.setAdapter(new BinderAdapter<MenuEntry>(this,
 				R.layout.list_layout_main, binder, entries));

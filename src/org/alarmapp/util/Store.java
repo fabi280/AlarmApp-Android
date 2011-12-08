@@ -34,7 +34,7 @@ public class Store<T> {
 			LogEx.exception(e);
 			return null;
 		} catch (FileNotFoundException e1) {
-			LogEx.exception(e1);
+			LogEx.warning("File " + this.file.getName() + " does not exist.");
 		} catch (IOException e) {
 			LogEx.exception(e);
 		}

@@ -45,7 +45,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="" >
+                android:text="" 
+                android:imeOptions="actionNext|flagNoEnterAction"
+                android:singleLine="true"
+                >
 
                 <requestFocus >
                 </requestFocus>
@@ -71,6 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:inputType="textPassword"
+                android:imeOptions="actionDone|flagNoEnterAction"
+                android:singleLine="true"
                 android:text="" >
             </EditText>
         </TableRow>

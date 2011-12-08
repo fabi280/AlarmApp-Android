@@ -250,7 +250,10 @@ public class AccountCreateActivity extends Activity {
 		this.etUserName = (EditText) findViewById(R.id.etName);
 		this.etPassword = (EditText) findViewById(R.id.etPassword);
 		this.etPassword2 = (EditText) findViewById(R.id.etPassword2);
+
 		this.btAccountCreate = (Button) findViewById(R.id.btAccountCreate);
+
+		this.etPassword2.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
 		btAccountCreate.setOnClickListener(accountCreateClick);
 

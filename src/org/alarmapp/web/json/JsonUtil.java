@@ -55,9 +55,8 @@ public class JsonUtil {
 	public static JsonResult<User> parseLoginResult(String jsonDocument)
 			throws JSONException {
 		JSONObject obj = new JSONObject(jsonDocument);
-		if (!obj.getString("result").equals("ok")) {
-			return new JsonResult<User>(obj.getString("msg"),
-					obj.getString("error_kind"));
+		if (isErrorResult(obj)) {
+			return parseErrorResult(obj);
 		}
 
 		JSONObject user = obj.getJSONObject("user");
@@ -77,11 +76,32 @@ public class JsonUtil {
 	public static WebResult parseResult(String jsonDocument)
 			throws JSONException {
 		JSONObject obj = new JSONObject(jsonDocument);
-		if (obj.getString("result").equals("ok")) {
-			return WebResult.Successful;
+		if (isErrorResult(obj))
+			return new WebResult(obj.getString("msg"),
+					obj.getString("error_kind"));
+
+		return WebResult.Successful;
+	}
+
+	public static JsonResult<String> parseCreateUserResult(String jsonDocument)
+			throws JSONException {
+		JSONObject obj = new JSONObject(jsonDocument);
+		if (isErrorResult(obj)) {
+			return parseErrorResult(obj);
 		}
 
-		return new WebResult(obj.getString("msg"), obj.getString("error_kind"));
+		return new JsonResult<String>(obj.getString("user_id"));
+
+	}
+
+	private static boolean isErrorResult(JSONObject obj) throws JSONException {
+		return !obj.getString("result").equals("ok");
+	}
+
+	private static <T> JsonResult<T> parseErrorResult(JSONObject obj)
+			throws JSONException {
+		return new JsonResult<T>(obj.getString("msg"),
+				obj.getString("error_kind"));
 	}
 
 	private static ArrayList<WayPoint> parsePositions(String operationId,

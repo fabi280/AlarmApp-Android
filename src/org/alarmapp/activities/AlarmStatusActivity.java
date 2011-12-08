@@ -137,7 +137,7 @@ public class AlarmStatusActivity extends Activity {
 	private OnClickListener mapClickListener = new OnClickListener() {
 
 		public void onClick(View v) {
-			IntentUtil.createDisplayAlarmMapActivity(AlarmStatusActivity.this,
+			IntentUtil.displayAlarmMapActivity(AlarmStatusActivity.this,
 					alarm);
 
 		}

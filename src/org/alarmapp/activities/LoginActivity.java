@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -68,9 +70,10 @@ public class LoginActivity extends Activity {
 
 	OnClickListener onLoginClickListener = new OnClickListener() {
 		public void onClick(View v) {
-
 			LogEx.verbose("Login key down");
 			btLogin.setOnClickListener(null);
+
+			hideKeyboad();
 
 			final String email = LoginActivity.this.etEmail.getText()
 					.toString();
@@ -107,6 +110,13 @@ public class LoginActivity extends Activity {
 		}
 	};
 
+	OnClickListener onCreateClick = new OnClickListener() {
+
+		public void onClick(View v) {
+			IntentUtil.displayAccountCreateActivity(LoginActivity.this);
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -121,10 +131,17 @@ public class LoginActivity extends Activity {
 		this.tvProgressStep = (TextView) findViewById(R.id.tvProgressStep);
 
 		this.pbLogin.setMax(3);
+		this.etPassword.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
 		setVisibility(View.INVISIBLE);
 
 		this.btLogin.setOnClickListener(onLoginClickListener);
+		this.btCreateAccount.setOnClickListener(onCreateClick);
+	}
+
+	protected void hideKeyboad() {
+		InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		mgr.hideSoftInputFromWindow(this.etPassword.getWindowToken(), 0);
 	}
 
 	private void setVisibility(final int visibility) {
@@ -144,7 +161,7 @@ public class LoginActivity extends Activity {
 		btLogin.setOnClickListener(onLoginClickListener);
 		setVisibility(View.INVISIBLE);
 
-		IntentUtil.createMainIntent(this);
+		IntentUtil.displayMainActivity(this);
 	}
 
 	private void displayError(String errorMessage) {

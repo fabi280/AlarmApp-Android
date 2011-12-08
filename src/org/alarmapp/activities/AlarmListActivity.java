@@ -43,7 +43,7 @@ public class AlarmListActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> view, View row, int pos,
 					long arg3) {
 				Alarm a = (Alarm) view.getItemAtPosition(pos);
-				IntentUtil.createDisplayAlarmIntent(AlarmListActivity.this, a);
+				IntentUtil.displayAlarmIntent(AlarmListActivity.this, a);
 			}
 		});
 	}

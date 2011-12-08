@@ -2,6 +2,7 @@ package org.alarmapp.util;
 
 import org.alarmapp.Actions;
 import org.alarmapp.AlarmApp;
+import org.alarmapp.activities.AccountCreateActivity;
 import org.alarmapp.activities.AlarmActivity;
 import org.alarmapp.activities.AlarmListActivity;
 import org.alarmapp.activities.AlarmPreferenceActivity;
@@ -18,7 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 
 public class IntentUtil {
-	public static void createAlarmStatusUpdateIntent(Context c, Alarm a) {
+	public static void sendToSyncService(Context c, Alarm a) {
 		Ensure.notNull(a);
 
 		Intent statusUpdateIntent = new Intent(c, SyncService.class);
@@ -27,7 +28,7 @@ public class IntentUtil {
 		c.startService(statusUpdateIntent);
 	}
 
-	public static void createPositionAddIntent(Context c, WayPoint w) {
+	public static void sendToSyncService(Context c, WayPoint w) {
 		Ensure.notNull(c);
 		Ensure.notNull(w);
 
@@ -35,6 +36,13 @@ public class IntentUtil {
 		statusUpdateIntent.putExtras(w.getBundle());
 		statusUpdateIntent.setAction(Actions.START_TRACKING);
 		c.startService(statusUpdateIntent);
+	}
+
+	public static void displayAccountCreateActivity(Context context) {
+		Ensure.notNull(context);
+
+		Intent alarmIntent = new Intent(context, AccountCreateActivity.class);
+		context.startActivity(alarmIntent);
 	}
 
 	public static void startPositionService(Context c, Alarm alarm) {
@@ -48,7 +56,7 @@ public class IntentUtil {
 		c.startService(startPositionServiceIntent);
 	}
 
-	public static void createDisplayAlarmMapActivity(Context context, Alarm alarm) {
+	public static void displayAlarmMapActivity(Context context, Alarm alarm) {
 		Ensure.notNull(alarm);
 
 		Intent intent = new Intent(context, AlarmMapActivity.class);
@@ -56,7 +64,7 @@ public class IntentUtil {
 		context.startActivity(intent);
 	}
 
-	public static void createDisplayAlarmStatusUpdateIntent(Context context,
+	public static void displayAlarmStatusUpdateIntent(Context context,
 			Alarm alarm) {
 		Ensure.notNull(alarm);
 
@@ -66,7 +74,7 @@ public class IntentUtil {
 		context.startActivity(alarmIntent);
 	}
 
-	public static void createDisplayAlarmIntent(Context context, Alarm alarm) {
+	public static void displayAlarmIntent(Context context, Alarm alarm) {
 		Ensure.notNull(alarm);
 
 		Intent alarmIntent = new Intent(context, AlarmActivity.class);
@@ -77,34 +85,32 @@ public class IntentUtil {
 
 	public static void sendFeedbackEmailIntent(Context context) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
-		// TODO insert a valid email address before publishing
 		intent.putExtra(Intent.EXTRA_EMAIL,
-				new String[] { "info@frank-englert.de" });
+				new String[] { "frank@alarmapp.org" });
 		intent.putExtra(Intent.EXTRA_SUBJECT,
 				"Feedback für die Android AlarmApp von "
 						+ AlarmApp.getUser().getFullName());
 		intent.setType("message/rfc822");
 		context.startActivity(Intent.createChooser(intent,
 				"Bitte wählen Sie eine Anwendung"));
-
 	}
 
-	public static void createMainIntent(Context context) {
+	public static void displayMainActivity(Context context) {
 		Intent mainIntent = new Intent(context, MainActivity.class);
 		context.startActivity(mainIntent);
 	}
 
-	public static void createDisplayAlarmListIntent(Context context) {
+	public static void displayAlarmListActivity(Context context) {
 		Intent alarmListIntent = new Intent(context, AlarmListActivity.class);
 		context.startActivity(alarmListIntent);
 	}
 
-	public static void createDisplayInformationsIntent(Context context) {
+	public static void displayInformationsActivity(Context context) {
 		Intent intent = new Intent(context, InformationActivity.class);
 		context.startActivity(intent);
 	}
 
-	public static void createDisplayPreferencesIntent(Context context) {
+	public static void displayPreferencesActivity(Context context) {
 		Intent intent = new Intent(context, AlarmPreferenceActivity.class);
 		context.startActivity(intent);
 	}

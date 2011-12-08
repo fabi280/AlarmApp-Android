@@ -66,7 +66,7 @@ public class PositionService extends Service {
 
 			LogEx.verbose("Sending position " + position
 					+ " to the Sync service.");
-			IntentUtil.createPositionAddIntent(PositionService.this, wp);
+			IntentUtil.sendToSyncService(PositionService.this, wp);
 		}
 
 		public void onProviderDisabled(String arg0) {

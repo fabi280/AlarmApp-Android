@@ -104,9 +104,9 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		LogEx.verbose("Display Alarm Activity.");
 
-		IntentUtil.createDisplayAlarmIntent(this, alarm);
+		IntentUtil.displayAlarmIntent(this, alarm);
 
-		IntentUtil.createAlarmStatusUpdateIntent(this, alarm);
+		IntentUtil.sendToSyncService(this, alarm);
 	}
 
 	@Override

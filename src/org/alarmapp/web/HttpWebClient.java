@@ -216,7 +216,18 @@ public class HttpWebClient implements WebClient {
 	public JsonResult<Person> createUser(String username, String firstName,
 			String lastName, String email, String password,
 			String passwordConfirmation) throws WebException {
-		// TODO Benutzer erzeugen
+
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("user", username);
+		data.put("email", email);
+		data.put("first_name", firstName);
+		data.put("last_name", lastName);
+		data.put("password", password);
+		data.put("password2", passwordConfirmation);
+
+		String response = HttpUtil.request(url("/web_service/account/create/"),
+				data, null);
+
 		return null;
 	}
 

@@ -63,7 +63,7 @@ public class AlarmActivity extends Activity {
 						alarm.getOperationId());
 				storedAlarm.setState(newState);
 				storedAlarm.save();
-				IntentUtil.createAlarmStatusUpdateIntent(AlarmActivity.this,
+				IntentUtil.sendToSyncService(AlarmActivity.this,
 						alarm);
 
 				if (newState == AlarmState.Accepted) {
@@ -78,7 +78,7 @@ public class AlarmActivity extends Activity {
 	private OnClickListener switchToClick = new OnClickListener() {
 		public void onClick(View v) {
 			LogEx.info("Clicked on the Switch to Alarm Status button");
-			IntentUtil.createDisplayAlarmStatusUpdateIntent(AlarmActivity.this,
+			IntentUtil.displayAlarmStatusUpdateIntent(AlarmActivity.this,
 					alarm);
 		}
 	};
