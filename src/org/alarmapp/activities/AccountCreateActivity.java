@@ -210,7 +210,7 @@ public class AccountCreateActivity extends Activity {
 			String pass1 = etPassword.getText().toString();
 			String pass2 = etPassword2.getText().toString();
 
-			if (pass1.length() < 6 && pass1.length() > 30) {
+			if (pass1.length() < 6 || pass1.length() > 30) {
 				displayError(etPassword, PASSWORD_LENGTH_INVALID);
 				return;
 			}
