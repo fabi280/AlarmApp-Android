@@ -1,6 +1,7 @@
 package org.alarmapp.web.json;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
@@ -117,6 +118,23 @@ public class JsonUtil {
 					.getDouble("speed"), (float) obj.getDouble("direction"), 0,
 					PositionMeasurementMethod.UNKNWON, DateUtil.parseIso(obj
 							.getString("date"))));
+		}
+		return result;
+	}
+
+	/**
+	 * @param response
+	 * @return
+	 */
+	public static List<String> parseGetFireDepartmentResult(String response)
+			throws JSONException {
+		JSONArray arr = new JSONArray(response);
+
+		ArrayList<String> result = new ArrayList<String>();
+
+		for (int i = 0; i < arr.length(); i++) {
+			if (!arr.isNull(i))
+				result.add(arr.getString(i));
 		}
 		return result;
 	}

@@ -61,4 +61,20 @@ public class UserData implements User {
 		return getFirstName() + " " + getLastName();
 	}
 
+	public boolean hasDepartment() {
+		return this.department != null;
+	}
+
+	public boolean hasAuthToken() {
+		return this.authToken != null;
+	}
+
+	public boolean isLoggedIn() {
+		return hasDepartment() && hasAuthToken();
+	}
+
+	public boolean hasAccount() {
+		return true;
+	}
+
 }

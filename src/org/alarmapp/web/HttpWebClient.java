@@ -2,6 +2,7 @@ package org.alarmapp.web;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
@@ -90,6 +91,9 @@ public class HttpWebClient implements WebClient {
 			JsonResult<User> login = JsonUtil.parseLoginResult(response);
 
 			if (!login.wasSuccessful()) {
+				if (login.getErrorTag().equals("user_department_missing"))
+					throw new WebException(
+							"Login Fehlgeschlagen. Der Benutzer ist noch kein Mitglied einer Feuerwehr!");
 				throw new WebException(
 						"Login fehlgeschlagen. Bitte überprüfen Sie ihren Benutzernamen und Ihr Passwort und stellen Sie sicher, dass Ihr Account aktiviert wurde.");
 			}
@@ -182,7 +186,7 @@ public class HttpWebClient implements WebClient {
 		data.put("source", position.getMeasurementMethod().toString());
 
 		String response = HttpUtil.request(
-				url("/web_service/alarm_notification/"
+				url("web_service/alarm_notification/"
 						+ position.getOperationId() + "/add_position/"), data,
 				createAuthHeader(authToken));
 		LogEx.verbose("Set alarm state returned " + response);
@@ -193,7 +197,7 @@ public class HttpWebClient implements WebClient {
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("user", username);
 		String response = HttpUtil.request(
-				url("/web_service/username/not_used/"), data, null);
+				url("web_service/username/not_used/"), data, null);
 		try {
 			return JsonUtil.parseResult(response);
 		} catch (JSONException ex) {
@@ -205,7 +209,7 @@ public class HttpWebClient implements WebClient {
 
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("email", email);
-		String response = HttpUtil.request(url("/web_service/email/not_used/"),
+		String response = HttpUtil.request(url("web_service/email/not_used/"),
 				data, null);
 		try {
 			return JsonUtil.parseResult(response);
@@ -226,7 +230,7 @@ public class HttpWebClient implements WebClient {
 		data.put("password", password);
 		data.put("password2", passwordConfirmation);
 
-		String response = HttpUtil.request(url("/web_service/account/create/"),
+		String response = HttpUtil.request(url("web_service/account/create/"),
 				data, null);
 
 		try {
@@ -247,5 +251,36 @@ public class HttpWebClient implements WebClient {
 	public void getAccountStatus(String userId) throws WebException {
 		// TODO Auto-generated method stub
 
+	}
+
+	public List<String> getFiredepartmentList(String term) throws WebException {
+		String response;
+		try {
+			response = HttpUtil.request(
+					url("ajax/department_list?term=" + term), null, null);
+			return JsonUtil.parseGetFireDepartmentResult(response);
+
+		} catch (JSONException e) {
+			throw new WebException(JSON_ERROR, e);
+		}
+
+	}
+
+	public WebResult joinFireDepartment(PersonData person, String firedepartment)
+			throws WebException {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("username_or_email", person.getEmail());
+		data.put("password", person.getPassword());
+		data.put("department_name", firedepartment);
+
+		String response = HttpUtil.request(
+				url("web_service/fire_department/join/"), data, null);
+
+		try {
+			return JsonUtil.parseResult(response);
+		} catch (JSONException e) {
+			LogEx.exception(e);
+			throw new WebException(JSON_ERROR, e);
+		}
 	}
 }

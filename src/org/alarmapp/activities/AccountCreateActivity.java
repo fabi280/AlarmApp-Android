@@ -18,14 +18,16 @@ package org.alarmapp.activities;
 
 import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
-import org.alarmapp.model.Person;
+import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.ActivityUtil;
+import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebClient;
 import org.alarmapp.web.WebException;
 import org.alarmapp.web.json.WebResult;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -59,10 +61,13 @@ public class AccountCreateActivity extends Activity {
 	EditText etPassword2;
 	Button btAccountCreate;
 	WebClient httpWebClient;
+	ProgressDialog progressDialog;
 
 	OnClickListener accountCreateClick = new OnClickListener() {
 		public void onClick(View v) {
 			LogEx.info("Creating User Account");
+			progressDialog = ProgressDialog.show(AccountCreateActivity.this,
+					"", "Benutzeraccount wird erzeugt. Bitte warten...", true);
 			new Thread(createUserRunnable).start();
 		}
 	};
@@ -78,8 +83,8 @@ public class AccountCreateActivity extends Activity {
 			String passwordConfirmation = etPassword2.getText().toString();
 
 			try {
-				final Person p = AlarmApp.getWebClient().createUser(username,
-						firstName, lastName, email, password,
+				final PersonData p = AlarmApp.getWebClient().createUser(
+						username, firstName, lastName, email, password,
 						passwordConfirmation);
 
 				runOnUiThread(new Runnable() {
@@ -90,15 +95,21 @@ public class AccountCreateActivity extends Activity {
 				});
 			} catch (WebException e) {
 				LogEx.exception("Creating a new User failed!", e);
+				progressDialog.cancel();
 				displayError(CREATE_USER_FAILED_ERROR);
 			}
 		}
 
 	};
 
-	private void userCreateSuccessful(Person value) {
-		LogEx.info("User " + value.getFullName() + " created");
-		// TODO weiterleiten auf die "Feuerwehr beitreten activity"
+	private void userCreateSuccessful(PersonData value) {
+		LogEx.info("User " + value.getFullName() + " created. Id is "
+				+ value.getId());
+		progressDialog.cancel();
+
+		AlarmApp.setUser(value);
+
+		IntentUtil.displayJoinDepartmentActivity(this, value);
 	}
 
 	OnEditorActionListener createEditorActionListener(

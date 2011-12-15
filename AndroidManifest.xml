@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 package="org.alarmapp"
-android:versionCode="1"
-android:versionName="1.0">
+android:versionCode="2"
+android:versionName="1.1">
 	<supports-screens
 	android:largeScreens="true"
 	android:normalScreens="true"
@@ -71,5 +71,7 @@ android:versionName="1.0">
 		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
 		<activity android:name=".activities.AccountCreateActivity"></activity>
 		<activity android:name=".activities.map.AlarmMapActivity"></activity>
+		<activity android:name=".activities.JoinDepartmentActivity"></activity>
+		<activity android:name=".activities.JoinPendingActivity"></activity>
 	</application>
 </manifest>

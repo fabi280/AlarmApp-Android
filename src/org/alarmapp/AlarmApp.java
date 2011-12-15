@@ -1,10 +1,10 @@
 package org.alarmapp;
 
-import org.acra.ACRA;
 import org.acra.ErrorReporter;
 import org.acra.annotation.ReportsCrashes;
 import org.alarmapp.model.AlarmStore;
 import org.alarmapp.model.User;
+import org.alarmapp.model.classes.AnonymusUserData;
 import org.alarmapp.model.classes.PersistentAlarmStore;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.LogEx;
@@ -59,7 +59,7 @@ public class AlarmApp extends Application {
 
 	/**
 	 * 
-	 * @return The user or null if the user did not log in yet
+	 * @return The user. Maybe a AnonymusUser if the user has not logged in yet.
 	 */
 	public static User getUser() {
 		Ensure.notNull(instance);
@@ -82,6 +82,10 @@ public class AlarmApp extends Application {
 							user.getFireDepartment().getName());
 			}
 		}
+
+		if (user == null)
+			return new AnonymusUserData();
+
 		return user;
 	}
 
@@ -115,7 +119,7 @@ public class AlarmApp extends Application {
 
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
+		// ACRA.init(this);
 		super.onCreate();
 		instance = this;
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);

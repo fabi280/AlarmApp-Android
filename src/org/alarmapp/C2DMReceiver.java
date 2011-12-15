@@ -6,6 +6,7 @@ package org.alarmapp;
 //http://www.vogella.de/articles/AndroidCloudToDeviceMessaging/article.html
 //--------------------------------------------------------
 
+import org.alarmapp.activities.AlarmActivity;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
@@ -15,6 +16,7 @@ import org.alarmapp.util.Device;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
+import org.alarmapp.util.NotificationUtil;
 import org.alarmapp.web.WebException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,11 +101,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 					+ " does already exist. Aborting");
 			return;
 		}
+
 		AlarmApp.getAlarmStore().put(alarm);
 		alarm.setState(AlarmState.Delivered);
 
 		LogEx.verbose("Display Alarm Activity.");
 
+		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
 		IntentUtil.displayAlarmIntent(this, alarm);
 
 		IntentUtil.sendToSyncService(this, alarm);

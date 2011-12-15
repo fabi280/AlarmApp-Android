@@ -18,6 +18,7 @@ import org.alarmapp.web.WebException;
 
 public class HttpUtil {
 
+	private static final String TEMPORARY_NOT_AVAILABLE = "Die Ressource ist temporär nicht verfügbar. HTTP-Statuscode:";
 	private static final String URL_ERROR = "Die Url hat kein gültiges Format. URL: ";
 	private static final String HTTP_POST_ERROR = "Fehler beim Senden von Daten an die URL ";
 	private static final String HTTP_GET_ERROR = "Fehler beim Abrufen der URL ";
@@ -72,7 +73,12 @@ public class HttpUtil {
 
 		LogEx.verbose(http.getURL() + " returned: Status " + statusCode);
 
-		if (statusCode == 404) // Ressource not found
+		if (statusCode == 302) // Temporary unavailable
+		{
+
+			LogEx.verbose("Response is " + http.getHeaderField("Location"));
+			throw new WebException(TEMPORARY_NOT_AVAILABLE + statusCode);
+		} else if (statusCode == 404) // Ressource not found
 		{
 			throw new WebException(RESSOURCE_DOES_NOT_EXIST_ERROR);
 		} else if (statusCode == -1) // no valid response code.
@@ -80,7 +86,7 @@ public class HttpUtil {
 			throw new WebException(false, NETWORK_ERROR);
 		} else if (statusCode == 500) // Internal Server Error
 		{
-			String error = read(http.getErrorStream());
+			String error = formatErrorMessage(read(http.getErrorStream()));
 			LogEx.exception(error);
 
 			throw new WebException(INTERNAL_SERVER_ERROR);
@@ -100,6 +106,14 @@ public class HttpUtil {
 		} else {
 			throw new WebException(UNKNOWN_HTTP_STATUS_ERROR + statusCode);
 		}
+	}
+
+	private static String formatErrorMessage(String read) {
+		int bodyBegin = read.indexOf("<body");
+		int bodyEnd = read.indexOf("</body>");
+		if (bodyBegin > -1)
+			return read.substring(bodyBegin);
+		return read;
 	}
 
 	private static String post(URL url, HashMap<String, String> data,

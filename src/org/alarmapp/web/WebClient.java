@@ -1,13 +1,14 @@
 package org.alarmapp.web;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
-import org.alarmapp.model.Person;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
+import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.web.json.WebResult;
 
 public interface WebClient {
@@ -26,6 +27,8 @@ public interface WebClient {
 	public void setAlarmStatus(AuthToken authToken, Alarm alarm)
 			throws WebException;
 
+	public List<String> getFiredepartmentList(String term) throws WebException;
+
 	public void addAlarmStatusPosition(AuthToken authToken, WayPoint position)
 			throws WebException;
 
@@ -33,7 +36,7 @@ public interface WebClient {
 
 	public WebResult checkEmailAdress(String email) throws WebException;
 
-	public Person createUser(String username, String firstName,
+	public PersonData createUser(String username, String firstName,
 			String lastName, String email, String password,
 			String passwordConfirmation) throws WebException;
 
@@ -41,4 +44,7 @@ public interface WebClient {
 
 	public Collection<AlarmedUser> getAlarmStatus(AuthToken authToken,
 			String operation_id) throws WebException;
+
+	public WebResult joinFireDepartment(PersonData person, String firedepartment)
+			throws WebException;
 }

@@ -13,15 +13,12 @@ import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
+import org.alarmapp.util.ParserUtil;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,8 +37,6 @@ public class AlarmActivity extends Activity {
 	private Button btAccept;
 	private Button btReject;
 	private Button btSwitchToStatus;
-	private Vibrator vibrator;
-	private MediaPlayer mediaPlayer;
 	private Alarm alarm;
 
 	private final HashMap<String, String> extraNames = new HashMap<String, String>() {
@@ -56,15 +51,15 @@ public class AlarmActivity extends Activity {
 	private OnClickListener onUpdateAlarmStatusClick(final AlarmState newState) {
 		return new OnClickListener() {
 			public void onClick(View v) {
-				stopRingingAndVibrating();
+
+				cancelNotification();
 
 				alarm.setState(newState);
 				Alarm storedAlarm = AlarmApp.getAlarmStore().get(
 						alarm.getOperationId());
 				storedAlarm.setState(newState);
 				storedAlarm.save();
-				IntentUtil.sendToSyncService(AlarmActivity.this,
-						alarm);
+				IntentUtil.sendToSyncService(AlarmActivity.this, alarm);
 
 				if (newState == AlarmState.Accepted) {
 					IntentUtil.startPositionService(AlarmActivity.this, alarm);
@@ -72,14 +67,26 @@ public class AlarmActivity extends Activity {
 
 				updateButtonBarVisibility();
 			}
+
 		};
+	}
+
+	/**
+	 * 
+	 */
+	private void cancelNotification() {
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager notificationManager = (NotificationManager) AlarmActivity.this
+				.getSystemService(ns);
+		notificationManager.cancel(ParserUtil.parseInt(alarm.getOperationId(),
+				0));
 	}
 
 	private OnClickListener switchToClick = new OnClickListener() {
 		public void onClick(View v) {
 			LogEx.info("Clicked on the Switch to Alarm Status button");
-			IntentUtil.displayAlarmStatusUpdateIntent(AlarmActivity.this,
-					alarm);
+			IntentUtil
+					.displayAlarmStatusUpdateIntent(AlarmActivity.this, alarm);
 		}
 	};
 
@@ -97,16 +104,11 @@ public class AlarmActivity extends Activity {
 		this.btReject = (Button) findViewById(R.id.btReject);
 		this.btSwitchToStatus = (Button) findViewById(R.id.btSwitchToStatus);
 
-		this.mediaPlayer = new MediaPlayer();
-		initMediaPlayer();
-
 		this.btAccept
 				.setOnClickListener(onUpdateAlarmStatusClick(AlarmState.Accepted));
 		this.btReject
 				.setOnClickListener(onUpdateAlarmStatusClick(AlarmState.Rejeced));
 		this.btSwitchToStatus.setOnClickListener(switchToClick);
-
-		this.vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		if (AlarmData.isAlarmDataBundle(savedInstanceState))
 			alarm = AlarmData.create(savedInstanceState);
@@ -118,33 +120,6 @@ public class AlarmActivity extends Activity {
 		displayAlarm();
 	}
 
-	private Uri getRingtone() {
-		try {
-			if (AlarmApp.getPreferences().contains("alarm_ringtone")) {
-				return Uri.parse(AlarmApp.getPreferences().getString(
-						"alarm_ringtone", null));
-			}
-		} catch (Exception e) {
-			LogEx.exception(
-					"Failed to load the ringtone from pref. Using default one",
-					e);
-		}
-		return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-	}
-
-	private void initMediaPlayer() {
-		Uri alert = getRingtone();
-
-		try {
-			mediaPlayer.setDataSource(this, alert);
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-			mediaPlayer.setLooping(true);
-			mediaPlayer.prepare();
-		} catch (Exception e) {
-			LogEx.exception(e);
-		}
-	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -153,7 +128,6 @@ public class AlarmActivity extends Activity {
 
 		if (alarm.getState().isUserActionRequired()) {
 			makeActivityVisible();
-			ringAndVibrate();
 		}
 	}
 
@@ -181,8 +155,6 @@ public class AlarmActivity extends Activity {
 		super.onPause();
 
 		LogEx.verbose("AlarmActivity onPause");
-
-		stopRingingAndVibrating();
 	}
 
 	private void putEntryToList(List<Map<String, String>> items, String key,
@@ -203,7 +175,6 @@ public class AlarmActivity extends Activity {
 
 		if (alarm.getState().isUserActionRequired()) {
 			makeActivityVisible();
-			ringAndVibrate();
 		}
 
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
@@ -250,36 +221,4 @@ public class AlarmActivity extends Activity {
 		w.setFlags(flags, flags);
 	}
 
-	private void stopRingingAndVibrating() {
-
-		vibrator.cancel();
-		if (mediaPlayer.isPlaying()) {
-			mediaPlayer.pause();
-
-			LogEx.verbose("Ringing and vibrating for Operation "
-					+ alarm.getOperationId() + " stopped");
-		}
-	}
-
-	private void ringAndVibrate() {
-
-		int dot = 200; // Length of a Morse Code "dot" in milliseconds
-		int short_gap = 200; // Length of Gap Between dots/dashes
-		int medium_gap = 500; // Length of Gap Between Letters
-		long[] pattern = { 0, // Start immediately
-				dot, short_gap, dot, short_gap, dot, medium_gap };
-
-		// Only perform this pattern one time (-1 means "do not repeat")
-		if (AlarmApp.getPreferences().getBoolean("alarm_vibrate", true))
-			vibrator.vibrate(pattern, 0);
-
-		final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-			if (!mediaPlayer.isPlaying())
-				mediaPlayer.start();
-		}
-
-		LogEx.verbose("Ringing and vibrating for Operation "
-				+ alarm.getOperationId() + " started");
-	}
 }

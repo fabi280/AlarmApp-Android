@@ -4,6 +4,7 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.Broadcasts;
 import org.alarmapp.R;
 import org.alarmapp.model.User;
+import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
@@ -112,7 +113,15 @@ public class LoginActivity extends Activity {
 	OnClickListener onCreateClick = new OnClickListener() {
 
 		public void onClick(View v) {
-			IntentUtil.displayAccountCreateActivity(LoginActivity.this);
+			User user = AlarmApp.getUser();
+			if (!user.hasAccount()) {
+				IntentUtil.displayAccountCreateActivity(LoginActivity.this);
+			} else if (!user.hasDepartment()) {
+				IntentUtil.displayJoinDepartmentActivity(LoginActivity.this,
+						(PersonData) user);
+			} else {
+				IntentUtil.displayJoinPendingActivity(LoginActivity.this);
+			}
 		}
 	};
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
+import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.util.adapter.BinderAdapter;
@@ -105,6 +106,13 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		LogEx.verbose("Hello!");
 
+		if (false) {
+
+			IntentUtil.displayJoinDepartmentActivity(this,
+					(PersonData) AlarmApp.getUser());
+			return;
+		}
+
 		if (!isUserAvailable()) {
 			startActivity(new Intent(this, LoginActivity.class));
 			return;
@@ -113,7 +121,7 @@ public class MainActivity extends Activity {
 		this.lvMainItems = (ListView) findViewById(R.id.lvMainItems);
 		this.lvMainItems.setOnItemClickListener(itemClick);
 		displayMenu();
-		IntentUtil.displayAccountCreateActivity(this);
+
 	}
 
 	private void displayMenu() {
@@ -136,6 +144,6 @@ public class MainActivity extends Activity {
 	}
 
 	private boolean isUserAvailable() {
-		return AlarmApp.getUser() != null;
+		return AlarmApp.getUser().isLoggedIn();
 	}
 }
