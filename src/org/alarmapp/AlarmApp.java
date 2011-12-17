@@ -1,5 +1,6 @@
 package org.alarmapp;
 
+import org.acra.ACRA;
 import org.acra.ErrorReporter;
 import org.acra.annotation.ReportsCrashes;
 import org.alarmapp.model.AlarmStore;
@@ -119,7 +120,7 @@ public class AlarmApp extends Application {
 
 	@Override
 	public void onCreate() {
-		// ACRA.init(this);
+		ACRA.init(this);
 		super.onCreate();
 		instance = this;
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);

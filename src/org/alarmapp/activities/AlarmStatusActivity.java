@@ -70,7 +70,8 @@ public class AlarmStatusActivity extends Activity {
 		public void run() {
 			try {
 				final Collection<AlarmedUser> alarmedUsers = AlarmApp
-						.getAuthWebClient().getAlarmStatus(alarm.getOperationId());
+						.getAuthWebClient().getAlarmStatus(
+								alarm.getOperationId());
 
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -137,8 +138,7 @@ public class AlarmStatusActivity extends Activity {
 	private OnClickListener mapClickListener = new OnClickListener() {
 
 		public void onClick(View v) {
-			IntentUtil.displayAlarmMapActivity(AlarmStatusActivity.this,
-					alarm);
+			IntentUtil.displayAlarmMapActivity(AlarmStatusActivity.this, alarm);
 
 		}
 	};
@@ -167,9 +167,9 @@ public class AlarmStatusActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		LogEx.info("Started AlarmStatusActivity");
-
 		setContentView(R.layout.alarm_status);
+
+		LogEx.info("Started AlarmStatusActivity");
 
 		this.lvAlarmedUsers = (ListView) findViewById(R.id.lvAlarmedUserList);
 		this.btRefresh = (ImageButton) findViewById(R.id.btRefresh);
@@ -190,6 +190,8 @@ public class AlarmStatusActivity extends Activity {
 
 		btRefresh.setOnClickListener(refreshListener);
 		btMap.setOnClickListener(mapClickListener);
+
+		ActivityUtil.makeVisible(this);
 	}
 
 	private boolean isAlarmStatusUpdateRequired() {

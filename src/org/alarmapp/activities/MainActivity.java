@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
-import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.util.adapter.BinderAdapter;
@@ -104,20 +103,15 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		LogEx.verbose("Hello!");
 
-		if (false) {
+		setContentView(R.layout.main);
 
-			IntentUtil.displayJoinDepartmentActivity(this,
-					(PersonData) AlarmApp.getUser());
-			return;
-		}
+		LogEx.verbose("MainActivity");
 
 		if (!isUserAvailable()) {
 			startActivity(new Intent(this, LoginActivity.class));
 			return;
 		}
-		setContentView(R.layout.main);
 		this.lvMainItems = (ListView) findViewById(R.id.lvMainItems);
 		this.lvMainItems.setOnItemClickListener(itemClick);
 		displayMenu();

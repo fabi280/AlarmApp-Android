@@ -130,14 +130,13 @@ public class JoinDepartmentActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.join_activity_layout);
 
 		if (savedInstanceState != null) {
 			person = PersonData.create(savedInstanceState);
 		} else {
 			person = PersonData.create(this.getIntent().getExtras());
 		}
-
-		setContentView(R.layout.join_activity_layout);
 
 		this.tvDepartment = (AutoCompleteTextView) findViewById(R.id.tvDepartment);
 		this.tvUser = (TextView) findViewById(R.id.tvUser);

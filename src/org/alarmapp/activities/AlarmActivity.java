@@ -10,6 +10,7 @@ import org.alarmapp.R;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.classes.AlarmData;
+import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
@@ -22,8 +23,6 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -213,12 +212,7 @@ public class AlarmActivity extends Activity {
 	}
 
 	private void makeActivityVisible() {
-		Window w = this.getWindow(); // in Activity's onCreate() for instance
-		int flags = /*
-					 * WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-					 */WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
-		w.setFlags(flags, flags);
+		ActivityUtil.makeVisible(this);
 	}
 
 }
