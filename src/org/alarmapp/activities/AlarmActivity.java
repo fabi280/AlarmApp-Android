@@ -52,6 +52,7 @@ public class AlarmActivity extends Activity {
 			public void onClick(View v) {
 
 				cancelNotification();
+				IntentUtil.stopAudioPlayerService(AlarmActivity.this);
 
 				alarm.setState(newState);
 				Alarm storedAlarm = AlarmApp.getAlarmStore().get(

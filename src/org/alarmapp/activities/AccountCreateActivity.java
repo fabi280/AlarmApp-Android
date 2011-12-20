@@ -20,9 +20,9 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.ActivityUtil;
+import org.alarmapp.util.Ensure;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
-import org.alarmapp.util.checker.AsyncEditorActionChecker;
 import org.alarmapp.util.checker.CheckerUtil;
 import org.alarmapp.util.checker.EditorActionChecker;
 import org.alarmapp.util.checker.TextViewChecker;
@@ -64,12 +64,16 @@ public class AccountCreateActivity extends Activity {
 
 			if (!allEditTextsValid()) {
 				displayError("Bitte korrigieren Sie Ihre Eingaben!");
+				return;
 			}
-			progressDialog = ProgressDialog.show(AccountCreateActivity.this,
-					"", "Benutzeraccount wird erzeugt. Bitte warten...", true);
+			progressDialog = new ProgressDialog(AccountCreateActivity.this);
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			progressDialog.setMessage("Benutzereingaben prüfen...");
+			progressDialog.setMax(3);
+			progressDialog.show();
+
 			new Thread(createUserRunnable).start();
 		}
-
 	};
 
 	private boolean allEditTextsValid() {
@@ -91,20 +95,45 @@ public class AccountCreateActivity extends Activity {
 			String passwordConfirmation = etPassword2.getText().toString();
 
 			try {
-				// final PersonData p = AlarmApp.getWebClient().createUser(
-				// username, firstName, lastName, email, password,
-				// passwordConfirmation);
-				throw new WebException("fail");
-				// runOnUiThread(new Runnable() {
-				//
-				// public void run() {
-				// userCreateSuccessful(p);
-				// }
-				// });
+
+				WebClient cli = AlarmApp.getWebClient();
+
+				setProgressMessage("Emailaddresse prüfen...");
+				if (!cli.checkEmailAdress(email).wasSuccessful()) {
+					setError(etEmail,
+							"Es existiert bereits ein Benutzer mit dieser Email-Addresse");
+					displayError("Bitte prüfen Sie die Email-Addresse.");
+					return;
+				}
+				incrProgress();
+
+				setProgressMessage("Benutzername prüfen...");
+				if (!cli.checkUserName(username).wasSuccessful()) {
+					setError(etUserName,
+							"Es existiert bereits ein Benutzer mit diesem Namen.");
+					displayError("Bitte prüfen Sie den Benutzernamen.");
+					return;
+				}
+				incrProgress();
+
+				setProgressMessage("Account erstellen...");
+				final PersonData person = AlarmApp.getWebClient().createUser(
+						username, firstName, lastName, email, password,
+						passwordConfirmation);
+
+				userCreateSuccessful(person);
+
 			} catch (WebException e) {
 				LogEx.exception("Creating a new User failed!", e);
+
+				if (e.isPermanentFailure())
+					displayError(CREATE_USER_FAILED_ERROR + " Grund: "
+							+ e.getMessage());
+				else
+					displayError(e.getMessage());
+
+			} finally {
 				progressDialog.cancel();
-				displayError(CREATE_USER_FAILED_ERROR + e.getMessage());
 			}
 		}
 
@@ -113,19 +142,48 @@ public class AccountCreateActivity extends Activity {
 	private void userCreateSuccessful(PersonData value) {
 		LogEx.info("User " + value.getFullName() + " created. Id is "
 				+ value.getId());
-		progressDialog.cancel();
 
 		AlarmApp.setUser(value);
 
 		IntentUtil.displayJoinDepartmentActivity(this, value);
 	}
 
-	/**
-	 * @param string
-	 */
-	protected void displayError(String string) {
-		ActivityUtil.displayToast(this, string, 30);
+	protected void setProgressMessage(final String message) {
+		Ensure.notNull(progressDialog);
+		runOnUiThread(new Runnable() {
 
+			public void run() {
+				progressDialog.setMessage(message);
+			}
+		});
+	}
+
+	protected void incrProgress() {
+		runOnUiThread(new Runnable() {
+
+			public void run() {
+				progressDialog.incrementProgressBy(1);
+			}
+		});
+	}
+
+	protected void setError(final TextView tv, final String msg) {
+		runOnUiThread(new Runnable() {
+
+			public void run() {
+				tv.setError(msg);
+
+			}
+		});
+	}
+
+	protected void displayError(final String string) {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				ActivityUtil.displayToast(AccountCreateActivity.this, string,
+						30);
+			}
+		});
 	}
 
 	TextViewChecker passwordConfirmedChecker = new TextViewChecker() {
@@ -158,9 +216,8 @@ public class AccountCreateActivity extends Activity {
 
 		btAccountCreate.setOnClickListener(accountCreateClick);
 
-		this.etUserName.setOnEditorActionListener(new AsyncEditorActionChecker(
-				this, CheckerUtil.UsernameValidChecker,
-				CheckerUtil.UsernameUniqueChecker));
+		this.etUserName.setOnEditorActionListener(new EditorActionChecker(
+				CheckerUtil.UsernameValidChecker));
 		this.etPassword
 				.setOnEditorActionListener(CheckerUtil.PasswortEditActionChecker);
 		this.etPassword2.setOnEditorActionListener(new EditorActionChecker(
@@ -169,7 +226,5 @@ public class AccountCreateActivity extends Activity {
 				.setOnEditorActionListener(CheckerUtil.LastNameEditActionChecker);
 		this.etFirstName
 				.setOnEditorActionListener(CheckerUtil.FirstNameEditActionChecker);
-		this.etEmail.setOnEditorActionListener(new AsyncEditorActionChecker(
-				this, CheckerUtil.EmailUniqueChecker));
 	}
 }

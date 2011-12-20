@@ -100,6 +100,23 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	// private Runnable playSoundClick = new Runnable() {
+	//
+	// public void run() {
+	// IntentUtil.startAudioPlayerService(MainActivity.this, AlarmApp
+	// .getAlarmStore().getLastAlarms().get(0));
+	//
+	// }
+	// };
+	//
+	// private Runnable stopSoundClick = new Runnable() {
+	//
+	// public void run() {
+	// IntentUtil.stopAudioPlayerService(MainActivity.this);
+	//
+	// }
+	// };
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -132,6 +149,11 @@ public class MainActivity extends Activity {
 		entries.add(new MenuEntry("Feedback",
 				"Verbesserungsvorschläge oder Fehler melden.",
 				MenuEntry.COLOR_RED, feedbackClick));
+
+		// entries.add(new MenuEntry("Start", "Alarmton", MenuEntry.COLOR_BLUE,
+		// playSoundClick));
+		// entries.add(new MenuEntry("Stopp", "Alarmton", MenuEntry.COLOR_BLUE,
+		// stopSoundClick));
 
 		this.lvMainItems.setAdapter(new BinderAdapter<MenuEntry>(this,
 				R.layout.list_layout_main, binder, entries));

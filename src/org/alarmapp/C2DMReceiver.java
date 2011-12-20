@@ -1,11 +1,5 @@
 package org.alarmapp;
 
-//--------------------------------------------------------
-//My knowledge came from
-//Android Cloud to Device Messaging (C2DM) - Tutorial
-//http://www.vogella.de/articles/AndroidCloudToDeviceMessaging/article.html
-//--------------------------------------------------------
-
 import org.alarmapp.activities.AlarmActivity;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
@@ -18,23 +12,17 @@ import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.util.NotificationUtil;
 import org.alarmapp.web.WebException;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
 
 public class C2DMReceiver extends C2DMBaseReceiver {
 
-	public static final String ME = "C2DMReceiver";
-
 	public C2DMReceiver() {
-		super("man"); // This is currently not used, a constructor is required
-		Log.v(ME, "Constructor");
+		super("org.AlarmApp");
 	}
 
 	@Override
@@ -109,30 +97,15 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
 		IntentUtil.displayAlarmIntent(this, alarm);
+		IntentUtil.startAudioPlayerService(this, alarm);
 
 		IntentUtil.sendToSyncService(this, alarm);
 	}
 
 	@Override
 	public void onError(Context context, String errorId) {
-		try {
-			JSONObject json;
-			json = new JSONObject().put("event", "error");
 
-			// My application on my host server sends back to "EXTRAS" variables
-			// msg and msgcnt
-			// Depending on how you build your server app you can specify what
-			// variables you want to send
-			//
-			json.put("msg", errorId);
-
-			Log.e(ME + ":onError ", json.toString());
-
-			// C2DMPlugin.sendJavascript(json);
-			// Send the MESSAGE to the Javascript application
-		} catch (JSONException e) {
-			Log.e(ME + ":onMessage", "JSON exception");
-		}
+		LogEx.exception("Failed. Error code is " + errorId);
 
 	}
 

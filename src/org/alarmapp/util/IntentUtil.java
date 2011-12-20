@@ -15,6 +15,7 @@ import org.alarmapp.activities.map.AlarmMapActivity;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.WayPoint;
 import org.alarmapp.model.classes.PersonData;
+import org.alarmapp.services.AudioPlayerService;
 import org.alarmapp.services.PositionService;
 import org.alarmapp.services.SyncService;
 
@@ -57,6 +58,25 @@ public class IntentUtil {
 		startPositionServiceIntent.putExtras(alarm.getBundle());
 
 		c.startService(startPositionServiceIntent);
+	}
+
+	public static void startAudioPlayerService(Context context, Alarm alarm) {
+		Ensure.notNull(context);
+		Ensure.notNull(alarm);
+
+		Intent intent = new Intent(context, AudioPlayerService.class);
+		intent.setAction(AudioPlayerService.START_PLAYING);
+		intent.putExtras(alarm.getBundle());
+		context.startService(intent);
+	}
+
+	public static void stopAudioPlayerService(Context context) {
+		Ensure.notNull(context);
+
+		Intent intent = new Intent(context, AudioPlayerService.class);
+		intent.setAction(AudioPlayerService.STOP_PLAYING);
+
+		context.startService(intent);
 	}
 
 	public static void displayAlarmMapActivity(Context context, Alarm alarm) {

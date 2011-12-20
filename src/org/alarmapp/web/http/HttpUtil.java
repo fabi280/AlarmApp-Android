@@ -18,10 +18,9 @@ import org.alarmapp.web.WebException;
 
 public class HttpUtil {
 
+	private static final String NOT_CONNECTED = "Es konnte keine Internet-Verbindung zum Server hergestellt werden.";
 	private static final String TEMPORARY_NOT_AVAILABLE = "Die Ressource ist temporär nicht verfügbar. HTTP-Statuscode:";
 	private static final String URL_ERROR = "Die Url hat kein gültiges Format. URL: ";
-	private static final String HTTP_POST_ERROR = "Fehler beim Senden von Daten an die URL ";
-	private static final String HTTP_GET_ERROR = "Fehler beim Abrufen der URL ";
 	private static final String TEMPORAL_SERVER_ERROR = "Der Web-Service ist momentan nicht verfügbar. Versuchen Sie es später erneut";
 
 	private static final String UNKNOWN_HTTP_STATUS_ERROR = "Der HTTP-Status-Code ist unbekannt:";
@@ -63,7 +62,7 @@ public class HttpUtil {
 			return getResponse(http);
 
 		} catch (IOException e) {
-			throw new WebException(HTTP_GET_ERROR + url, e);
+			throw new WebException(NOT_CONNECTED);
 		}
 	}
 
@@ -110,7 +109,7 @@ public class HttpUtil {
 
 	private static String formatErrorMessage(String read) {
 		int bodyBegin = read.indexOf("<body");
-		int bodyEnd = read.indexOf("</body>");
+		// int bodyEnd = read.indexOf("</body>");
 		if (bodyBegin > -1)
 			return read.substring(bodyBegin);
 		return read;
@@ -141,7 +140,7 @@ public class HttpUtil {
 
 		} catch (IOException e) {
 			LogEx.exception(e);
-			throw new WebException(HTTP_POST_ERROR + url, e);
+			throw new WebException(NOT_CONNECTED);
 		}
 	}
 

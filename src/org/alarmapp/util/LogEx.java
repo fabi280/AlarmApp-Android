@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class LogEx {
 
-	private static String TAG = "AlarmApp";
+	public static final String TAG = "AlarmApp";
 
 	private static String analyzeStackTrace() {
 		StackTraceElement elem = Thread.currentThread().getStackTrace()[5];
