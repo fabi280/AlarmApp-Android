@@ -7,6 +7,7 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
+import org.alarmapp.util.RingtoneUtil;
 import org.alarmapp.util.adapter.BinderAdapter;
 import org.alarmapp.util.adapter.IAdapterBinder;
 
@@ -117,6 +118,13 @@ public class MainActivity extends Activity {
 	// }
 	// };
 
+	private Runnable deleteRingtoneDir = new Runnable() {
+
+		public void run() {
+			RingtoneUtil.deleteRingtoneDir();
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -129,6 +137,19 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, LoginActivity.class));
 			return;
 		}
+
+		LogEx.verbose("Ringtone is "
+				+ AlarmApp.getPreferences().getString("alarm_ringtone", null));
+
+		if (!RingtoneUtil.doesAlarmDirExsist()) {
+
+			LogEx.verbose("Install new ring tones");
+			RingtoneUtil.installSwissphoneQuattro();
+			RingtoneUtil.installMotorolaBMD();
+		} else {
+			LogEx.verbose("Ringtones already installed!");
+		}
+
 		this.lvMainItems = (ListView) findViewById(R.id.lvMainItems);
 		this.lvMainItems.setOnItemClickListener(itemClick);
 		displayMenu();
@@ -150,8 +171,8 @@ public class MainActivity extends Activity {
 				"Verbesserungsvorschläge oder Fehler melden.",
 				MenuEntry.COLOR_RED, feedbackClick));
 
-		// entries.add(new MenuEntry("Start", "Alarmton", MenuEntry.COLOR_BLUE,
-		// playSoundClick));
+		// entries.add(new MenuEntry("Lösche", "Alarmtonverzeichnis",
+		// MenuEntry.COLOR_BLUE, deleteRingtoneDir));
 		// entries.add(new MenuEntry("Stopp", "Alarmton", MenuEntry.COLOR_BLUE,
 		// stopSoundClick));
 

@@ -96,7 +96,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		LogEx.verbose("Display Alarm Activity.");
 
 		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
-		IntentUtil.displayAlarmIntent(this, alarm);
+		IntentUtil.displayAlarmActivity(this, alarm);
 		IntentUtil.startAudioPlayerService(this, alarm);
 
 		IntentUtil.sendToSyncService(this, alarm);

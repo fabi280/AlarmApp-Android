@@ -97,7 +97,7 @@ public class IntentUtil {
 		context.startActivity(alarmIntent);
 	}
 
-	public static void displayAlarmIntent(Context context, Alarm alarm) {
+	public static void displayAlarmActivity(Context context, Alarm alarm) {
 		Ensure.notNull(alarm);
 
 		Intent alarmIntent = new Intent(context, AlarmActivity.class);

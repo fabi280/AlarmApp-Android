@@ -61,9 +61,9 @@ public class AlarmActivity extends Activity {
 				storedAlarm.save();
 				IntentUtil.sendToSyncService(AlarmActivity.this, alarm);
 
-				if (newState == AlarmState.Accepted) {
-					IntentUtil.startPositionService(AlarmActivity.this, alarm);
-				}
+				// if (newState == AlarmState.Accepted) {
+				// IntentUtil.startPositionService(AlarmActivity.this, alarm);
+				// }
 
 				updateButtonBarVisibility();
 			}

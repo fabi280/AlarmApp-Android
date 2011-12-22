@@ -118,6 +118,11 @@ public class AlarmApp extends Application {
 		return PreferenceManager.getDefaultSharedPreferences(instance);
 	}
 
+	public static AlarmApp getInstance() {
+		Ensure.notNull(instance);
+		return instance;
+	}
+
 	@Override
 	public void onCreate() {
 		ACRA.init(this);
