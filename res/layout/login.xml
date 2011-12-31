@@ -46,10 +46,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
+                android:inputType="textEmailAddress" 
                 android:imeOptions="actionNext"
                 android:singleLine="true"
                 >
-
                 <requestFocus >
                 </requestFocus>
             </EditText>

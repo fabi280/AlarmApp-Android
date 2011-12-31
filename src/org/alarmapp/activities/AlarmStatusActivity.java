@@ -243,6 +243,7 @@ public class AlarmStatusActivity extends Activity {
 	}
 
 	private void cancelProgressBar() {
-		dialog.cancel();
+		if (dialog != null && dialog.isShowing())
+			dialog.cancel();
 	}
 }

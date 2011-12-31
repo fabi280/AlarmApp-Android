@@ -90,8 +90,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			return;
 		}
 
-		AlarmApp.getAlarmStore().put(alarm);
 		alarm.setState(AlarmState.Delivered);
+		AlarmApp.getAlarmStore().put(alarm);
 
 		LogEx.verbose("Display Alarm Activity.");
 
