@@ -132,7 +132,7 @@ public class HttpWebClient implements WebClient {
 		// "APA91bFVprgJrcUTtvdN_IoZU5qpRf04sk-l1X5HS0gXHl3zlyh29nmuAbhdCwJVHXI4gbNnvZxKyQWjeL6l32mQ7Zsqa3Low6axWUakFUIv0CfgoRe-RoyPZdENRLokZo9ZLlZGRTSa",
 		// "Name": "n1", "Platform": "android", "Version": "1.2.3.4", "Owner":
 		// 4001, "UUID": "259748ba-d53b-47cf-b667-7beb3af26e7d"}}]
-
+		// TODO: Prüfen ob das Smartphone angelegt wurde
 		LogEx.verbose("Create Smartphone returned " + response);
 	}
 
