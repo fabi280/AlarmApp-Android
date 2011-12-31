@@ -37,6 +37,8 @@ public class Store<T> {
 			LogEx.warning("File " + this.file.getName() + " does not exist.");
 		} catch (IOException e) {
 			LogEx.exception(e);
+		} catch (Exception ex) {
+			LogEx.exception(ex);
 		}
 		return null;
 	}
@@ -52,6 +54,8 @@ public class Store<T> {
 			LogEx.exception(e);
 		} catch (IOException e) {
 			LogEx.exception(e);
+		} catch (Exception ex) {
+			LogEx.exception(ex);
 		}
 	}
 }
