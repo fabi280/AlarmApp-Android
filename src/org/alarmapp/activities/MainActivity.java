@@ -12,7 +12,6 @@ import org.alarmapp.util.adapter.BinderAdapter;
 import org.alarmapp.util.adapter.IAdapterBinder;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,7 +133,7 @@ public class MainActivity extends Activity {
 		LogEx.verbose("MainActivity");
 
 		if (!isUserAvailable()) {
-			startActivity(new Intent(this, LoginActivity.class));
+			IntentUtil.displayLoginActivity(this);
 			return;
 		}
 

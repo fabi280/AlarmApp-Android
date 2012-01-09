@@ -7,6 +7,7 @@ import java.io.RandomAccessFile;
 import java.util.UUID;
 
 import android.content.Context;
+import android.os.Build;
 
 public class Device {
 
@@ -14,7 +15,7 @@ public class Device {
 	private static final String INSTALLATION = "INSTALLATION";
 
 	public static String name(Context context) {
-		return "n1";
+		return android.os.Build.MODEL;
 	}
 
 	public static String platform(Context context) {
@@ -22,7 +23,7 @@ public class Device {
 	}
 
 	public static String version(Context context) {
-		return "1.2.3.4";
+		return Build.VERSION.RELEASE;
 	}
 
 	public synchronized static String id(Context context) {

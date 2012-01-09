@@ -6,6 +6,7 @@ import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.model.classes.AlarmedUserData;
+import org.alarmapp.model.classes.AnonymusUserData;
 import org.alarmapp.util.Device;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.IntentUtil;
@@ -13,7 +14,9 @@ import org.alarmapp.util.LogEx;
 import org.alarmapp.util.NotificationUtil;
 import org.alarmapp.web.WebException;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -42,6 +45,29 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		}
 
 		Broadcasts.sendSmartphoneCreatedBroadcast(context);
+	};
+
+	@Override
+	public void onUnregistered(final Context context) {
+		LogEx.warning("C2DM unregister happened.");
+		LogEx.info("Removing user Account. Login required!");
+		AlarmApp.setUser(new AnonymusUserData());
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(
+				"Google hat den Push-Dienst für Ihr Smartphoen deaktiviert. Um den Push-Dienst wieder zu starten, müssen Sie sich erneut anmelden.")
+				.setCancelable(false);
+		AlertDialog alert = builder.create();
+
+		alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+			public void onDismiss(DialogInterface dialog) {
+				IntentUtil.displayLoginActivity(context);
+
+			}
+		});
+
+		alert.show();
 	};
 
 	@Override

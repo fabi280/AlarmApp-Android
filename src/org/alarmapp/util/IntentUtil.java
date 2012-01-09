@@ -10,6 +10,7 @@ import org.alarmapp.activities.AlarmStatusActivity;
 import org.alarmapp.activities.InformationActivity;
 import org.alarmapp.activities.JoinDepartmentActivity;
 import org.alarmapp.activities.JoinPendingActivity;
+import org.alarmapp.activities.LoginActivity;
 import org.alarmapp.activities.MainActivity;
 import org.alarmapp.activities.map.AlarmMapActivity;
 import org.alarmapp.model.Alarm;
@@ -136,6 +137,10 @@ public class IntentUtil {
 	public static void displayPreferencesActivity(Context context) {
 		Intent intent = new Intent(context, AlarmPreferenceActivity.class);
 		context.startActivity(intent);
+	}
+
+	public static void displayLoginActivity(Context context) {
+		context.startActivity(new Intent(context, LoginActivity.class));
 	}
 
 	public static void displayJoinDepartmentActivity(Context context,
