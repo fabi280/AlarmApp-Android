@@ -24,6 +24,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 /**
  * @author frankenglert
@@ -32,27 +33,38 @@ import android.content.Intent;
 public class NotificationUtil {
 
 	public static void notifyUser(Context c, Alarm alarm, Class<?> cls) {
+		notifyUser(c, ParserUtil.parseInt(alarm.getOperationId(), 0),
+				alarm.getTitle(), alarm.getText(), cls, alarm.getBundle());
+	}
+
+	public static void notifyUser(Context c, String title, String text,
+			Class<?> callbackIntentClass) {
+		notifyUser(c, 0, title, text, callbackIntentClass, null);
+	}
+
+	public static void notifyUser(Context c, int id, String title,
+			String message, Class<?> cls, Bundle bundle) {
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager notificationManager = (NotificationManager) c
 				.getSystemService(ns);
 
-		Notification notification = createNotification();
+		Notification notification = createNotification(title);
 
 		Intent notificationIntent = new Intent(c, cls);
-		notificationIntent.putExtras(alarm.getBundle());
+		if (bundle != null)
+			notificationIntent.putExtras(bundle);
+
 		PendingIntent contentIntent = PendingIntent.getActivity(c, 0,
 				notificationIntent, 0);
 
-		notification.setLatestEventInfo(c, alarm.getTitle(), alarm.getText(),
-				contentIntent);
+		notification.setLatestEventInfo(c, title, message, contentIntent);
 
-		notificationManager.notify(
-				ParserUtil.parseInt(alarm.getOperationId(), 0), notification);
+		notificationManager.notify(id, notification);
 	}
 
-	private static Notification createNotification() {
+	private static Notification createNotification(String title) {
 		int icon = R.drawable.startus_bar_icon;
-		CharSequence tickerText = "Einsatz";
+		CharSequence tickerText = title;
 		long when = System.currentTimeMillis();
 
 		Notification notification = new Notification(icon, tickerText, when);

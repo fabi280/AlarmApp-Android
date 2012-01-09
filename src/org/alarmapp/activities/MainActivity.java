@@ -13,6 +13,9 @@ import org.alarmapp.util.adapter.IAdapterBinder;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +23,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.c2dm.C2DMessaging;
 
 public class MainActivity extends Activity {
 	/** Called when the activity is first created. */
@@ -70,6 +75,25 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.log_out:
+			new Thread(logoutClick).start();
+			IntentUtil.displayLoginActivity(this);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 	private Runnable feedbackClick = new Runnable() {
 
 		public void run() {
@@ -100,22 +124,12 @@ public class MainActivity extends Activity {
 		}
 	};
 
-	// private Runnable playSoundClick = new Runnable() {
-	//
-	// public void run() {
-	// IntentUtil.startAudioPlayerService(MainActivity.this, AlarmApp
-	// .getAlarmStore().getLastAlarms().get(0));
-	//
-	// }
-	// };
-	//
-	// private Runnable stopSoundClick = new Runnable() {
-	//
-	// public void run() {
-	// IntentUtil.stopAudioPlayerService(MainActivity.this);
-	//
-	// }
-	// };
+	private Runnable logoutClick = new Runnable() {
+
+		public void run() {
+			C2DMessaging.unregister(MainActivity.this);
+		}
+	};
 
 	private Runnable deleteRingtoneDir = new Runnable() {
 

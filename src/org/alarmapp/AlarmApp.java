@@ -70,14 +70,14 @@ public class AlarmApp extends Application {
 			user = userStore.read();
 			LogEx.verbose("Loaded the user " + user + " from local storage");
 
-			if (user != null) {
+			if (user != null && user.isLoggedIn()) {
 
 				ErrorReporter.getInstance().putCustomData("UserId",
 						user.getId());
 				ErrorReporter.getInstance().putCustomData("User Name",
 						user.getFullName());
 
-				if (user.getFireDepartment() != null)
+				if (user.hasDepartment())
 					ErrorReporter.getInstance().putCustomData(
 							"Fire Department",
 							user.getFireDepartment().getName());

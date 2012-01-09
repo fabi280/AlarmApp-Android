@@ -47,17 +47,17 @@ public class AnonymusUserData implements User {
 
 	public AuthToken getAuthToken() {
 		throw new UnsupportedOperationException(
-				"Don't call getFireDepartment on a anonymus user");
+				"Don't call getAuthToken on a anonymus user");
 	}
 
 	public void setAuthToken(AuthToken token) {
 		throw new UnsupportedOperationException(
-				"Don't call getFireDepartment on a anonymus user");
+				"Don't call setAuthToken on a anonymus user");
 	}
 
 	public String getId() {
 		throw new UnsupportedOperationException(
-				"Don't call getFireDepartment on a anonymus user");
+				"Don't call getId on a anonymus user");
 	}
 
 	public boolean canViewAlarmStatus() {

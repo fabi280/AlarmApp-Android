@@ -1,6 +1,7 @@
 package org.alarmapp;
 
 import org.alarmapp.activities.AlarmActivity;
+import org.alarmapp.activities.LoginActivity;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
@@ -14,9 +15,7 @@ import org.alarmapp.util.LogEx;
 import org.alarmapp.util.NotificationUtil;
 import org.alarmapp.web.WebException;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -53,21 +52,12 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		LogEx.info("Removing user Account. Login required!");
 		AlarmApp.setUser(new AnonymusUserData());
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(
-				"Google hat den Push-Dienst für Ihr Smartphoen deaktiviert. Um den Push-Dienst wieder zu starten, müssen Sie sich erneut anmelden.")
-				.setCancelable(false);
-		AlertDialog alert = builder.create();
-
-		alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-			public void onDismiss(DialogInterface dialog) {
-				IntentUtil.displayLoginActivity(context);
-
-			}
-		});
-
-		alert.show();
+		NotificationUtil
+				.notifyUser(
+						context,
+						"Push-Dienst deaktiviert",
+						"Google hat den Push-Dienst auf Ihrem Smartphoen deaktiviert. Sie müssen Sich erneut anmelden, um die AlarmApp weiterhin zu verweden",
+						LoginActivity.class);
 	};
 
 	@Override
