@@ -165,6 +165,48 @@ public class AudioPlayerService extends Service {
 		LogEx.verbose("AudioPlayerService.play() " + alarm.getOperationId()
 				+ " alert ");
 
+		AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+		if (respectAndroidRingerMode()) {
+
+			switch (am.getRingerMode()) {
+			case AudioManager.RINGER_MODE_SILENT:
+				LogEx.info("Device is in silent Mode. Do nothing.");
+				break;
+			case AudioManager.RINGER_MODE_VIBRATE:
+				LogEx.info("Device is in vibration only Mode. Vibrate.");
+				startVibration();
+				break;
+			case AudioManager.RINGER_MODE_NORMAL:
+				LogEx.info("Device is in normal Mode. Ring and Vibrate");
+				startVibration();
+				startRinging();
+				break;
+			}
+		} else {
+			startVibration();
+			startRinging();
+		}
+
+		enableKiller(alarm);
+		mPlaying = true;
+	}
+
+	private boolean respectAndroidRingerMode() {
+		AlarmApp.getPreferences().getBoolean("respect_ringer_mode", true);
+		return false;
+	}
+
+	private void startVibration() {
+		/* Start the vibrator after everything is ok with the media player */
+		if (AlarmApp.getPreferences().getBoolean("alarm_vibrate", true)) {
+			mVibrator.vibrate(sVibratePattern, 0);
+		} else {
+			mVibrator.cancel();
+		}
+	}
+
+	private void startRinging() {
 		Uri alert = getRingtone();
 		// Fall back on the default alarm if the database does not have an
 		// alarm stored.
@@ -212,16 +254,6 @@ public class AudioPlayerService extends Service {
 				LogEx.exception("Failed to play fallback ringtone", ex2);
 			}
 		}
-
-		/* Start the vibrator after everything is ok with the media player */
-		if (AlarmApp.getPreferences().getBoolean("alarm_vibrate", true)) {
-			mVibrator.vibrate(sVibratePattern, 0);
-		} else {
-			mVibrator.cancel();
-		}
-
-		enableKiller(alarm);
-		mPlaying = true;
 	}
 
 	// Do the common stuff when starting the alarm.
@@ -267,8 +299,10 @@ public class AudioPlayerService extends Service {
 	 * user will know that the alarm tripped.
 	 */
 	private void enableKiller(Alarm alarm) {
+		int alarmTimeoutInSec = AlarmApp.getPreferences().getInt(
+				"ringtone_timeout", 5) * 60;
 		mHandler.sendMessageDelayed(mHandler.obtainMessage(KILLER, alarm),
-				1000 * ALARM_TIMEOUT_SECONDS);
+				1000 * alarmTimeoutInSec);
 	}
 
 	private void disableKiller() {

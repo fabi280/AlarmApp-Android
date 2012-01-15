@@ -5,4 +5,6 @@
     <CheckBoxPreference android:key="alarm_vibrate" android:title="Vibrieren" android:summary="Bei einem Alarm vibrieren" android:defaultValue="true"/> 
 	<!-- <CheckBoxPreference android:key="alarm_record_position" android:title="Weg aufzeihnen" android:summary="Bei einem Alarm den Weg zum Feuerwehrhaus aufzeichnen" android:defaultValue="false" />
 	<EditTextPreference android:key="firedepartment_geofence_radius" android:title="Geofence Durchmesser" android:summary="Wegaufzeichnung abbrechen, wenn das Smartphone einen Kreis mit dem hier eingestellten Radius um das Feuerwehrhaus betritt." android:defaultValue="150" android:dependency="alarm_record_position" android:numeric="integer" /> --> 
+	<CheckBoxPreference android:key="respect_ringer_mode" android:title="Lautlosmodus beachten" android:summary="Bei einer Alarmierung den Lautlos-Modus des Systems beachten." android:defaultValue="true"/>
+	<EditTextPreference android:key="ringtone_timeout" android:title="Maximale Klingeldauer" android:summary="Zeitdauer in Minuten bis zum Verstummen einer Alarmierung ohne Benutzerbestätigung." android:defaultValue="5" android:numeric="integer" />
 </PreferenceScreen>
