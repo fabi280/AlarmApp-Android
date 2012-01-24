@@ -2,22 +2,33 @@ package org.alarmapp.util;
 
 import java.util.HashSet;
 
+import org.alarmapp.AlarmApp;
+
 import android.os.Bundle;
 
 public class Ensure {
 	public static void notNull(Object value) {
+		if (!AlarmApp.isDebuggable())
+			return;
+
 		if (value == null)
 			throw new IllegalArgumentException(
 					"The given Value shall not be <null>");
 	}
 
 	public static void valid(boolean expr) {
+		if (!AlarmApp.isDebuggable())
+			return;
+
 		if (!expr)
 			throw new IllegalArgumentException(
 					"The given assertion does not hold");
 	}
 
 	public static void bundleHasKeys(Bundle bundle, String... keys) {
+		if (!AlarmApp.isDebuggable())
+			return;
+
 		if (BundleUtil.containsAll(bundle, keys))
 			return;
 
@@ -34,4 +45,5 @@ public class Ensure {
 						+ ") are not in the given Bundle. The bundle contains the following keys: "
 						+ bundle.keySet());
 	}
+
 }

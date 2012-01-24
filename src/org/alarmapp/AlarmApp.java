@@ -17,6 +17,7 @@ import org.alarmapp.web.WebClient;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.preference.PreferenceManager;
 
 //dFRiRHVCbGVxVzNva0NkdHB0NVN5Q0E6MQ
@@ -90,6 +91,12 @@ public class AlarmApp extends Application {
 		return user;
 	}
 
+	public static boolean isDebuggable() {
+		boolean isDebuggable = (0 != (instance.getApplicationInfo().flags &= ApplicationInfo.FLAG_DEBUGGABLE));
+
+		return isDebuggable;
+	}
+
 	public static void setUser(User user) {
 		Ensure.notNull(user);
 
@@ -107,8 +114,6 @@ public class AlarmApp extends Application {
 
 		if (alarmStore == null)
 			alarmStore = new PersistentAlarmStore(instance);
-
-		// throw new NullPointerException();
 
 		return alarmStore;
 	}
@@ -129,5 +134,9 @@ public class AlarmApp extends Application {
 		super.onCreate();
 		instance = this;
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+		if (isDebuggable()) {
+			LogEx.info("Running in Debug mode");
+		}
 	}
 }

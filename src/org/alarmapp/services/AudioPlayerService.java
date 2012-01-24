@@ -21,6 +21,7 @@ import org.alarmapp.model.Alarm;
 import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.util.AlarmAppWakeLock;
 import org.alarmapp.util.LogEx;
+import org.alarmapp.util.ParserUtil;
 
 import android.app.Service;
 import android.content.Context;
@@ -193,8 +194,8 @@ public class AudioPlayerService extends Service {
 	}
 
 	private boolean respectAndroidRingerMode() {
-		AlarmApp.getPreferences().getBoolean("respect_ringer_mode", true);
-		return false;
+		return AlarmApp.getPreferences()
+				.getBoolean("respect_ringer_mode", true);
 	}
 
 	private void startVibration() {
@@ -299,8 +300,8 @@ public class AudioPlayerService extends Service {
 	 * user will know that the alarm tripped.
 	 */
 	private void enableKiller(Alarm alarm) {
-		int alarmTimeoutInSec = AlarmApp.getPreferences().getInt(
-				"ringtone_timeout", 5) * 60;
+		int alarmTimeoutInSec = ParserUtil.parseInt(AlarmApp.getPreferences()
+				.getString("ringtone_timeout", "60"), 60);
 		mHandler.sendMessageDelayed(mHandler.obtainMessage(KILLER, alarm),
 				1000 * alarmTimeoutInSec);
 	}
