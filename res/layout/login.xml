@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+     >
 
     <TextView
         android:id="@+id/textView1"
@@ -10,7 +11,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/login_title"
-        android:textAppearance="?android:attr/textAppearanceLarge" >
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:layout_marginLeft="5dip"
+    	android:layout_marginRight="5dip"
+        >
     </TextView>
 
     <TextView
@@ -18,67 +22,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dip"
+        android:layout_marginLeft="5dip"
+    	android:layout_marginRight="5dip"
         android:text="Bitte melden Sie sich mit Ihren AlarmApp.org-Zugangsdaten an um Ihrem Gerät den Empfang von Alarmierungen zu ermöglichen." >
     </TextView>
-
-    <TableLayout
-        android:id="@+id/tableLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dip"
-                android:layout_marginRight="5dip"
-                android:text="Email-Adresse" >
-            </TextView>
-
             <EditText
                 android:id="@+id/etEmail"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text=""
                 android:inputType="textEmailAddress" 
                 android:imeOptions="actionNext"
                 android:singleLine="true"
+                android:hint="Email oder Benutzername"
+                android:layout_marginLeft="5dip"
+    			android:layout_marginRight="5dip"
                 >
                 <requestFocus >
                 </requestFocus>
             </EditText>
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dip"
-                android:layout_marginRight="5dip"
-                android:text="Passwort" >
-            </TextView>
 
             <EditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
-                android:text="" >
+                android:text="" 
+                android:hint="Passwort"
+                android:layout_marginLeft="5dip"
+    			android:layout_marginRight="5dip"
+                >
             </EditText>
-        </TableRow>
+            
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
         <TableRow
             android:id="@+id/tableRow3"
