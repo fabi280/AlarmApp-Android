@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.log_out:
-			new Thread(logoutClick).start();
+			new Thread(onLogoutClick).start();
 			IntentUtil.displayLoginActivity(this);
 			return true;
 		default:
@@ -124,10 +124,11 @@ public class MainActivity extends Activity {
 		}
 	};
 
-	private Runnable logoutClick = new Runnable() {
+	private Runnable onLogoutClick = new Runnable() {
 
 		public void run() {
 			C2DMessaging.unregister(MainActivity.this);
+			MainActivity.this.finish();
 		}
 	};
 
@@ -142,14 +143,15 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.main);
-
 		LogEx.verbose("MainActivity");
 
 		if (!isUserAvailable()) {
 			IntentUtil.displayLoginActivity(this);
+			this.finish();
 			return;
 		}
+
+		setContentView(R.layout.main);
 
 		LogEx.verbose("Ringtone is "
 				+ AlarmApp.getPreferences().getString("alarm_ringtone", null));

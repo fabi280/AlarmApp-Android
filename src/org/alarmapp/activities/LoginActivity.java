@@ -4,7 +4,6 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.Broadcasts;
 import org.alarmapp.R;
 import org.alarmapp.model.User;
-import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
@@ -39,6 +38,9 @@ public class LoginActivity extends Activity {
 	private TextView tvProgressStep;
 	private User user;
 
+	private boolean isPushServiceBroadcastRegistered = false;
+	private boolean isSmartphoneCreatedBroadcastRegistered = false;
+
 	private Runnable displayProgress(final String nextStep) {
 		return new Runnable() {
 			public void run() {
@@ -58,6 +60,19 @@ public class LoginActivity extends Activity {
 					+ intent.getStringExtra("registration_id"));
 
 			unregisterReceiver(pushServiceRegistered);
+			isPushServiceBroadcastRegistered = false;
+		}
+	};
+
+	protected void onDestroy() {
+		super.onDestroy();
+		if (isPushServiceBroadcastRegistered) {
+			unregisterReceiver(pushServiceRegistered);
+			isPushServiceBroadcastRegistered = false;
+		}
+		if (isSmartphoneCreatedBroadcastRegistered) {
+			unregisterReceiver(smartphoneCreated);
+			isSmartphoneCreatedBroadcastRegistered = false;
 		}
 	};
 
@@ -90,10 +105,13 @@ public class LoginActivity extends Activity {
 						AlarmApp.setUser(user);
 
 						runOnUiThread(displayProgress("Push-Dienst starten"));
+
 						Broadcasts.registerForC2DMRegisteredBroadcast(
 								LoginActivity.this, pushServiceRegistered);
+						isPushServiceBroadcastRegistered = true;
 						Broadcasts.registerForSmartphoneCreatedBroadcast(
 								LoginActivity.this, smartphoneCreated);
+						isSmartphoneCreatedBroadcastRegistered = true;
 
 						LogEx.info("C2DMessaging.Register");
 						C2DMessaging.register(LoginActivity.this,
@@ -106,7 +124,6 @@ public class LoginActivity extends Activity {
 					}
 				}
 			}).start();
-
 		}
 	};
 
@@ -114,14 +131,7 @@ public class LoginActivity extends Activity {
 
 		public void onClick(View v) {
 			User user = AlarmApp.getUser();
-			if (!user.hasAccount()) {
-				IntentUtil.displayAccountCreateActivity(LoginActivity.this);
-			} else if (!user.hasDepartment()) {
-				IntentUtil.displayJoinDepartmentActivity(LoginActivity.this,
-						(PersonData) user);
-			} else {
-				IntentUtil.displayJoinPendingActivity(LoginActivity.this);
-			}
+			IntentUtil.displayAccountCreateActivity(LoginActivity.this);
 		}
 	};
 

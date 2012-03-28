@@ -8,14 +8,11 @@ import org.alarmapp.activities.AlarmListActivity;
 import org.alarmapp.activities.AlarmPreferenceActivity;
 import org.alarmapp.activities.AlarmStatusActivity;
 import org.alarmapp.activities.InformationActivity;
-import org.alarmapp.activities.JoinDepartmentActivity;
-import org.alarmapp.activities.JoinPendingActivity;
 import org.alarmapp.activities.LoginActivity;
 import org.alarmapp.activities.MainActivity;
 import org.alarmapp.activities.map.AlarmMapActivity;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.WayPoint;
-import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.services.AudioPlayerService;
 import org.alarmapp.services.PositionService;
 import org.alarmapp.services.SyncService;
@@ -140,18 +137,8 @@ public class IntentUtil {
 	}
 
 	public static void displayLoginActivity(Context context) {
-		context.startActivity(new Intent(context, LoginActivity.class));
-	}
-
-	public static void displayJoinDepartmentActivity(Context context,
-			PersonData person) {
-		Intent intent = new Intent(context, JoinDepartmentActivity.class);
-		intent.putExtras(person.getBundle());
-		context.startActivity(intent);
-	}
-
-	public static void displayJoinPendingActivity(Context context) {
-		Intent intent = new Intent(context, JoinPendingActivity.class);
-		context.startActivity(intent);
+		Intent i = new Intent(context, LoginActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(i);
 	}
 }
