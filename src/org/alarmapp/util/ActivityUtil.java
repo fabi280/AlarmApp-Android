@@ -1,6 +1,7 @@
 package org.alarmapp.util;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -16,6 +17,26 @@ public class ActivityUtil {
 
 			}
 		});
+	}
+
+	private static ProgressDialog pDialog;
+
+	public static void startProgressBar(final Activity activity) {
+		activity.runOnUiThread(new Runnable() {
+
+			public void run() {
+				// pBar = ProgressBar.makeText(activity, text, duration);
+				pDialog = new ProgressDialog(activity);
+				pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				pDialog.setMessage("Laden");
+				pDialog.setCancelable(false);
+				pDialog.show();
+			}
+		});
+	}
+
+	public static void stopProgressBar() {
+		pDialog.dismiss();
 	}
 
 	public static void makeVisible(Activity activity) {

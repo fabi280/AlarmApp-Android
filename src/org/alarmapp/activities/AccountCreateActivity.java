@@ -25,10 +25,6 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-/**
- * @author frank
- * 
- */
 public class AccountCreateActivity extends Activity {
 
 	private WebView webView;
@@ -62,6 +58,7 @@ public class AccountCreateActivity extends Activity {
 		webView.getSettings().setJavaScriptEnabled(true);
 
 		webView.setWebViewClient(new AccountCreateWebViewClient());
+		ActivityUtil.startProgressBar(this);
 		webView.loadUrl("http://alarmnotificationservice.appspot.com/mobile/register");
 
 	}

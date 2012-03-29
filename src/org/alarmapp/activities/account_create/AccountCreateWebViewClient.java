@@ -17,6 +17,7 @@
 package org.alarmapp.activities.account_create;
 
 import org.alarmapp.AlarmApp;
+import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 
 import android.webkit.WebView;
@@ -30,6 +31,12 @@ public class AccountCreateWebViewClient extends android.webkit.WebViewClient {
 		}
 		view.loadUrl(url);
 		return true;
+	}
+
+	@Override
+	public void onPageFinished(WebView view, String url) {
+		super.onPageFinished(view, url);
+		ActivityUtil.stopProgressBar();
 	}
 
 	private boolean isRegistrationDone(String url) {
