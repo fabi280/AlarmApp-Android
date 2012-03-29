@@ -18,11 +18,11 @@
 			<LinearLayout android:id="@+id/llButtonBar" style="@android:style/ButtonBar"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:orientation="horizontal">
-				<Button android:text="Akzeptieren" android:layout_height="wrap_content"
+				<Button android:text="Akzeptieren" android:layout_height="60dip"
 					android:id="@+id/btAccept" android:layout_weight="1" android:layout_width="0dp"></Button>
-				<Button android:layout_height="wrap_content" android:text="Ablehnen"
+				<Button android:layout_height="60dip" android:text="Ablehnen"
 					android:id="@+id/btReject" android:layout_weight="1" android:layout_width="0dp"></Button>
-			<Button android:text="Einsatzstatus" android:layout_height="wrap_content" android:id="@+id/btSwitchToStatus" android:layout_weight="1" android:layout_width="0dp" android:visibility="gone"></Button>
+			<Button android:text="Einsatzstatus" android:layout_height="60dip" android:id="@+id/btSwitchToStatus" android:layout_weight="1" android:layout_width="0dp" android:visibility="gone"></Button>
 		
 					
 			</LinearLayout>

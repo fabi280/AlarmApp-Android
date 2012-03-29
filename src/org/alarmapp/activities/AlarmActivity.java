@@ -19,6 +19,8 @@ import org.alarmapp.util.ParserUtil;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -106,8 +108,14 @@ public class AlarmActivity extends Activity {
 
 		this.btAccept
 				.setOnClickListener(onUpdateAlarmStatusClick(AlarmState.Accepted));
+		this.btAccept.getBackground().setColorFilter(Color.GREEN, Mode.SRC_IN);
+		this.btAccept.setTextColor(Color.BLACK);
+
 		this.btReject
 				.setOnClickListener(onUpdateAlarmStatusClick(AlarmState.Rejeced));
+		this.btReject.getBackground().setColorFilter(Color.RED, Mode.SRC_IN);
+		this.btReject.setTextColor(Color.BLACK);
+
 		this.btSwitchToStatus.setOnClickListener(switchToClick);
 
 		if (AlarmData.isAlarmDataBundle(savedInstanceState))
