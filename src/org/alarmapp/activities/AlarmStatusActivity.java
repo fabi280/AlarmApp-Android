@@ -177,6 +177,9 @@ public class AlarmStatusActivity extends Activity {
 		this.tvAcceptCount = (TextView) findViewById(R.id.tvAcceptCount);
 
 		if (AlarmData.isAlarmDataBundle(savedInstanceState)) {
+
+			LogEx.info("savedInstanceState is AlarmDataBundle");
+
 			alarm = AlarmData.create(savedInstanceState);
 			fillAlarmStatusView();
 		} else {
@@ -205,6 +208,7 @@ public class AlarmStatusActivity extends Activity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
+		LogEx.info("Saving State");
 		outState.putAll(alarm.getBundle());
 	}
 
