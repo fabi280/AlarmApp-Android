@@ -4,8 +4,14 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="top">
-    	<LinearLayout android:layout_width="match_parent" android:layout_weight="1" android:layout_height="match_parent" android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|top"
+        android:orientation="horizontal" >
+
+    	<LinearLayout android:layout_width="match_parent" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
 	    	<TextView android:id="@+id/textView1" 
 	    	android:textAppearance="?android:attr/textAppearanceLarge" 
 	    	android:text="Einsatzstatus"  
@@ -17,8 +23,8 @@
 	    	    android:id="@+id/tvAcceptCount"
 	    	    android:layout_width="wrap_content"
 	    	    android:layout_height="wrap_content"
-	    	    android:layout_weight="1"
 	    	    android:text="n haben akzeptiert"
+	    	    android:paddingBottom="12dp"
 	    	    android:textAppearance="?android:attr/textAppearanceMedium" />
 	    	
     	</LinearLayout>
@@ -28,7 +34,16 @@
     	android:layout_weight="0"
     	android:id="@+id/btMap"
     	android:visibility="gone"
-    	></ImageButton> 
+    	></ImageButton>
+
+    	<ProgressBar
+    	    android:id="@+id/pb_loading"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_gravity="center_vertical" 
+    	    android:visibility="gone"
+    	    />
+ 
     	<ImageButton android:layout_height="wrap_content" 
     	android:layout_width="wrap_content" 
     	android:src="@drawable/ic_refresh"

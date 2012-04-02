@@ -21,15 +21,16 @@ import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebException;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class AlarmStatusActivity extends Activity {
@@ -39,6 +40,7 @@ public class AlarmStatusActivity extends Activity {
 	TextView tvAcceptCount;
 	ImageButton btRefresh;
 	ImageButton btMap;
+	ProgressBar pbLoader;
 
 	private final OnClickListener refreshListener = new OnClickListener() {
 
@@ -65,35 +67,50 @@ public class AlarmStatusActivity extends Activity {
 		}
 	};
 
-	private Runnable loadAlarmStatus = new Runnable() {
+	private class LoadAlarmstatusAsyncTask extends
+			AsyncTask<Alarm, Void, Collection<AlarmedUser>> {
 
-		public void run() {
+		@Override
+		protected void onPreExecute() {
+			AlarmStatusActivity.this.btRefresh.setVisibility(ImageButton.GONE);
+			AlarmStatusActivity.this.pbLoader
+					.setVisibility(ProgressBar.VISIBLE);
+		}
+
+		@Override
+		protected Collection<AlarmedUser> doInBackground(Alarm... params) {
+			Ensure.valid(params.length == 1);
+
+			Alarm alarm = params[0];
+
 			try {
 				final Collection<AlarmedUser> alarmedUsers = AlarmApp
 						.getAuthWebClient().getAlarmStatus(
 								alarm.getOperationId());
 
-				runOnUiThread(new Runnable() {
-					public void run() {
-						displayAlarmStatusView(alarmedUsers);
-					}
-				});
+				return alarmedUsers;
 
 			} catch (final WebException e) {
 				LogEx.exception("Failed to load the user list", e);
-
-				runOnUiThread(new Runnable() {
-					public void run() {
-						cancelProgressBar();
-						displayError(e.getMessage());
-					}
-				});
 			}
-
+			return null;
 		}
-	};
+
+		@Override
+		protected void onPostExecute(Collection<AlarmedUser> result) {
+			super.onPostExecute(result);
+
+			displayAlarmStatusView(result);
+
+			AlarmStatusActivity.this.btRefresh
+					.setVisibility(ImageButton.VISIBLE);
+			AlarmStatusActivity.this.pbLoader.setVisibility(ProgressBar.GONE);
+		}
+
+	}
 
 	private void addUser(AlarmedUser user) {
+
 		this.alarm.updateAlarmedUser(user);
 
 		LogEx.verbose("Number of positions: " + user.getPositions().size());
@@ -117,8 +134,6 @@ public class AlarmStatusActivity extends Activity {
 	private void displayAlarmStatusView(Collection<AlarmedUser> users) {
 		LogEx.verbose("Display the alarm status for " + users.size()
 				+ " fire fighters");
-
-		this.cancelProgressBar();
 
 		for (AlarmedUser u : users)
 			addUser(u);
@@ -175,6 +190,7 @@ public class AlarmStatusActivity extends Activity {
 		this.btRefresh = (ImageButton) findViewById(R.id.btRefresh);
 		this.btMap = (ImageButton) findViewById(R.id.btMap);
 		this.tvAcceptCount = (TextView) findViewById(R.id.tvAcceptCount);
+		this.pbLoader = (ProgressBar) findViewById(R.id.pb_loading);
 
 		if (AlarmData.isAlarmDataBundle(savedInstanceState)) {
 
@@ -182,6 +198,7 @@ public class AlarmStatusActivity extends Activity {
 
 			alarm = AlarmData.create(savedInstanceState);
 			fillAlarmStatusView();
+
 		} else {
 			Ensure.valid(AlarmData.isAlarmDataBundle(getIntent().getExtras()));
 			alarm = AlarmData.create(getIntent().getExtras());
@@ -210,6 +227,7 @@ public class AlarmStatusActivity extends Activity {
 
 		LogEx.info("Saving State");
 		outState.putAll(alarm.getBundle());
+
 	}
 
 	@Override
@@ -223,7 +241,6 @@ public class AlarmStatusActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-
 		this.unregisterReceiver(alarmStatusReceiver);
 	}
 
@@ -232,22 +249,7 @@ public class AlarmStatusActivity extends Activity {
 	}
 
 	private void startFetchAlarmStatus() {
-		displayProgressBar();
 
-		new Thread(this.loadAlarmStatus).start();
-	}
-
-	ProgressDialog dialog;
-
-	private void displayProgressBar() {
-		this.dialog = ProgressDialog.show(AlarmStatusActivity.this, "",
-				"Loading. Please wait...", true);
-
-		dialog.show();
-	}
-
-	private void cancelProgressBar() {
-		if (dialog != null && dialog.isShowing())
-			dialog.cancel();
+		new LoadAlarmstatusAsyncTask().execute(this.alarm);
 	}
 }
