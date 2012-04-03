@@ -75,7 +75,7 @@ android:versionName="1.1.4">
 		<activity android:name=".activities.AlarmActivity"></activity>
 		<activity android:name=".activities.AlarmStatusActivity"></activity>
 		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
-		<activity android:name=".activities.AccountCreateActivity"  android:theme="@android:style/Theme.NoTitleBar"></activity>
+		<activity android:name=".activities.AccountCreateActivity"  android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation"></activity>
 		<activity android:name=".activities.map.AlarmMapActivity"></activity>
 	</application>
 </manifest>
