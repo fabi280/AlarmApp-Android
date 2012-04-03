@@ -57,7 +57,8 @@ public class AccountCreateActivity extends Activity {
 		webView = (WebView) findViewById(R.id.wvCreateAccount);
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.setWebViewClient(new AccountCreateWebViewClient());
+		ActivityUtil.startProgressBar(this);
 		webView.loadUrl("http://alarmnotificationservice.appspot.com/mobile/register");
-
 	}
+
 }
