@@ -20,6 +20,7 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 
+import android.view.KeyEvent;
 import android.webkit.WebView;
 
 public class AccountCreateWebViewClient extends android.webkit.WebViewClient {
@@ -37,6 +38,15 @@ public class AccountCreateWebViewClient extends android.webkit.WebViewClient {
 	public void onPageFinished(WebView view, String url) {
 		ActivityUtil.stopProgressBar();
 		super.onPageFinished(view, url);
+	}
+
+	@Override
+	public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
+		if (event.getKeyCode() == event.KEYCODE_BACK && !view.canGoBack()) {
+			IntentUtil.displayLoginActivity(AlarmApp.getInstance());
+			return true;
+		}
+		return super.shouldOverrideKeyEvent(view, event);
 	}
 
 	private boolean isRegistrationDone(String url) {
