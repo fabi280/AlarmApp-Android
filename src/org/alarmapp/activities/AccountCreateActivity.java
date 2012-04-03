@@ -19,6 +19,7 @@ package org.alarmapp.activities;
 import org.alarmapp.R;
 import org.alarmapp.activities.account_create.AccountCreateWebViewClient;
 import org.alarmapp.util.ActivityUtil;
+import org.alarmapp.util.IntentUtil;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -61,4 +62,8 @@ public class AccountCreateActivity extends Activity {
 		webView.loadUrl("http://alarmnotificationservice.appspot.com/mobile/register");
 	}
 
+	@Override
+	public void onBackPressed() {
+		IntentUtil.displayLoginActivity(AccountCreateActivity.this);
+	}
 }
