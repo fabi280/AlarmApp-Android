@@ -23,10 +23,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-/**
- * @author frank
- * 
- */
 public class EditorActionChecker implements OnEditorActionListener {
 
 	private final TextViewChecker[] checker;

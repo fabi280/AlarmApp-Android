@@ -18,10 +18,6 @@ package org.alarmapp.util.checker;
 
 import android.widget.TextView;
 
-/**
- * @author frank
- * 
- */
 public class RegexTextviewChecker implements TextViewChecker {
 
 	private final String regex;

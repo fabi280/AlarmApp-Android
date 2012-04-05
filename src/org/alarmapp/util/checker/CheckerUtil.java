@@ -16,10 +16,6 @@
 
 package org.alarmapp.util.checker;
 
-/**
- * @author frank
- * 
- */
 public class CheckerUtil {
 	public final static TextViewChecker UsernameValidChecker = new RegexTextviewChecker(
 			"([\\w.+-_@]){1,30}",

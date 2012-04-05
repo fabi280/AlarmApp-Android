@@ -20,10 +20,6 @@ import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.FireDepartment;
 import org.alarmapp.model.User;
 
-/**
- * @author Frank Englert
- * 
- */
 public class AnonymusUserData implements User {
 
 	private static final long serialVersionUID = 1L;

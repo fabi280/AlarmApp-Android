@@ -22,10 +22,6 @@ import org.alarmapp.web.WebException;
 
 import android.widget.TextView;
 
-/**
- * @author frank
- * 
- */
 public class UsernameUniqueTextViewChecker implements TextViewChecker {
 
 	private boolean checkFailed = false;

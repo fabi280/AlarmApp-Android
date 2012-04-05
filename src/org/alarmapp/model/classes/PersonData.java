@@ -28,10 +28,6 @@ import org.alarmapp.util.Ensure;
 
 import android.os.Bundle;
 
-/**
- * @author frank
- * 
- */
 public class PersonData implements User, Bindable, Serializable {
 
 	private static final long serialVersionUID = 1L;

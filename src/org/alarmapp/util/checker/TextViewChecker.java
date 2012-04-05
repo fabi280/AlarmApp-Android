@@ -18,10 +18,6 @@ package org.alarmapp.util.checker;
 
 import android.widget.TextView;
 
-/**
- * @author frank
- * 
- */
 public interface TextViewChecker {
 	public boolean isValid(TextView v);
 

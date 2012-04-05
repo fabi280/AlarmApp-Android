@@ -18,10 +18,6 @@ package org.alarmapp.model;
 
 import android.os.Bundle;
 
-/**
- * @author frank
- * 
- */
 public interface BindableConverter<T> {
 	public boolean canConvert(Bundle b);
 
