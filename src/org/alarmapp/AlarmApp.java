@@ -16,6 +16,8 @@
 
 package org.alarmapp;
 
+import org.acra.ACRA;
+import org.acra.ErrorReporter;
 import org.acra.annotation.ReportsCrashes;
 import org.alarmapp.model.AlarmStore;
 import org.alarmapp.model.User;
@@ -87,15 +89,15 @@ public class AlarmApp extends Application {
 
 			if (user != null && user.isLoggedIn()) {
 
-				// ErrorReporter.getInstance().putCustomData("UserId",
-				// user.getId());
-				// ErrorReporter.getInstance().putCustomData("User Name",
-				// user.getFullName());
-				//
-				// if (user.hasDepartment())
-				// ErrorReporter.getInstance().putCustomData(
-				// "Fire Department",
-				// user.getFireDepartment().getName());
+				ErrorReporter.getInstance().putCustomData("UserId",
+						user.getId());
+				ErrorReporter.getInstance().putCustomData("User Name",
+						user.getFullName());
+
+				if (user.hasDepartment())
+					ErrorReporter.getInstance().putCustomData(
+							"Fire Department",
+							user.getFireDepartment().getName());
 			}
 		}
 
@@ -144,7 +146,7 @@ public class AlarmApp extends Application {
 
 	@Override
 	public void onCreate() {
-		// ACRA.init(this);
+		ACRA.init(this);
 		super.onCreate();
 		instance = this;
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
