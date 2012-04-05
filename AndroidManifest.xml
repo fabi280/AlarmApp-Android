@@ -71,7 +71,7 @@ android:versionName="1.1.4">
 		</activity>
 		<activity android:name=".activities.InformationActivity"></activity>
 		<activity android:name=".activities.AlarmListActivity"></activity>
-		<activity android:name=".activities.LoginActivity" android:noHistory="true"></activity>
+		<activity android:name=".activities.LoginActivity" android:noHistory="true" android:configChanges="orientation"></activity>
 		<activity android:name=".activities.AlarmActivity"></activity>
 		<activity android:name=".activities.AlarmStatusActivity"></activity>
 		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
