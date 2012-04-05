@@ -26,10 +26,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-/**
- * @author frankenglert
- * 
- */
 public class NotificationUtil {
 
 	public static void notifyUser(Context c, Alarm alarm, Class<?> cls) {
@@ -40,6 +36,13 @@ public class NotificationUtil {
 	public static void notifyUser(Context c, String title, String text,
 			Class<?> callbackIntentClass) {
 		notifyUser(c, 0, title, text, callbackIntentClass, null);
+	}
+
+	public static void closeNotification(Context c, int id) {
+		String ns = Context.NOTIFICATION_SERVICE;
+		NotificationManager notificationManager = (NotificationManager) c
+				.getSystemService(ns);
+		notificationManager.cancel(id);
 	}
 
 	public static void notifyUser(Context c, int id, String title,

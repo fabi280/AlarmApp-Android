@@ -60,6 +60,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		}
 
 		Broadcasts.sendSmartphoneCreatedBroadcast(context);
+		NotificationUtil.closeNotification(context, 0);
 	};
 
 	@Override
@@ -72,7 +73,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 				.notifyUser(
 						context,
 						"Push-Dienst deaktiviert",
-						"Google hat den Push-Dienst auf Ihrem Smartphoen deaktiviert. Sie müssen Sich erneut anmelden, um die AlarmApp weiterhin zu verweden",
+						"Google hat den Push-Dienst auf Ihrem Smartphone deaktiviert. Sie müssen sich erneut anmelden, um die AlarmApp weiterhin zu verweden",
 						LoginActivity.class);
 	};
 
