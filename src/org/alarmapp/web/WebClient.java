@@ -36,7 +36,7 @@ public interface WebClient {
 
 	public boolean checkAuthentication(AuthToken token) throws WebException;
 
-	public void createSmartphone(AuthToken token, String registrationId,
+	public boolean createSmartphone(AuthToken token, String registrationId,
 			String deviceId, String name, String platform, String version)
 			throws WebException;
 

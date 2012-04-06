@@ -69,6 +69,33 @@ public class JsonUtil {
 		return result;
 	}
 
+	public static boolean parseSmartphoneCreateResult(String jsonDocument)
+			throws JSONException {
+
+		// Content is
+		// [{"pk": 26004, "model": "AlarmService.smartphone", "fields":
+		// {"RegistrationId":
+		// "APA91bFVprgJrcUTtvdN_IoZU5qpRf04sk-l1X5HS0gXHl3zlyh29nmuAbhdCwJVHXI4gbNnvZxKyQWjeL6l32mQ7Zsqa3Low6axWUakFUIv0CfgoRe-RoyPZdENRLokZo9ZLlZGRTSa",
+		// "Name": "n1", "Platform": "android", "Version": "1.2.3.4", "Owner":
+		// 4001, "UUID": "259748ba-d53b-47cf-b667-7beb3af26e7d"}}]
+
+		JSONArray array = new JSONArray(jsonDocument);
+		if (array.length() == 0) {
+			return false;
+		}
+
+		JSONObject obj = (JSONObject) array.get(0);
+		int pk = obj.getInt("pk");
+
+		LogEx.verbose("Smartphone PK is " + pk);
+
+		if (pk > 0) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public static JsonResult<User> parseLoginResult(String jsonDocument)
 			throws JSONException {
 		JSONObject obj = new JSONObject(jsonDocument);

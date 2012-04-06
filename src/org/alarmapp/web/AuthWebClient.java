@@ -28,7 +28,7 @@ public interface AuthWebClient {
 
 	public boolean checkAuthentication() throws WebException;
 
-	public void createSmartphone(String registrationId, String deviceId,
+	public boolean createSmartphone(String registrationId, String deviceId,
 			String name, String platform, String version) throws WebException;
 
 	public void setAlarmStatus(Alarm alarm) throws WebException;

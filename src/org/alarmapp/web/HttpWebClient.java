@@ -129,7 +129,7 @@ public class HttpWebClient implements WebClient {
 		}
 	}
 
-	public void createSmartphone(AuthToken token, String registrationId,
+	public boolean createSmartphone(AuthToken token, String registrationId,
 			String deviceId, String name, String platform, String version)
 			throws WebException {
 		HashMap<String, String> data = new HashMap<String, String>();
@@ -143,13 +143,14 @@ public class HttpWebClient implements WebClient {
 				url("web_service/smartphone/create/"), data,
 				createAuthHeader(token));
 
-		// [{"pk": 26004, "model": "AlarmService.smartphone", "fields":
-		// {"RegistrationId":
-		// "APA91bFVprgJrcUTtvdN_IoZU5qpRf04sk-l1X5HS0gXHl3zlyh29nmuAbhdCwJVHXI4gbNnvZxKyQWjeL6l32mQ7Zsqa3Low6axWUakFUIv0CfgoRe-RoyPZdENRLokZo9ZLlZGRTSa",
-		// "Name": "n1", "Platform": "android", "Version": "1.2.3.4", "Owner":
-		// 4001, "UUID": "259748ba-d53b-47cf-b667-7beb3af26e7d"}}]
-		// TODO: Prüfen ob das Smartphone angelegt wurde
 		LogEx.verbose("Create Smartphone returned " + response);
+
+		try {
+			return JsonUtil.parseSmartphoneCreateResult(response);
+		} catch (Exception ex) {
+			throw new WebException(
+					"Registrieren des Smartphones fehlgeschlagen", ex);
+		}
 	}
 
 	public void setAlarmStatus(AuthToken authToken, Alarm alarm)

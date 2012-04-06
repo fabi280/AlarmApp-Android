@@ -46,9 +46,9 @@ public class AuthHttpClient implements AuthWebClient {
 		return client.checkAuthentication(this.token);
 	}
 
-	public void createSmartphone(String registrationId, String deviceId,
+	public boolean createSmartphone(String registrationId, String deviceId,
 			String name, String platform, String version) throws WebException {
-		client.createSmartphone(token, registrationId, deviceId, name,
+		return client.createSmartphone(token, registrationId, deviceId, name,
 				platform, version);
 	}
 
