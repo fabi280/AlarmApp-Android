@@ -40,6 +40,7 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ public class AlarmActivity extends Activity {
 	private Button btAccept;
 	private Button btReject;
 	private Button btSwitchToStatus;
+	private LinearLayout llButtonBar;
 	private Alarm alarm;
 
 	private final HashMap<String, String> extraNames = new HashMap<String, String>() {
@@ -119,6 +121,7 @@ public class AlarmActivity extends Activity {
 		this.btAccept = (Button) findViewById(R.id.btAccept);
 		this.btReject = (Button) findViewById(R.id.btReject);
 		this.btSwitchToStatus = (Button) findViewById(R.id.btSwitchToStatus);
+		this.llButtonBar = (LinearLayout) findViewById(R.id.llButtonBar);
 
 		this.btAccept
 				.setOnClickListener(onUpdateAlarmStatusClick(AlarmState.Accepted));
@@ -156,6 +159,15 @@ public class AlarmActivity extends Activity {
 			public void run() {
 				for (Button b : buttons)
 					b.setVisibility(visibility);
+			}
+		});
+	}
+
+	private void setButtonBarVisibility(final int visibility) {
+		runOnUiThread(new Runnable() {
+
+			public void run() {
+				llButtonBar.setVisibility(visibility);
 			}
 		});
 	}
@@ -221,10 +233,14 @@ public class AlarmActivity extends Activity {
 		if (alarm.getState().isFinal()) {
 			setButtonVisibility(View.GONE, btAccept, btReject);
 
-			if (alarm.isAlarmStatusViewer())
+			if (alarm.isAlarmStatusViewer()) {
 				setButtonVisibility(View.VISIBLE, btSwitchToStatus);
+				setButtonBarVisibility(View.VISIBLE);
+			} else
+				setButtonBarVisibility(View.GONE);
 
 		} else {
+			setButtonBarVisibility(View.VISIBLE);
 			setButtonVisibility(View.VISIBLE, btAccept, btReject);
 			setButtonVisibility(View.GONE, btSwitchToStatus);
 		}
