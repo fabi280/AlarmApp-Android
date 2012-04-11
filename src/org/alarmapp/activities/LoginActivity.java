@@ -52,6 +52,7 @@ public class LoginActivity extends Activity {
 	private ProgressBar pbLogin;
 	private TextView tvLoginProgress;
 	private TextView tvProgressStep;
+	private TextView tvErrorMessage;
 	private User user;
 
 	private boolean isPushServiceBroadcastRegistered = false;
@@ -105,6 +106,7 @@ public class LoginActivity extends Activity {
 			btLogin.setOnClickListener(null);
 
 			hideKeyboad();
+			hideError();
 
 			final String email = LoginActivity.this.etEmail.getText()
 					.toString();
@@ -163,6 +165,8 @@ public class LoginActivity extends Activity {
 		this.pbLogin = (ProgressBar) findViewById(R.id.pbLogin);
 		this.tvLoginProgress = (TextView) findViewById(R.id.tvLoginProgress);
 		this.tvProgressStep = (TextView) findViewById(R.id.tvProgressStep);
+		this.tvErrorMessage = (TextView) findViewById(R.id.tvErrorMessage);
+		tvErrorMessage.setTextColor(0xFFFF0000);
 
 		this.pbLogin.setMax(3);
 		this.etPassword.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -198,11 +202,25 @@ public class LoginActivity extends Activity {
 		IntentUtil.displayMainActivity(this);
 	}
 
-	private void displayError(String errorMessage) {
-		ActivityUtil.displayToast(this, errorMessage, 15);
+	private void displayError(final String errorMessage) {
+		runOnUiThread(new Runnable() {
+
+			public void run() {
+				tvErrorMessage.setText(errorMessage);
+
+			}
+		});
 
 		btLogin.setOnClickListener(onLoginClickListener);
 		setVisibility(View.INVISIBLE);
+	}
+
+	private void hideError() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				tvErrorMessage.setText("");
+			}
+		});
 	}
 
 	@Override
