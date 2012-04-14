@@ -17,7 +17,9 @@
 package org.alarmapp.util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -33,6 +35,33 @@ public class ActivityUtil {
 
 			}
 		});
+	}
+
+	private static AlertDialog aDialog;
+	private static AlertDialog.Builder aDialogBuilder;
+
+	public static void showAlertDialog(final Activity activity,
+			final String text) {
+		activity.runOnUiThread(new Runnable() {
+
+			public void run() {
+				aDialogBuilder = new AlertDialog.Builder(activity);
+				aDialogBuilder.setMessage(text);
+				aDialogBuilder.setCancelable(false);
+				aDialogBuilder.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.cancel();
+
+							}
+						});
+				aDialog = aDialogBuilder.create();
+				aDialog.show();
+			}
+		});
+
 	}
 
 	private static ProgressDialog pDialog;

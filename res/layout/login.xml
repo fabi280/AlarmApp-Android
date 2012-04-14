@@ -115,14 +115,4 @@
             android:text="anmelden" >
         </TextView>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvErrorMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dip"
-        android:layout_marginRight="5dip"
-        android:layout_marginTop="10dip"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
 </LinearLayout>
