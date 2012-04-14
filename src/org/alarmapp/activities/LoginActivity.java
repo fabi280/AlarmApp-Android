@@ -201,20 +201,10 @@ public class LoginActivity extends Activity {
 	}
 
 	private void displayError(final String errorMessage) {
-		System.out.println("HUHUUUUUUUUUUUUU");
-
 		ActivityUtil.showAlertDialog(this, errorMessage);
 
 		btLogin.setOnClickListener(onLoginClickListener);
 		setVisibility(View.INVISIBLE);
-	}
-
-	private void hideError() {
-		runOnUiThread(new Runnable() {
-			public void run() {
-				dErrorMessage.dismiss();
-			}
-		});
 	}
 
 	@Override
