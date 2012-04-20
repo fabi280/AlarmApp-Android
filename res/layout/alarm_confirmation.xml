@@ -17,7 +17,7 @@
 				android:layout_width="match_parent" android:layout_weight="1" android:layout_marginLeft="10dip" android:layout_marginRight="10dip"></ListView>
 			<LinearLayout android:id="@+id/llButtonBar" style="@android:style/ButtonBar"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:orientation="horizontal">
+				android:orientation="horizontal" android:background="#000000">
 				<Button android:text="Akzeptieren" android:layout_height="60dip"
 					android:id="@+id/btAccept" android:layout_weight="1" android:layout_width="0dp" android:background="@drawable/green_button" android:layout_margin="4dp"></Button>
 				<Button android:layout_height="60dip" android:text="Ablehnen"
