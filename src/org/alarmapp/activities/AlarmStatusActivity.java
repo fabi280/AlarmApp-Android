@@ -116,11 +116,15 @@ public class AlarmStatusActivity extends Activity {
 		protected void onPostExecute(Collection<AlarmedUser> result) {
 			super.onPostExecute(result);
 
-			displayAlarmStatusView(result);
-
 			AlarmStatusActivity.this.btRefresh
 					.setVisibility(ImageButton.VISIBLE);
 			AlarmStatusActivity.this.pbLoader.setVisibility(ProgressBar.GONE);
+
+			if (result == null)
+				return;
+
+			displayAlarmStatusView(result);
+
 		}
 
 	}
