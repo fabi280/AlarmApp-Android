@@ -144,8 +144,8 @@ public class JsonUtil {
 
 	private static <T> JsonResult<T> parseErrorResult(JSONObject obj)
 			throws JSONException {
-		return new JsonResult<T>(obj.getString("msg"),
-				obj.getString("error_kind"));
+		return new JsonResult<T>(obj.getString("error_kind"),
+				obj.getString("msg"));
 	}
 
 	private static ArrayList<WayPoint> parsePositions(String operationId,

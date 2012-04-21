@@ -23,6 +23,7 @@ import org.alarmapp.model.User;
 import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
+import org.alarmapp.web.FireDepartmentMissingException;
 import org.alarmapp.web.HttpWebClient;
 import org.alarmapp.web.WebClient;
 
@@ -134,6 +135,10 @@ public class LoginActivity extends Activity {
 						LogEx.info("C2DMessaging.Register");
 						C2DMessaging.register(LoginActivity.this,
 								"f.englert@gmail.com");
+					} catch (final FireDepartmentMissingException e) {
+						LogEx.exception(
+								"Der Benutzer ist in keiner Feuerwehr. ", e);
+						LoginActivity.this.displayError(e.getMessage());
 					} catch (final Exception e) {
 						LogEx.exception(
 								"Der Login des Benutzers schlug fehl. ", e);
@@ -201,7 +206,8 @@ public class LoginActivity extends Activity {
 	}
 
 	private void displayError(final String errorMessage) {
-		ActivityUtil.showAlertDialog(this, errorMessage);
+		ActivityUtil
+				.showAlertDialog(this, "Login Fehlgeschlagen", errorMessage);
 
 		btLogin.setOnClickListener(onLoginClickListener);
 		setVisibility(View.INVISIBLE);

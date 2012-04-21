@@ -108,10 +108,14 @@ public class HttpWebClient implements WebClient {
 
 			if (!login.wasSuccessful()) {
 				if (login.getErrorTag().equals("user_department_missing"))
-					throw new WebException(
-							"Login Fehlgeschlagen. Der Benutzer ist noch kein Mitglied einer Feuerwehr!");
+					throw new FireDepartmentMissingException(
+							"Sie sind kein Mitglied einer Feuerwehr!");
+				if (login.getErrorTag().equals("user_department_not_active"))
+					throw new FireDepartmentNotActiveException(
+							"Ihre Feuerwehr ist nicht aktiviert!");
+
 				throw new WebException(
-						"Login fehlgeschlagen. Bitte überprüfen Sie ihren Benutzernamen und Ihr Passwort und stellen Sie sicher, dass Ihr Account aktiviert wurde.");
+						"Bitte überprüfen Sie ihren Benutzernamen und Ihr Passwort und stellen Sie sicher, dass Ihr Account aktiviert wurde.");
 			}
 
 			User userObj = login.getValue();

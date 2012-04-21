@@ -41,12 +41,13 @@ public class ActivityUtil {
 	private static AlertDialog.Builder aDialogBuilder;
 
 	public static void showAlertDialog(final Activity activity,
-			final String text) {
+			final String titel, final String text) {
 		activity.runOnUiThread(new Runnable() {
 
 			public void run() {
 				aDialogBuilder = new AlertDialog.Builder(activity);
 				aDialogBuilder.setMessage(text);
+				aDialogBuilder.setTitle(titel);
 				aDialogBuilder.setCancelable(false);
 				aDialogBuilder.setPositiveButton("OK",
 						new DialogInterface.OnClickListener() {
