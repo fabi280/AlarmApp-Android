@@ -40,6 +40,9 @@ public interface WebClient {
 			String deviceId, String name, String platform, String version)
 			throws WebException;
 
+	public void unregisterSmartphone(AuthToken token, String id)
+			throws WebException;
+
 	public void setAlarmStatus(AuthToken authToken, Alarm alarm)
 			throws WebException;
 

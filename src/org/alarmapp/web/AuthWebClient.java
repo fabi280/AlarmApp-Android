@@ -31,6 +31,8 @@ public interface AuthWebClient {
 	public boolean createSmartphone(String registrationId, String deviceId,
 			String name, String platform, String version) throws WebException;
 
+	public void unregisterSmartphone(String uuid) throws WebException;
+
 	public void setAlarmStatus(Alarm alarm) throws WebException;
 
 	public Collection<AlarmedUser> getAlarmStatus(String operation_id)

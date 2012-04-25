@@ -66,4 +66,7 @@ public class AuthHttpClient implements AuthWebClient {
 		client.addAlarmStatusPosition(token, wayPoint);
 	}
 
+	public void unregisterSmartphone(String uuid) throws WebException {
+		client.unregisterSmartphone(token, uuid);
+	}
 }

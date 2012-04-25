@@ -21,11 +21,14 @@ import java.util.List;
 
 import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
+import org.alarmapp.util.Device;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.util.RingtoneUtil;
 import org.alarmapp.util.adapter.BinderAdapter;
 import org.alarmapp.util.adapter.IAdapterBinder;
+import org.alarmapp.web.AuthWebClient;
+import org.alarmapp.web.WebException;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -144,6 +147,14 @@ public class MainActivity extends Activity {
 
 		public void run() {
 			C2DMessaging.unregister(MainActivity.this);
+			AuthWebClient client = AlarmApp.getAuthWebClient();
+			try {
+				client.unregisterSmartphone(Device.id(AlarmApp.getInstance()));
+			} catch (WebException e) {
+				LogEx.exception(e);
+				e.printStackTrace();
+			}
+			// AlarmApp.setUser(new AnonymusUserData());
 			MainActivity.this.finish();
 		}
 	};

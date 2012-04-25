@@ -157,6 +157,15 @@ public class HttpWebClient implements WebClient {
 		}
 	}
 
+	public void unregisterSmartphone(AuthToken token, String uuid)
+			throws WebException {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("uuid", uuid);
+		String response = HttpUtil.request("web_service/smartphone/remove/",
+				data, createAuthHeader(token));
+		LogEx.verbose("Smartphone abgemeldet.");
+	}
+
 	public void setAlarmStatus(AuthToken authToken, Alarm alarm)
 			throws WebException {
 		HashMap<String, String> data = new HashMap<String, String>();
