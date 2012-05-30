@@ -63,6 +63,7 @@ android:versionName="1.1.5">
 	
 		<activity android:name=".activities.MainActivity"
 		android:label="@string/app_name"
+		android:noHistory="true"
 		android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -70,9 +71,9 @@ android:versionName="1.1.5">
 			</intent-filter>
 		</activity>
 		<activity android:name=".activities.InformationActivity"></activity>
-		<activity android:name=".activities.AlarmListActivity"></activity>
+		<activity android:name=".activities.AlarmListActivity" android:noHistory="true"></activity>
 		<activity android:name=".activities.LoginActivity" android:noHistory="true" android:configChanges="orientation"></activity>
-		<activity android:name=".activities.AlarmActivity"></activity>
+		<activity android:name=".activities.AlarmActivity" android:noHistory="true"></activity>
 		<activity android:name=".activities.AlarmStatusActivity"></activity>
 		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
 		<activity android:name=".activities.AccountCreateActivity"  android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation" android:noHistory="true"></activity>

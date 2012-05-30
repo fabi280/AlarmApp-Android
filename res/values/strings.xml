@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="hello">Hello World, AlarmAppActivity!</string>
     <string name="app_name">AlarmApp</string>
     <string name="login_title">Anmeldung erforderlich</string>
+    <string name="feedback_menu_title">Feedback</string>
+    <string name="feedback_menu_desc">Verbesserungsvorschläge oder Fehler melden.</string>
+    <string name="einstellungen_menu_title">Einstellungen</string>
+    <string name="einstellungen_menu_desc">Einstellungen der AlarmApp anzeigen und ändern.</string>
+    
+
+    
 </resources>

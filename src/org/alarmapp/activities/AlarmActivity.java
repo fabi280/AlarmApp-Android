@@ -59,7 +59,7 @@ public class AlarmActivity extends Activity {
 	private final HashMap<String, String> extraNames = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
 		{
-			put("ff_count", "Einsatzkr√§fte:");
+			put("ff_count", "Einsatzkräfte:");
 			put("alarmed", "Alarmzeit:");
 			put("groups", "Alarmgruppen:");
 		}
@@ -248,6 +248,11 @@ public class AlarmActivity extends Activity {
 
 	private void makeActivityVisible() {
 		ActivityUtil.makeVisible(this);
+	}
+
+	@Override
+	public void onBackPressed() {
+		IntentUtil.displayAlarmListActivity(AlarmActivity.this);
 	}
 
 }

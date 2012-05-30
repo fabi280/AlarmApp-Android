@@ -200,20 +200,20 @@ public class MainActivity extends Activity {
 
 	private void displayMenu() {
 		List<MenuEntry> entries = new ArrayList<MainActivity.MenuEntry>();
-		entries.add(new MenuEntry("Letzte Eins√§tze",
-				"Zeigt Ihnen eine Liste mit den letzten Eins√§tzen an.",
+		entries.add(new MenuEntry("Letzte Einsätze",
+				"Zeigt Ihnen eine Liste mit den letzten Einsätzen an.",
 				MenuEntry.COLOR_BLUE, alarmListClick));
 		entries.add(new MenuEntry("Informationen",
 				"Zeigt Infos zu Ihrere Feuerwehr und Ihrem Benutzeraccount ",
 				MenuEntry.COLOR_GREEN, infoClick));
-		entries.add(new MenuEntry("Einstellungen",
-				"Einstellungen der AlarmApp anzeigen und √§ndern.",
+		entries.add(new MenuEntry(getString(R.string.einstellungen_menu_title),
+				getString(R.string.einstellungen_menu_desc),
 				MenuEntry.COLOR_YELLOW, prefsClick));
-		entries.add(new MenuEntry("Feedback",
-				"Verbesserungsvorschl√§ge oder Fehler melden.",
-				MenuEntry.COLOR_RED, feedbackClick));
+		entries.add(new MenuEntry(getString(R.string.feedback_menu_title),
+				getString(R.string.feedback_menu_desc), MenuEntry.COLOR_RED,
+				feedbackClick));
 
-		// entries.add(new MenuEntry("L√∂sche", "Alarmtonverzeichnis",
+		// entries.add(new MenuEntry("Lösche", "Alarmtonverzeichnis",
 		// MenuEntry.COLOR_BLUE, deleteRingtoneDir));
 		// entries.add(new MenuEntry("Stopp", "Alarmton", MenuEntry.COLOR_BLUE,
 		// stopSoundClick));
