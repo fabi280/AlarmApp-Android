@@ -70,12 +70,12 @@ android:versionName="1.1.5">
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".activities.InformationActivity"></activity>
+		<activity android:name=".activities.InformationActivity" android:noHistory="true"></activity>
 		<activity android:name=".activities.AlarmListActivity" android:noHistory="true"></activity>
 		<activity android:name=".activities.LoginActivity" android:noHistory="true" android:configChanges="orientation"></activity>
 		<activity android:name=".activities.AlarmActivity" android:noHistory="true"></activity>
 		<activity android:name=".activities.AlarmStatusActivity"></activity>
-		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
+		<activity android:name=".activities.AlarmPreferenceActivity" android:noHistory="true"></activity>
 		<activity android:name=".activities.AccountCreateActivity"  android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation" android:noHistory="true"></activity>
 		<activity android:name=".activities.map.AlarmMapActivity"></activity>
 	</application>

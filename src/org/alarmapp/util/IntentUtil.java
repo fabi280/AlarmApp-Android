@@ -123,13 +123,13 @@ public class IntentUtil {
 	public static void sendFeedbackEmailIntent(Context context) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.putExtra(Intent.EXTRA_EMAIL,
-				new String[] { "frank@alarmapp.org" });
+				new String[] { "info@alarmapp.org" });
 		intent.putExtra(Intent.EXTRA_SUBJECT,
-				"Feedback f√ºr die Android AlarmApp von "
+				"Feedback für die Android AlarmApp von "
 						+ AlarmApp.getUser().getFullName());
 		intent.setType("message/rfc822");
 		context.startActivity(Intent.createChooser(intent,
-				"Bitte w√§hlen Sie eine Anwendung"));
+				"Bitte wählen Sie eine Anwendung"));
 	}
 
 	public static void displayMainActivity(Context context) {

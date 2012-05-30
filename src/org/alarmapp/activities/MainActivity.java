@@ -225,4 +225,9 @@ public class MainActivity extends Activity {
 	private boolean isUserAvailable() {
 		return AlarmApp.getUser().isLoggedIn();
 	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
+	}
 }

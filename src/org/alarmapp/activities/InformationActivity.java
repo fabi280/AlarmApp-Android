@@ -22,6 +22,7 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.model.User;
 import org.alarmapp.util.CollectionUtil;
+import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.adapter.BinderAdapter;
 import org.alarmapp.util.adapter.IAdapterBinder;
 
@@ -82,5 +83,10 @@ public class InformationActivity extends ListActivity {
 		BinderAdapter<Info> adapter = new BinderAdapter<InformationActivity.Info>(
 				this, R.layout.list_layout_info, binder, collectInformations());
 		this.getListView().setAdapter(adapter);
+	}
+
+	@Override
+	public void onBackPressed() {
+		IntentUtil.displayMainActivity(InformationActivity.this);
 	}
 }
