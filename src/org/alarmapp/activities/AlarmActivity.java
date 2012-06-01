@@ -69,19 +69,9 @@ public class AlarmActivity extends Activity {
 		return new OnClickListener() {
 			public void onClick(View v) {
 
-				cancelNotification();
 				IntentUtil.stopAudioPlayerService(AlarmActivity.this);
 
-				alarm.setState(newState);
-				Alarm storedAlarm = AlarmApp.getAlarmStore().get(
-						alarm.getOperationId());
-				storedAlarm.setState(newState);
-				storedAlarm.save();
-				IntentUtil.sendToSyncService(AlarmActivity.this, alarm);
-
-				// if (newState == AlarmState.Accepted) {
-				// IntentUtil.startPositionService(AlarmActivity.this, alarm);
-				// }
+				setStateToRecentOpenAlarms(newState);
 
 				updateButtonBarVisibility();
 			}
@@ -89,15 +79,30 @@ public class AlarmActivity extends Activity {
 		};
 	}
 
+	private void setStateToRecentOpenAlarms(AlarmState newState) {
+		List<Alarm> latestAlarms = AlarmApp.getAlarmStore().getLastAlarms();
+		for (Alarm a : latestAlarms) {
+			if (!a.isFinal()) {
+				cancelNotification(a.getOperationId());
+				a.setState(newState);
+				Alarm storedAlarm = AlarmApp.getAlarmStore().get(
+						a.getOperationId());
+				storedAlarm.setState(newState);
+				storedAlarm.save();
+				IntentUtil.sendToSyncService(AlarmActivity.this, a);
+			}
+		}
+		alarm.setState(newState);
+	}
+
 	/**
 	 * 
 	 */
-	private void cancelNotification() {
+	private void cancelNotification(String operationID) {
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager notificationManager = (NotificationManager) AlarmActivity.this
 				.getSystemService(ns);
-		notificationManager.cancel(ParserUtil.parseInt(alarm.getOperationId(),
-				0));
+		notificationManager.cancel(ParserUtil.parseInt(operationID, 0));
 	}
 
 	private OnClickListener switchToClick = new OnClickListener() {
