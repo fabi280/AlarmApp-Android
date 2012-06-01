@@ -77,5 +77,6 @@ public class AlarmListActivity extends ListActivity {
 	@Override
 	public void onBackPressed() {
 		IntentUtil.displayMainActivity(AlarmListActivity.this);
+		finish();
 	}
 }

@@ -182,6 +182,9 @@ public class AlarmData implements Alarm {
 		if (this.state == newState)
 			return;
 
+		LogEx.info("Actual State is: " + this.state.getName()
+				+ " New State is: " + newState.getName());
+
 		Ensure.valid(this.state.isNext(newState));
 
 		LogEx.info("Operation" + this.getOperationId() + " has now State "

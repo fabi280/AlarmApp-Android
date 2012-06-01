@@ -200,8 +200,8 @@ public class MainActivity extends Activity {
 
 	private void displayMenu() {
 		List<MenuEntry> entries = new ArrayList<MainActivity.MenuEntry>();
-		entries.add(new MenuEntry("Letzte Einsätze",
-				"Zeigt Ihnen eine Liste mit den letzten Einsätzen an.",
+		entries.add(new MenuEntry("Letzte Eins√§tze",
+				"Zeigt Ihnen eine Liste mit den letzten Eins√§tzen an.",
 				MenuEntry.COLOR_BLUE, alarmListClick));
 		entries.add(new MenuEntry("Informationen",
 				"Zeigt Infos zu Ihrere Feuerwehr und Ihrem Benutzeraccount ",
@@ -213,7 +213,7 @@ public class MainActivity extends Activity {
 				getString(R.string.feedback_menu_desc), MenuEntry.COLOR_RED,
 				feedbackClick));
 
-		// entries.add(new MenuEntry("Lösche", "Alarmtonverzeichnis",
+		// entries.add(new MenuEntry("L√∂sche", "Alarmtonverzeichnis",
 		// MenuEntry.COLOR_BLUE, deleteRingtoneDir));
 		// entries.add(new MenuEntry("Stopp", "Alarmton", MenuEntry.COLOR_BLUE,
 		// stopSoundClick));

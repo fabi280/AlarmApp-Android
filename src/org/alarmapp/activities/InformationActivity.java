@@ -88,5 +88,6 @@ public class InformationActivity extends ListActivity {
 	@Override
 	public void onBackPressed() {
 		IntentUtil.displayMainActivity(InformationActivity.this);
+		finish();
 	}
 }

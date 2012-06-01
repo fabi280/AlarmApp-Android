@@ -272,4 +272,10 @@ public class AlarmStatusActivity extends Activity {
 
 		new LoadAlarmstatusAsyncTask().execute(this.alarm);
 	}
+
+	@Override
+	public void onBackPressed() {
+		IntentUtil.displayAlarmActivity(AlarmStatusActivity.this, this.alarm);
+		finish();
+	}
 }

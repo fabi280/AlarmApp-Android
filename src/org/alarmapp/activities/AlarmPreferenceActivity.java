@@ -34,5 +34,6 @@ public class AlarmPreferenceActivity extends PreferenceActivity {
 	@Override
 	public void onBackPressed() {
 		IntentUtil.displayMainActivity(AlarmPreferenceActivity.this);
+		finish();
 	}
 }

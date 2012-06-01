@@ -218,4 +218,9 @@ public class LoginActivity extends Activity {
 		LogEx.info("Key Down!");
 		return super.onKeyDown(keyCode, event);
 	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
+	}
 }

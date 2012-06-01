@@ -125,15 +125,17 @@ public class IntentUtil {
 		intent.putExtra(Intent.EXTRA_EMAIL,
 				new String[] { "info@alarmapp.org" });
 		intent.putExtra(Intent.EXTRA_SUBJECT,
-				"Feedback für die Android AlarmApp von "
+				"Feedback f√ºr die Android AlarmApp von "
 						+ AlarmApp.getUser().getFullName());
 		intent.setType("message/rfc822");
 		context.startActivity(Intent.createChooser(intent,
-				"Bitte wählen Sie eine Anwendung"));
+				"Bitte w√§hlen Sie eine Anwendung"));
 	}
 
 	public static void displayMainActivity(Context context) {
 		Intent mainIntent = new Intent(context, MainActivity.class);
+		mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(mainIntent);
 	}
 
