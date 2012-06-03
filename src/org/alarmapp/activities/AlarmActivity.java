@@ -17,6 +17,7 @@
 package org.alarmapp.activities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,9 +82,19 @@ public class AlarmActivity extends Activity {
 
 	private void setStateToRecentOpenAlarms(AlarmState newState) {
 		List<Alarm> latestAlarms = AlarmApp.getAlarmStore().getLastAlarms();
+		Date actualAlarmTime = this.alarm.getAlarmed();
+		Date fiveMinutesBefore = actualAlarmTime;
+		fiveMinutesBefore.setTime(actualAlarmTime.getTime() - 5 * 60 * 1000);
 		for (Alarm a : latestAlarms) {
+
+			if (a.getAlarmed().getTime() < fiveMinutesBefore.getTime()) {
+				break;
+			}
+
 			if (!a.isFinal()) {
+
 				cancelNotification(a.getOperationId());
+
 				a.setState(newState);
 				Alarm storedAlarm = AlarmApp.getAlarmStore().get(
 						a.getOperationId());
