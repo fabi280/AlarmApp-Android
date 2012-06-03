@@ -63,6 +63,7 @@ public class AlarmActivity extends Activity {
 			put("ff_count", "Einsatzkräfte:");
 			put("alarmed", "Alarmzeit:");
 			put("groups", "Alarmgruppen:");
+			put("alarmed_date", "Alarmdatum:");
 		}
 	};
 
@@ -229,8 +230,11 @@ public class AlarmActivity extends Activity {
 				.entrySet()) {
 			putEntryToList(items, item.getKey(), item.getValue());
 		}
-		java.text.DateFormat dateFormatter = DateFormat.getTimeFormat(this);
+		java.text.DateFormat timeFormatter = DateFormat.getTimeFormat(this);
 		putEntryToList(items, "alarmed",
+				timeFormatter.format(alarm.getAlarmed()));
+		java.text.DateFormat dateFormatter = DateFormat.getDateFormat(this);
+		putEntryToList(items, "alarmed_date",
 				dateFormatter.format(alarm.getAlarmed()));
 
 		SimpleAdapter adapter = new SimpleAdapter(this, items,
