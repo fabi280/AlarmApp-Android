@@ -8,10 +8,14 @@
     <string name="feedback_menu_desc">Verbesserungsvorschläge oder Fehler melden.</string>
     <string name="einstellungen_menu_title">Einstellungen</string>
     <string name="einstellungen_menu_desc">Einstellungen der AlarmApp anzeigen und ändern.</string>
-    <string name="alarm_group">&quot;Alarmgruppe:&quot;</string>
+    
+    
+    <string name="alarm_group">Alarmgruppe:</string>
     <string name="alarm_titel">Alarmtitel:</string>
     <string name="alarm_text">Alarmtext:</string>
     <string name="alarm_adress">Einsatzadresse:</string>
     <string name="alarm_create">Alarm auslösen</string>
+    
+    <string name="no_alarms">Keine Alarme vorhanden</string>
     
 </resources>

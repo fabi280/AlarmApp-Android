@@ -77,5 +77,13 @@ android:versionName="1.1.5">
 		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
 		<activity android:name=".activities.AccountCreateActivity"  android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation"></activity>
 		<activity android:name=".activities.map.AlarmMapActivity"></activity>
+		
+	<receiver android:name=".widget.StatusWidget" android:label="@string/app_name">
+	   <intent-filter>
+	      <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+	   </intent-filter>
+	  <meta-data android:name="android.appwidget.provider" android:resource="@xml/statuswidget_provider"/>
+	</receiver>
+		
 	</application>
 </manifest>
