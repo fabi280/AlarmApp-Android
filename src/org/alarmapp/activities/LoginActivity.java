@@ -203,6 +203,7 @@ public class LoginActivity extends Activity {
 		setVisibility(View.INVISIBLE);
 
 		IntentUtil.displayMainActivity(this);
+		this.finish();
 	}
 
 	private void displayError(final String errorMessage) {
