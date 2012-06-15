@@ -143,6 +143,12 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	private Runnable alarmCreateClick = new Runnable() {
+		public void run() {
+			IntentUtil.displayAlarmCreateActivity(MainActivity.this);
+		}
+	};
+
 	private Runnable onLogoutClick = new Runnable() {
 
 		public void run() {
@@ -212,6 +218,9 @@ public class MainActivity extends Activity {
 		entries.add(new MenuEntry(getString(R.string.feedback_menu_title),
 				getString(R.string.feedback_menu_desc), MenuEntry.COLOR_RED,
 				feedbackClick));
+		entries.add(new MenuEntry("Alarm auslösen",
+				"Hier können Sie eine Alarmierung auslösen",
+				MenuEntry.COLOR_BLUE, alarmCreateClick));
 
 		// entries.add(new MenuEntry("Lösche", "Alarmtonverzeichnis",
 		// MenuEntry.COLOR_BLUE, deleteRingtoneDir));

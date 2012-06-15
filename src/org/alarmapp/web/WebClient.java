@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmGroup;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.User;
@@ -66,4 +67,9 @@ public interface WebClient {
 
 	public WebResult joinFireDepartment(PersonData person, String firedepartment)
 			throws WebException;
+
+	public WebResult performAlarm(AuthToken token, String code, String title,
+			String message) throws WebException;
+
+	public List<AlarmGroup> getAlarmGroups(AuthToken token) throws WebException;
 }

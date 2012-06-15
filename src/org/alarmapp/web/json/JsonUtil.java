@@ -19,6 +19,7 @@ package org.alarmapp.web.json;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.alarmapp.model.AlarmGroup;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.FireDepartment;
@@ -179,6 +180,13 @@ public class JsonUtil {
 			if (!arr.isNull(i))
 				result.add(arr.getString(i));
 		}
+		return result;
+	}
+
+	public static List<AlarmGroup> parseGetAlarmGroupListResult(String response)
+			throws JSONException {
+		ArrayList<AlarmGroup> result = new ArrayList<AlarmGroup>();
+		// TODO: parse the result
 		return result;
 	}
 }

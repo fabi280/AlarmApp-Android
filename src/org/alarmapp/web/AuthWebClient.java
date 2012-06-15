@@ -17,8 +17,10 @@
 package org.alarmapp.web;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmGroup;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.WayPoint;
@@ -39,4 +41,9 @@ public interface AuthWebClient {
 			throws WebException;
 
 	public void addAlarmStatusPosition(WayPoint wayPoint) throws WebException;
+
+	public void performAlarm(String code, String alarmTitle, String alarmText)
+			throws WebException;
+
+	public List<AlarmGroup> getAlarmGroups() throws WebException;
 }

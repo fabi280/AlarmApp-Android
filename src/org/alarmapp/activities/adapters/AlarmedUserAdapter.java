@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.alarmapp.activities.list_adapters;
+package org.alarmapp.activities.adapters;
 
 import java.util.List;
 

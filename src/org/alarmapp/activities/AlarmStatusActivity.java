@@ -25,7 +25,7 @@ import java.util.Comparator;
 import org.alarmapp.AlarmApp;
 import org.alarmapp.Broadcasts;
 import org.alarmapp.R;
-import org.alarmapp.activities.list_adapters.AlarmedUserAdapter;
+import org.alarmapp.activities.adapters.AlarmedUserAdapter;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.classes.AlarmData;
