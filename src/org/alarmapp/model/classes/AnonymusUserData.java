@@ -76,4 +76,8 @@ public class AnonymusUserData implements User {
 		return false;
 	}
 
+	public boolean canCreateAlarms() {
+		return false;
+	}
+
 }

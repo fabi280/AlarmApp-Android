@@ -52,6 +52,8 @@ public interface User extends Serializable, Person {
 
 	public boolean canViewAlarmStatus();
 
+	public boolean canCreateAlarms();
+
 	public boolean hasDepartment();
 
 	public boolean hasAuthToken();

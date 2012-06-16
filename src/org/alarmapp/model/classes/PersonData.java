@@ -169,4 +169,8 @@ public class PersonData implements User, Bindable, Serializable {
 		return true;
 	}
 
+	public boolean canCreateAlarms() {
+		return false;
+	}
+
 }

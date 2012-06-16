@@ -218,14 +218,16 @@ public class MainActivity extends Activity {
 		entries.add(new MenuEntry(getString(R.string.feedback_menu_title),
 				getString(R.string.feedback_menu_desc), MenuEntry.COLOR_RED,
 				feedbackClick));
-		entries.add(new MenuEntry("Alarm auslösen",
-				"Hier können Sie eine Alarmierung auslösen",
-				MenuEntry.COLOR_BLUE, alarmCreateClick));
 
 		// entries.add(new MenuEntry("Lösche", "Alarmtonverzeichnis",
 		// MenuEntry.COLOR_BLUE, deleteRingtoneDir));
 		// entries.add(new MenuEntry("Stopp", "Alarmton", MenuEntry.COLOR_BLUE,
 		// stopSoundClick));
+		if (AlarmApp.getUser().canCreateAlarms()) {
+			entries.add(new MenuEntry("Alarm auslösen",
+					"Hier können Sie eine Alarmierung auslösen",
+					MenuEntry.COLOR_BLUE, alarmCreateClick));
+		}
 
 		this.lvMainItems.setAdapter(new BinderAdapter<MenuEntry>(this,
 				R.layout.list_layout_main, binder, entries));

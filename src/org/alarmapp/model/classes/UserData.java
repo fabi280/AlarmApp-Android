@@ -30,6 +30,9 @@ public class UserData implements User {
 	private AuthToken authToken;
 	private String id;
 
+	// TODO: hier muss noch irgendwie die Permission hin vom Server
+	private boolean canCreateAlarms = false;
+
 	public UserData(String id, String firstName, String lastName,
 			FireDepartment department) {
 		super();
@@ -91,6 +94,10 @@ public class UserData implements User {
 
 	public boolean hasAccount() {
 		return true;
+	}
+
+	public boolean canCreateAlarms() {
+		return canCreateAlarms;
 	}
 
 }
