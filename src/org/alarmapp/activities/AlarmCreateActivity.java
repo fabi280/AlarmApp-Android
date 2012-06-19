@@ -21,6 +21,7 @@ import java.util.List;
 import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.model.AlarmGroup;
+import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.WebException;
@@ -98,11 +99,17 @@ public class AlarmCreateActivity extends Activity {
 			LogEx.info("Alarmierung ausgelöst " + text
 					+ alarmGroups.get(alarmGroup).getName());
 			try {
-				// TODO spinner einfügen
-				// in Thread auslagern
+				ActivityUtil.startProgressBar(this);
+
+				// TODO in Thread auslagern
 				AlarmApp.getAuthWebClient().performAlarm(
 						alarmGroups.get(alarmGroup).getGroupID(), title, text);
-				// TODO bestätigung anzeigen und activity schließen
+
+				ActivityUtil.stopProgressBar();
+				Toast t = Toast.makeText(this,
+						"Alarmierung erfolgreich ausgelöst.", 10);
+				t.show();
+				IntentUtil.displayMainActivity(this);
 			} catch (WebException e) {
 				LogEx.exception(e);
 				Toast t = Toast.makeText(this, "Fehler bei der Alarmierung ("
