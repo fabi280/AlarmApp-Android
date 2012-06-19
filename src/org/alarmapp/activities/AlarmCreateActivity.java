@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
-import org.alarmapp.activities.adapters.AlarmGroupsSpinnerAdapter;
 import org.alarmapp.model.AlarmGroup;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
@@ -30,6 +29,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -71,8 +71,9 @@ public class AlarmCreateActivity extends Activity {
 			// TODO Gruppen Laden bei MainActivityStart nicht bei
 			// AlarmCreateActivity start
 			alarmGroups = AlarmApp.getAuthWebClient().getAlarmGroups();
-			AlarmGroupsSpinnerAdapter adapter = new AlarmGroupsSpinnerAdapter(
-					this, alarmGroups);
+			ArrayAdapter<AlarmGroup> adapter = new ArrayAdapter<AlarmGroup>(
+					this, android.R.layout.simple_spinner_item, alarmGroups);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			spAlarmGroup.setAdapter(adapter);
 			spAlarmGroup.setSelection(0);
 

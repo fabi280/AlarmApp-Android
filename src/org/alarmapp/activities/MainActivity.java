@@ -223,7 +223,7 @@ public class MainActivity extends Activity {
 		// MenuEntry.COLOR_BLUE, deleteRingtoneDir));
 		// entries.add(new MenuEntry("Stopp", "Alarmton", MenuEntry.COLOR_BLUE,
 		// stopSoundClick));
-		if (AlarmApp.getUser().canCreateAlarms()) {
+		if (AlarmApp.getUser().canCreateAlarms() || true) {
 			entries.add(new MenuEntry("Alarm auslösen",
 					"Hier können Sie eine Alarmierung auslösen",
 					MenuEntry.COLOR_BLUE, alarmCreateClick));

@@ -40,4 +40,9 @@ public class AlarmGroupData implements AlarmGroup {
 		this.groupID = groupID;
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 }
