@@ -268,10 +268,10 @@ public class HttpWebClient implements WebClient {
 
 	}
 
-	public WebResult performAlarm(AuthToken token, String code, String title,
+	public WebResult performAlarm(AuthToken token, String group, String title,
 			String message) throws WebException {
 		HashMap<String, String> data = new HashMap<String, String>();
-		data.put("code", code);
+		data.put("group", group);
 		data.put("title", title);
 		data.put("text", message);
 		String response = HttpUtil.request(url("/web_service/alarm/create/"),

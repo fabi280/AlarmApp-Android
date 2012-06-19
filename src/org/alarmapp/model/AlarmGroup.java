@@ -18,7 +18,7 @@ package org.alarmapp.model;
 
 public interface AlarmGroup {
 
-	public String getCode();
+	public String getGroupID();
 
 	public String getName();
 

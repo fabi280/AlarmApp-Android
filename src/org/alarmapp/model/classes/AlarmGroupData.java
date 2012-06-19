@@ -21,10 +21,10 @@ import org.alarmapp.model.AlarmGroup;
 public class AlarmGroupData implements AlarmGroup {
 
 	private String name;
-	private String code;
+	private String groupID;
 
-	public String getCode() {
-		return code;
+	public String getGroupID() {
+		return groupID;
 	}
 
 	public String getName() {
@@ -35,9 +35,9 @@ public class AlarmGroupData implements AlarmGroup {
 
 	}
 
-	public AlarmGroupData(String name, String code) {
+	public AlarmGroupData(String name, String groupID) {
 		this.name = name;
-		this.code = code;
+		this.groupID = groupID;
 	}
 
 }

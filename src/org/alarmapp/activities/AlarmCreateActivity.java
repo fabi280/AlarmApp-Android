@@ -68,6 +68,8 @@ public class AlarmCreateActivity extends Activity {
 
 		btCreateAlarm.setOnClickListener(alarmCreateListener);
 		try {
+			// TODO Gruppen Laden bei MainActivityStart nicht bei
+			// AlarmCreateActivity start
 			alarmGroups = AlarmApp.getAuthWebClient().getAlarmGroups();
 			AlarmGroupsSpinnerAdapter adapter = new AlarmGroupsSpinnerAdapter(
 					this, alarmGroups);
@@ -92,12 +94,14 @@ public class AlarmCreateActivity extends Activity {
 			String text = etAlarmText.getText().toString();
 			String adress = etAdress.getText().toString();
 			int alarmGroup = spAlarmGroup.getSelectedItemPosition();
-
 			LogEx.info("Alarmierung ausgelöst " + text
 					+ alarmGroups.get(alarmGroup).getName());
 			try {
+				// TODO spinner einfügen
+				// in Thread auslagern
 				AlarmApp.getAuthWebClient().performAlarm(
-						alarmGroups.get(alarmGroup).getCode(), title, text);
+						alarmGroups.get(alarmGroup).getGroupID(), title, text);
+				// TODO bestätigung anzeigen und activity schließen
 			} catch (WebException e) {
 				LogEx.exception(e);
 				Toast t = Toast.makeText(this, "Fehler bei der Alarmierung ("
