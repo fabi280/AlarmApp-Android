@@ -25,7 +25,6 @@ import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
-import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.web.json.WebResult;
 
 public interface WebClient {
@@ -56,17 +55,10 @@ public interface WebClient {
 
 	public WebResult checkEmailAdress(String email) throws WebException;
 
-	public PersonData createUser(String username, String firstName,
-			String lastName, String email, String password,
-			String passwordConfirmation) throws WebException;
-
 	public void getAccountStatus(String userId) throws WebException;
 
 	public Collection<AlarmedUser> getAlarmStatus(AuthToken authToken,
 			String operation_id) throws WebException;
-
-	public WebResult joinFireDepartment(PersonData person, String firedepartment)
-			throws WebException;
 
 	public WebResult performAlarm(AuthToken token, String code, String title,
 			String message) throws WebException;

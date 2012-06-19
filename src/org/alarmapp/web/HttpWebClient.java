@@ -29,7 +29,6 @@ import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
 import org.alarmapp.model.classes.AlarmGroupData;
 import org.alarmapp.model.classes.AuthTokenData;
-import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.DateUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.web.http.HttpUtil;
@@ -251,36 +250,6 @@ public class HttpWebClient implements WebClient {
 		}
 	}
 
-	public PersonData createUser(String username, String firstName,
-			String lastName, String email, String password,
-			String passwordConfirmation) throws WebException {
-
-		HashMap<String, String> data = new HashMap<String, String>();
-		data.put("user", username);
-		data.put("email", email);
-		data.put("first_name", firstName);
-		data.put("last_name", lastName);
-		data.put("password", password);
-		data.put("password2", passwordConfirmation);
-
-		String response = HttpUtil.request(url("web_service/account/create/"),
-				data, null);
-
-		try {
-			JsonResult<String> user_id = JsonUtil
-					.parseCreateUserResult(response);
-
-			if (!user_id.wasSuccessful())
-				throw new WebException(USER_ACCOUNT_NOT_CREATED);
-
-			return new PersonData(user_id.getValue(), firstName, lastName,
-					username, email, password);
-
-		} catch (JSONException e) {
-			throw new WebException(JSON_ERROR, e);
-		}
-	}
-
 	public void getAccountStatus(String userId) throws WebException {
 		// TODO Auto-generated method stub
 
@@ -297,24 +266,6 @@ public class HttpWebClient implements WebClient {
 			throw new WebException(JSON_ERROR, e);
 		}
 
-	}
-
-	public WebResult joinFireDepartment(PersonData person, String firedepartment)
-			throws WebException {
-		HashMap<String, String> data = new HashMap<String, String>();
-		data.put("username_or_email", person.getEmail());
-		data.put("password", person.getPassword());
-		data.put("department_name", firedepartment);
-
-		String response = HttpUtil.request(
-				url("web_service/fire_department/join/"), data, null);
-
-		try {
-			return JsonUtil.parseResult(response);
-		} catch (JSONException e) {
-			LogEx.exception(e);
-			throw new WebException(JSON_ERROR, e);
-		}
 	}
 
 	public WebResult performAlarm(AuthToken token, String code, String title,
