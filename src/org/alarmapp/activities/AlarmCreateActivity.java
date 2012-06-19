@@ -88,8 +88,8 @@ public class AlarmCreateActivity extends Activity {
 
 	private void createAlarm() {
 		if (etAlarmTitle.getText().length() != 0) {
-			String text = etAlarmTitle.getText().toString();
-			String title = etAlarmText.getText().toString();
+			String title = etAlarmTitle.getText().toString();
+			String text = etAlarmText.getText().toString();
 			String adress = etAdress.getText().toString();
 			int alarmGroup = spAlarmGroup.getSelectedItemPosition();
 
