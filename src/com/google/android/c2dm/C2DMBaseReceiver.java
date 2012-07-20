@@ -20,8 +20,8 @@ import java.io.IOException;
 
 import org.alarmapp.util.LogEx;
 
+import roboguice.service.RoboIntentService;
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +32,7 @@ import android.util.Log;
  * Base class for C2D message receiver. Includes constants for the strings used
  * in the protocol.
  */
-public abstract class C2DMBaseReceiver extends IntentService {
+public abstract class C2DMBaseReceiver extends RoboIntentService {
 	private static final String C2DM_RETRY = "com.google.android.c2dm.intent.RETRY";
 
 	public static final String REGISTRATION_CALLBACK_INTENT = "com.google.android.c2dm.intent.REGISTRATION";

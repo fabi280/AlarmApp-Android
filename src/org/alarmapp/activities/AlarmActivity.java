@@ -17,6 +17,7 @@
 package org.alarmapp.activities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +27,18 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmState;
+import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.Ensure;
 import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.util.ParserUtil;
+import org.alarmapp.web.WebException;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -60,12 +64,48 @@ public class AlarmActivity extends Activity {
 	private final HashMap<String, String> extraNames = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
 		{
-			put("ff_count", "Einsatzkr√§fte:");
+			put("ff_count", "Einsatzkräfte:");
 			put("alarmed", "Alarmzeit:");
 			put("groups", "Alarmgruppen:");
 			put("alarmed_date", "Alarmdatum:");
 		}
 	};
+
+	ProgressDialog progress;
+
+	private Runnable checkIfOperationIsMine = new Runnable() {
+
+		public void run() {
+			try {
+				Collection<AlarmedUser> alarmedUsers = AlarmApp
+						.getAuthWebClient().getAlarmStatus(
+								AlarmActivity.this.alarm.getOperationId());
+
+				if (progress != null) {
+					progress.dismiss();
+				}
+				if (operationIsAlreadyAccepted(alarmedUsers)) {
+					ActivityUtil
+							.showAlertDialog(AlarmActivity.this,
+									"Hilferuf bereits vergeben",
+									"Der Hilferufe wurde bereits an einen anderen Helfer vergeben.");
+				}
+
+			} catch (WebException e) {
+				LogEx.exception(e);
+			}
+
+		}
+	};
+
+	private boolean operationIsAlreadyAccepted(
+			Collection<AlarmedUser> alarmedUsers) {
+		for (AlarmedUser u : alarmedUsers) {
+			if (u.hasAccepted() && u.getId() != AlarmApp.getUser().getId())
+				return true;
+		}
+		return false;
+	}
 
 	private OnClickListener onUpdateAlarmStatusClick(final AlarmState newState) {
 		return new OnClickListener() {
@@ -73,7 +113,17 @@ public class AlarmActivity extends Activity {
 
 				IntentUtil.stopAudioPlayerService(AlarmActivity.this);
 
+				cancelNotification(AlarmActivity.this.alarm.getOperationId());
 				setStateToRecentOpenAlarms(newState);
+
+				if (newState.equals(AlarmState.Accepted)) {
+					LogEx.info("User has accepted the alarm.");
+					// Check if somebody else has accepted the alarm
+					progress = ProgressDialog.show(AlarmActivity.this,
+							"Übernehme Hilferuf.", "Bitte warten...");
+
+					new Thread(checkIfOperationIsMine).start();
+				}
 
 				updateButtonBarVisibility();
 			}

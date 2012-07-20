@@ -21,8 +21,8 @@ android:versionName="1.1.5">
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
 	<uses-sdk android:minSdkVersion="8" />
+	<!-- <uses-library android:name="com.google.android.c2dm.C2DMessaging" />-->
 	<!-- Send the registration id to the server -->
-	<uses-library android:name="com.google.android.c2dm.C2DMessaging" />
 	<permission android:name="org.alarmapp.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 	<uses-permission android:name="org.alarmapp.permission.C2D_MESSAGE" />
 	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -61,7 +61,7 @@ android:versionName="1.1.5">
 			</intent-filter>
 		</service>
 	
-		<activity android:name=".activities.MainActivity"
+		<activity android:name=".activities.NeedHelpActivity"
 		android:label="@string/app_name"
 		android:configChanges="orientation|keyboardHidden">
 			<intent-filter>
@@ -69,6 +69,7 @@ android:versionName="1.1.5">
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity android:name=".activities.MainActivity"></activity>
 		<activity android:name=".activities.InformationActivity"></activity>
 		<activity android:name=".activities.AlarmListActivity"></activity>
 		<activity android:name=".activities.LoginActivity" android:configChanges="orientation"></activity>

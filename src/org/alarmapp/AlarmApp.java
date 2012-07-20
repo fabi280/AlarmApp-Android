@@ -16,7 +16,6 @@
 
 package org.alarmapp;
 
-import org.acra.ACRA;
 import org.acra.ErrorReporter;
 import org.acra.annotation.ReportsCrashes;
 import org.alarmapp.model.AlarmStore;
@@ -31,10 +30,13 @@ import org.alarmapp.web.AuthWebClient;
 import org.alarmapp.web.HttpWebClient;
 import org.alarmapp.web.WebClient;
 
+import roboguice.RoboGuice;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.preference.PreferenceManager;
+
+import com.google.inject.util.Modules;
 
 //dFRiRHVCbGVxVzNva0NkdHB0NVN5Q0E6MQ
 @ReportsCrashes(formKey = "dFRiRHVCbGVxVzNva0NkdHB0NVN5Q0E6MQ")
@@ -146,9 +148,19 @@ public class AlarmApp extends Application {
 
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
+		// TODO: Comment in acra again
+		// ACRA.init(this);
 		super.onCreate();
+
 		instance = this;
+
+		RoboGuice.setBaseApplicationInjector(
+				(Application) AlarmApp.getInstance(),
+				RoboGuice.DEFAULT_STAGE,
+				Modules.override(
+						RoboGuice.newDefaultRoboModule(AlarmApp.getInstance()))
+						.with(new AlarmAppModule()));
+
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		if (isDebuggable()) {

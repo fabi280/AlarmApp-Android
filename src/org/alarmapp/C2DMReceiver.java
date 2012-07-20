@@ -16,17 +16,12 @@
 
 package org.alarmapp;
 
-import org.alarmapp.activities.AlarmActivity;
 import org.alarmapp.activities.LoginActivity;
-import org.alarmapp.model.Alarm;
-import org.alarmapp.model.AlarmState;
-import org.alarmapp.model.AlarmedUser;
-import org.alarmapp.model.classes.AlarmData;
-import org.alarmapp.model.classes.AlarmedUserData;
+import org.alarmapp.behaviour.IPushMessageHandler;
+import org.alarmapp.behaviour.binding.Alarm;
+import org.alarmapp.behaviour.binding.AlarmStatus;
 import org.alarmapp.model.classes.AnonymusUserData;
 import org.alarmapp.util.Device;
-import org.alarmapp.util.Ensure;
-import org.alarmapp.util.IntentUtil;
 import org.alarmapp.util.LogEx;
 import org.alarmapp.util.NotificationUtil;
 import org.alarmapp.web.WebException;
@@ -36,8 +31,17 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
+import com.google.inject.Inject;
 
 public class C2DMReceiver extends C2DMBaseReceiver {
+
+	@Inject
+	@Alarm
+	IPushMessageHandler alarmMessageHandler;
+
+	@Inject
+	@AlarmStatus
+	IPushMessageHandler alarmStatusMessageHandler;
 
 	public C2DMReceiver() {
 		super("org.AlarmApp");
@@ -92,50 +96,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			LogEx.verbose("Kind is " + extras.getString("kind"));
 
 			if (extras.getString("kind").equals("alarm")) {
-				handleAlarmMessage(context, extras);
+				alarmMessageHandler.handleMessage(context, extras);
+				// handleAlarmMessage(context, extras);
 			}
 			if (extras.getString("kind").equals("alarm_status")) {
-				handleAlarmStatusMessage(context, extras);
+				alarmStatusMessageHandler.handleMessage(context, extras);
 			}
 		}
-	}
-
-	private void handleAlarmStatusMessage(Context context, Bundle extras) {
-		Ensure.valid(AlarmedUserData.isAlarmedUserDataBundle(extras));
-		AlarmedUser user = AlarmedUserData.create(extras);
-
-		Broadcasts.sendAlarmstatusChangedBroadcast(context, user);
-		LogEx.verbose("Sent AlarmStatus change Broadcast for Firefighter "
-				+ user.getFirstName() + " " + user.getLastName()
-				+ ". Firefighter is " + user.getAlarmState());
-
-		if (AlarmApp.getAlarmStore().contains(user.getOperationId())) {
-			Alarm a = AlarmApp.getAlarmStore().get(user.getOperationId());
-			a.updateAlarmedUser(user);
-			a.save();
-		}
-	}
-
-	private void handleAlarmMessage(Context context, Bundle extras) {
-		Ensure.valid(AlarmData.isAlarmDataBundle(extras));
-		Alarm alarm = AlarmData.create(extras);
-
-		if (AlarmApp.getAlarmStore().contains(alarm.getOperationId())) {
-			LogEx.warning("The Alarm " + alarm
-					+ " does already exist. Aborting");
-			return;
-		}
-
-		alarm.setState(AlarmState.Delivered);
-		AlarmApp.getAlarmStore().put(alarm);
-
-		LogEx.verbose("Display Alarm Activity.");
-
-		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
-		IntentUtil.displayAlarmActivity(this, alarm);
-		IntentUtil.startAudioPlayerService(this, alarm);
-
-		IntentUtil.sendToSyncService(this, alarm);
 	}
 
 	@Override
