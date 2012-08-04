@@ -17,8 +17,10 @@
 package org.alarmapp.web.json;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmGroup;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
@@ -27,6 +29,7 @@ import org.alarmapp.model.LonLat;
 import org.alarmapp.model.PositionMeasurementMethod;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
+import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.model.classes.AlarmedUserData;
 import org.alarmapp.model.classes.FireDepartmentData;
 import org.alarmapp.model.classes.LonLatData;
@@ -188,5 +191,21 @@ public class JsonUtil {
 		ArrayList<AlarmGroup> result = new ArrayList<AlarmGroup>();
 		// TODO: parse the result
 		return result;
+	}
+
+	public static Alarm parseGetAlarmInformationsResult(String response)
+			throws JSONException {
+
+		// TODO: Hier muss noch der Parser ordentlich geschrieben werden, vor
+		// allem die Extras gehen hier verloren, der AlarmStatus im Alarm wird
+		// auch nicht ordentlich gesetzt!!!!
+
+		JSONObject jobj = new JSONObject(response);
+		Date date = DateUtil.parse(jobj.getString("alarmed"));
+
+		// XXX: Achtung, hier müssen noch die Extras mit rein
+		Alarm a = new AlarmData(jobj.getString("operation_id"), date,
+				jobj.getString("title"), jobj.getString("text"), null, null);
+		return a;
 	}
 }

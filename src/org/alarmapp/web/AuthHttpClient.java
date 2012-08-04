@@ -81,4 +81,7 @@ public class AuthHttpClient implements AuthWebClient {
 		return client.getAlarmGroups(token);
 	}
 
+	public Alarm getAlarmInformations(String operation_id) throws WebException {
+		return client.getAlarmInformations(token, operation_id);
+	}
 }

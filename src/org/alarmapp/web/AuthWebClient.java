@@ -46,4 +46,6 @@ public interface AuthWebClient {
 			throws WebException;
 
 	public List<AlarmGroup> getAlarmGroups() throws WebException;
+
+	public Alarm getAlarmInformations(String operation_id) throws WebException;
 }

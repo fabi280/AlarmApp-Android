@@ -65,6 +65,9 @@ public interface WebClient {
 	public Collection<AlarmedUser> getAlarmStatus(AuthToken authToken,
 			String operation_id) throws WebException;
 
+	public Alarm getAlarmInformations(AuthToken authToken, String operation_id)
+			throws WebException;
+
 	public WebResult joinFireDepartment(PersonData person, String firedepartment)
 			throws WebException;
 

@@ -343,4 +343,19 @@ public class HttpWebClient implements WebClient {
 
 		return stub;
 	}
+
+	public Alarm getAlarmInformations(AuthToken token, String operation_id)
+			throws WebException {
+		String response = HttpUtil.request(url(String.format(
+				"/web_service/operation/%s/info/", operation_id)), null,
+				createAuthHeader(token));
+		LogEx.info(response);
+		try {
+			return JsonUtil.parseGetAlarmInformationsResult(response);
+		} catch (JSONException e) {
+			LogEx.info("getAlarmInformations request fehlgeschlagen.");
+			LogEx.exception(e);
+			throw new WebException(JSON_ERROR, e);
+		}
+	}
 }
