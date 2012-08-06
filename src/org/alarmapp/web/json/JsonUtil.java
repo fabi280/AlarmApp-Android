@@ -196,16 +196,13 @@ public class JsonUtil {
 	public static Alarm parseGetAlarmInformationsResult(String response)
 			throws JSONException {
 
-		// TODO: Hier muss noch der Parser ordentlich geschrieben werden, vor
-		// allem die Extras gehen hier verloren, der AlarmStatus im Alarm wird
-		// auch nicht ordentlich gesetzt!!!!
-
 		JSONObject jobj = new JSONObject(response);
 		Date date = DateUtil.parse(jobj.getString("alarmed"));
+		AlarmState state = AlarmState.create(jobj.getString("status"));
 
 		// XXX: Achtung, hier müssen noch die Extras mit rein
 		Alarm a = new AlarmData(jobj.getString("operation_id"), date,
-				jobj.getString("title"), jobj.getString("text"), null, null);
+				jobj.getString("title"), jobj.getString("text"), state, null);
 		return a;
 	}
 }

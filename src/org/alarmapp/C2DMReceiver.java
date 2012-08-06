@@ -118,28 +118,28 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 	private void handleAlarmMessage(Context context, Bundle extras) {
 		Ensure.valid(AlarmData.isAlarmDataBundle(extras));
-		Alarm alarm = AlarmData.create(extras);
+		final Alarm alarm = AlarmData.create(extras);
 
-		if (AlarmApp.getAlarmStore().contains(alarm.getOperationId())) {
-			LogEx.warning("The Alarm " + alarm
-					+ " does already exist. Updating the data.");
+		new Thread(new Runnable() {
 
-			try {
-				Alarm updated_alarm = AlarmApp.getAuthWebClient()
-						.getAlarmInformations(alarm.getOperationId());
-				// XXX: das mit dem State ist noch nicht so schön
-				updated_alarm.setState(alarm.getState());
-				alarm = updated_alarm;
-			} catch (WebException e) {
-				LogEx.info("Laden der Alarminformationen fehlgeschlagen!");
-				LogEx.exception(e);
+			public void run() {
+				try {
+					Alarm updated_alarm = AlarmApp.getAuthWebClient()
+							.getAlarmInformations(alarm.getOperationId());
+					updated_alarm.save();
+
+					// TODO: send Broadcast -> reload AlarmActivity
+					// damit die AlarmActivity neu geladen wird;
+					// jetzt werden die neuen Informationen geladen aber nicht
+					// die Anzeige aktualisiert
+
+				} catch (WebException e) {
+					LogEx.info("Laden der Alarminformationen fehlgeschlagen!");
+					LogEx.exception(e);
+				}
+
 			}
-			alarm.save();
-
-			IntentUtil.displayAlarmActivity(this, alarm);
-
-			return;
-		}
+		}).start();
 
 		alarm.setState(AlarmState.Delivered);
 		AlarmApp.getAlarmStore().put(alarm);
@@ -151,21 +151,6 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		IntentUtil.startAudioPlayerService(this, alarm);
 		IntentUtil.sendToSyncService(this, alarm);
 
-		// XXX: doppelter Code zum oberen Teil, soll nur jedes Mal der Alarm
-		// nachgeladen werden, wenn eine 2.Push-Nachricht kommt, oder immer?
-		try {
-			Alarm updated_alarm = AlarmApp.getAuthWebClient()
-					.getAlarmInformations(alarm.getOperationId());
-			// XXX: das mit dem State ist noch nicht so schön
-			updated_alarm.setState(alarm.getState());
-			alarm = updated_alarm;
-			alarm.save();
-			IntentUtil.displayAlarmActivity(this, alarm);
-
-		} catch (WebException e) {
-			LogEx.info("Laden der Alarminformationen fehlgeschlagen!");
-			LogEx.exception(e);
-		}
 	}
 
 	@Override
