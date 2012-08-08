@@ -198,7 +198,7 @@ public class JsonUtil {
 
 		JSONObject jobj = new JSONObject(response);
 		Date date = DateUtil.parse(jobj.getString("alarmed"));
-		AlarmState state = AlarmState.create(jobj.getString("status"));
+		AlarmState state = AlarmState.create(jobj.getString("my_status"));
 
 		// XXX: Achtung, hier müssen noch die Extras mit rein
 		Alarm a = new AlarmData(jobj.getString("operation_id"), date,
