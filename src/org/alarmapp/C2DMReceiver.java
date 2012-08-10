@@ -128,11 +128,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 							.getAlarmInformations(alarm.getOperationId());
 					updated_alarm.save();
 
-					// TODO: send Broadcast -> reload AlarmActivity
-					// damit die AlarmActivity neu geladen wird;
-					// jetzt werden die neuen Informationen geladen aber nicht
-					// die Anzeige aktualisiert
-
+					IntentUtil.displayAlarmActivity(C2DMReceiver.this,
+							updated_alarm);
 				} catch (WebException e) {
 					LogEx.info("Laden der Alarminformationen fehlgeschlagen!");
 					LogEx.exception(e);
