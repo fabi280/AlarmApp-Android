@@ -187,10 +187,10 @@ public class AlarmData implements Alarm {
 
 		Ensure.valid(this.state.isNext(newState));
 
+		this.state = newState;
+
 		LogEx.info("Operation" + this.getOperationId() + " has now State "
 				+ this.state.getName());
-
-		this.state = newState;
 	}
 
 	private HashSet<AlarmedUser> alarmedUsers;
