@@ -201,7 +201,7 @@ public class JsonUtil {
 		AlarmState state = AlarmState.create(jobj.getString("my_status"));
 
 		// XXX: Achtung, hier müssen noch die Extras mit rein
-		Alarm a = new AlarmData(jobj.getString("operation_id"), date,
+		Alarm a = new AlarmData(jobj.getString("id"), date,
 				jobj.getString("title"), jobj.getString("text"), state, null);
 		return a;
 	}
