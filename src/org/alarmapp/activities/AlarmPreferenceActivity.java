@@ -17,6 +17,7 @@
 package org.alarmapp.activities;
 
 import org.alarmapp.R;
+import org.alarmapp.util.IntentUtil;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -28,5 +29,11 @@ public class AlarmPreferenceActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 
 		addPreferencesFromResource(R.xml.preferences);
+	}
+
+	@Override
+	public void onBackPressed() {
+		IntentUtil.displayMainActivity(AlarmPreferenceActivity.this);
+		finish();
 	}
 }

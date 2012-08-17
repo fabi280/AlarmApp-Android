@@ -73,4 +73,10 @@ public class AlarmListActivity extends ListActivity {
 						.getAlarmStore().getLastAlarms());
 		setListAdapter(adapter);
 	}
+
+	@Override
+	public void onBackPressed() {
+		IntentUtil.displayMainActivity(AlarmListActivity.this);
+		finish();
+	}
 }

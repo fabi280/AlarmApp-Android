@@ -203,6 +203,7 @@ public class LoginActivity extends Activity {
 		setVisibility(View.INVISIBLE);
 
 		IntentUtil.displayMainActivity(this);
+		this.finish();
 	}
 
 	private void displayError(final String errorMessage) {
@@ -217,5 +218,10 @@ public class LoginActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		LogEx.info("Key Down!");
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
 	}
 }

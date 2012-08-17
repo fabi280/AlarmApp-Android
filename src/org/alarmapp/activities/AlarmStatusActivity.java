@@ -25,7 +25,7 @@ import java.util.Comparator;
 import org.alarmapp.AlarmApp;
 import org.alarmapp.Broadcasts;
 import org.alarmapp.R;
-import org.alarmapp.activities.list_adapters.AlarmedUserAdapter;
+import org.alarmapp.activities.adapters.AlarmedUserAdapter;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.classes.AlarmData;
@@ -271,5 +271,11 @@ public class AlarmStatusActivity extends Activity {
 	private void startFetchAlarmStatus() {
 
 		new LoadAlarmstatusAsyncTask().execute(this.alarm);
+	}
+
+	@Override
+	public void onBackPressed() {
+		IntentUtil.displayAlarmActivity(AlarmStatusActivity.this, this.alarm);
+		finish();
 	}
 }

@@ -17,8 +17,11 @@
 package org.alarmapp.web.json;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmGroup;
 import org.alarmapp.model.AlarmState;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.FireDepartment;
@@ -26,6 +29,7 @@ import org.alarmapp.model.LonLat;
 import org.alarmapp.model.PositionMeasurementMethod;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
+import org.alarmapp.model.classes.AlarmData;
 import org.alarmapp.model.classes.AlarmedUserData;
 import org.alarmapp.model.classes.FireDepartmentData;
 import org.alarmapp.model.classes.LonLatData;
@@ -180,5 +184,25 @@ public class JsonUtil {
 				result.add(arr.getString(i));
 		}
 		return result;
+	}
+
+	public static List<AlarmGroup> parseGetAlarmGroupListResult(String response)
+			throws JSONException {
+		ArrayList<AlarmGroup> result = new ArrayList<AlarmGroup>();
+		// TODO: parse the result
+		return result;
+	}
+
+	public static Alarm parseGetAlarmInformationsResult(String response)
+			throws JSONException {
+
+		JSONObject jobj = new JSONObject(response);
+		Date date = DateUtil.parse(jobj.getString("alarmed"));
+		AlarmState state = AlarmState.create(jobj.getString("my_status"));
+
+		// XXX: Achtung, hier müssen noch die Extras mit rein
+		Alarm a = new AlarmData(jobj.getString("id"), date,
+				jobj.getString("title"), jobj.getString("text"), state, null);
+		return a;
 	}
 }

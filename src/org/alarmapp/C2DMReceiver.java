@@ -118,24 +118,51 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 	private void handleAlarmMessage(Context context, Bundle extras) {
 		Ensure.valid(AlarmData.isAlarmDataBundle(extras));
-		Alarm alarm = AlarmData.create(extras);
+		final Alarm alarm = AlarmData.create(extras);
 
-		if (AlarmApp.getAlarmStore().contains(alarm.getOperationId())) {
-			LogEx.warning("The Alarm " + alarm
-					+ " does already exist. Aborting");
-			return;
+		if (!alarm.getState().isFinal()) {
+			alarm.setState(AlarmState.Delivered);
+			AlarmApp.getAlarmStore().put(alarm);
+			IntentUtil.sendToSyncService(this, alarm);
 		}
 
-		alarm.setState(AlarmState.Delivered);
-		AlarmApp.getAlarmStore().put(alarm);
-
-		LogEx.verbose("Display Alarm Activity.");
-
 		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
-		IntentUtil.displayAlarmActivity(this, alarm);
-		IntentUtil.startAudioPlayerService(this, alarm);
 
-		IntentUtil.sendToSyncService(this, alarm);
+		new Thread(new Runnable() {
+
+			public void run() {
+				try {
+					LogEx.verbose("Updating Alarminformations.");
+					Alarm updated_alarm = AlarmApp.getAuthWebClient()
+							.getAlarmInformations(alarm.getOperationId());
+
+					if (updated_alarm.getState().isNext(alarm.getState())) {
+						updated_alarm.setState(alarm.getState());
+					}
+
+					updated_alarm.save();
+
+					// TODO: der alte Alarm muss aktualisiert werden (Text,
+					// Titel und Extras)
+					// oder die Berechtigungen etc. müssen vom Server mit
+					// übertragen werden
+
+					LogEx.verbose("Display Alarm Activity.");
+					IntentUtil.displayAlarmActivity(C2DMReceiver.this,
+							updated_alarm);
+				} catch (WebException e) {
+					LogEx.info("Laden der Alarminformationen fehlgeschlagen!");
+					LogEx.exception(e);
+				}
+
+			}
+		}).start();
+
+		if (!alarm.getState().isFinal()) {
+			LogEx.verbose("Display Alarm Activity.");
+			IntentUtil.displayAlarmActivity(this, alarm);
+			IntentUtil.startAudioPlayerService(this, alarm);
+		}
 	}
 
 	@Override

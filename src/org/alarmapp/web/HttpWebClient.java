@@ -16,15 +16,18 @@
 
 package org.alarmapp.web;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmGroup;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.User;
 import org.alarmapp.model.WayPoint;
+import org.alarmapp.model.classes.AlarmGroupData;
 import org.alarmapp.model.classes.AuthTokenData;
 import org.alarmapp.model.classes.PersonData;
 import org.alarmapp.util.DateUtil;
@@ -309,6 +312,48 @@ public class HttpWebClient implements WebClient {
 		try {
 			return JsonUtil.parseResult(response);
 		} catch (JSONException e) {
+			LogEx.exception(e);
+			throw new WebException(JSON_ERROR, e);
+		}
+	}
+
+	public WebResult performAlarm(AuthToken token, String code, String title,
+			String message) throws WebException {
+		HashMap<String, String> data = new HashMap<String, String>();
+		data.put("code", code);
+		data.put("title", title);
+		data.put("text", message);
+		String response = HttpUtil.request(url("/web_service/alarm/create/"),
+				data, this.createAuthHeader(token));
+		try {
+			return JsonUtil.parseResult(response);
+		} catch (JSONException e) {
+			LogEx.exception(e);
+			throw new WebException(JSON_ERROR, e);
+		}
+	}
+
+	public List<AlarmGroup> getAlarmGroups(AuthToken token) throws WebException {
+		ArrayList<AlarmGroup> stub = new ArrayList<AlarmGroup>();
+		stub.add(new AlarmGroupData("Probealarm", "constialarm"));
+		stub.add(new AlarmGroupData("Testalarm", "constialarm"));
+		stub.add(new AlarmGroupData("First Responder", "constialarm"));
+
+		// TODO: request an den Server schicken, um die Daten zu holen
+
+		return stub;
+	}
+
+	public Alarm getAlarmInformations(AuthToken token, String operation_id)
+			throws WebException {
+		String response = HttpUtil.request(url(String.format(
+				"/web_service/operation/%s/info/", operation_id)), null,
+				createAuthHeader(token));
+		LogEx.info(response);
+		try {
+			return JsonUtil.parseGetAlarmInformationsResult(response);
+		} catch (JSONException e) {
+			LogEx.info("getAlarmInformations request fehlgeschlagen.");
 			LogEx.exception(e);
 			throw new WebException(JSON_ERROR, e);
 		}

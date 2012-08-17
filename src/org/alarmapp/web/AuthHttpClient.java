@@ -17,8 +17,10 @@
 package org.alarmapp.web;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.alarmapp.model.Alarm;
+import org.alarmapp.model.AlarmGroup;
 import org.alarmapp.model.AlarmedUser;
 import org.alarmapp.model.AuthToken;
 import org.alarmapp.model.WayPoint;
@@ -68,5 +70,18 @@ public class AuthHttpClient implements AuthWebClient {
 
 	public void unregisterSmartphone(String uuid) throws WebException {
 		client.unregisterSmartphone(token, uuid);
+	}
+
+	public void performAlarm(String code, String title, String message)
+			throws WebException {
+		client.performAlarm(token, code, title, message);
+	}
+
+	public List<AlarmGroup> getAlarmGroups() throws WebException {
+		return client.getAlarmGroups(token);
+	}
+
+	public Alarm getAlarmInformations(String operation_id) throws WebException {
+		return client.getAlarmInformations(token, operation_id);
 	}
 }

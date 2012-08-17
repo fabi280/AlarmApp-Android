@@ -20,6 +20,7 @@ import org.alarmapp.Actions;
 import org.alarmapp.AlarmApp;
 import org.alarmapp.activities.AccountCreateActivity;
 import org.alarmapp.activities.AlarmActivity;
+import org.alarmapp.activities.AlarmCreateActivity;
 import org.alarmapp.activities.AlarmListActivity;
 import org.alarmapp.activities.AlarmPreferenceActivity;
 import org.alarmapp.activities.AlarmStatusActivity;
@@ -123,7 +124,7 @@ public class IntentUtil {
 	public static void sendFeedbackEmailIntent(Context context) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.putExtra(Intent.EXTRA_EMAIL,
-				new String[] { "frank@alarmapp.org" });
+				new String[] { "info@alarmapp.org" });
 		intent.putExtra(Intent.EXTRA_SUBJECT,
 				"Feedback für die Android AlarmApp von "
 						+ AlarmApp.getUser().getFullName());
@@ -134,6 +135,8 @@ public class IntentUtil {
 
 	public static void displayMainActivity(Context context) {
 		Intent mainIntent = new Intent(context, MainActivity.class);
+		mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(mainIntent);
 	}
 
@@ -155,6 +158,12 @@ public class IntentUtil {
 	public static void displayLoginActivity(Context context) {
 		Intent i = new Intent(context, LoginActivity.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(i);
+	}
+
+	public static void displayAlarmCreateActivity(Context context) {
+		Intent intent = new Intent(context, AlarmCreateActivity.class);
+		context.startActivity(intent);
 	}
 }

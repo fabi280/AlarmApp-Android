@@ -42,7 +42,7 @@ public class HttpUtil {
 	private static final String UNKNOWN_HTTP_STATUS_ERROR = "Der HTTP-Status-Code ist unbekannt:";
 	private static final String RESSOURCE_DOES_NOT_EXIST_ERROR = "Die angeforderte Ressource existiert nicht.";
 	private static final String NETWORK_ERROR = "Der Webserver ist nicht erreichbar.";
-	private static final String INTERNAL_SERVER_ERROR = "Probelem beim Verarbeiten der Anfrage durch den Web-Server.";
+	private static final String INTERNAL_SERVER_ERROR = "Problem beim Verarbeiten der Anfrage durch den Web-Server.";
 	private static final String SLOW_NETWORK_SERVER_ERROR = "Verbindung zum Server zu langsam";
 
 	private static String read(InputStream stream) throws IOException {

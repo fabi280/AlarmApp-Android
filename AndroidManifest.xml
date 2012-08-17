@@ -71,11 +71,13 @@ android:versionName="1.1.6">
 		</activity>
 		<activity android:name=".activities.InformationActivity"></activity>
 		<activity android:name=".activities.AlarmListActivity"></activity>
-		<activity android:name=".activities.LoginActivity" android:noHistory="true" android:configChanges="orientation"></activity>
+		<activity android:name=".activities.LoginActivity" android:configChanges="orientation"></activity>
 		<activity android:name=".activities.AlarmActivity"></activity>
 		<activity android:name=".activities.AlarmStatusActivity"></activity>
 		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
-		<activity android:name=".activities.AccountCreateActivity"  android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation" android:noHistory="true"></activity>
+		<activity android:name=".activities.AccountCreateActivity"  android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation"></activity>
 		<activity android:name=".activities.map.AlarmMapActivity"></activity>
+		<activity android:name=".activities.AlarmCreateActivity"></activity>
+		
 	</application>
 </manifest>

@@ -65,5 +65,6 @@ public class AccountCreateActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		IntentUtil.displayLoginActivity(AccountCreateActivity.this);
+		finish();
 	}
 }

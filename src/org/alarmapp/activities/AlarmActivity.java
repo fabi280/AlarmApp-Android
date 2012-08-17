@@ -17,6 +17,7 @@
 package org.alarmapp.activities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,7 @@ public class AlarmActivity extends Activity {
 			put("ff_count", "Einsatzkräfte:");
 			put("alarmed", "Alarmzeit:");
 			put("groups", "Alarmgruppen:");
+			put("alarmed_date", "Alarmdatum:");
 		}
 	};
 
@@ -69,19 +71,9 @@ public class AlarmActivity extends Activity {
 		return new OnClickListener() {
 			public void onClick(View v) {
 
-				cancelNotification();
 				IntentUtil.stopAudioPlayerService(AlarmActivity.this);
 
-				alarm.setState(newState);
-				Alarm storedAlarm = AlarmApp.getAlarmStore().get(
-						alarm.getOperationId());
-				storedAlarm.setState(newState);
-				storedAlarm.save();
-				IntentUtil.sendToSyncService(AlarmActivity.this, alarm);
-
-				// if (newState == AlarmState.Accepted) {
-				// IntentUtil.startPositionService(AlarmActivity.this, alarm);
-				// }
+				setStateToRecentOpenAlarms(newState);
 
 				updateButtonBarVisibility();
 			}
@@ -89,15 +81,40 @@ public class AlarmActivity extends Activity {
 		};
 	}
 
+	private void setStateToRecentOpenAlarms(AlarmState newState) {
+		List<Alarm> latestAlarms = AlarmApp.getAlarmStore().getLastAlarms();
+		Date actualAlarmTime = this.alarm.getAlarmed();
+		Date fiveMinutesBefore = actualAlarmTime;
+		fiveMinutesBefore.setTime(actualAlarmTime.getTime() - 5 * 60 * 1000);
+		for (Alarm a : latestAlarms) {
+
+			if (a.getAlarmed().getTime() < fiveMinutesBefore.getTime()) {
+				break;
+			}
+
+			if (!a.isFinal()) {
+
+				cancelNotification(a.getOperationId());
+
+				a.setState(newState);
+				Alarm storedAlarm = AlarmApp.getAlarmStore().get(
+						a.getOperationId());
+				storedAlarm.setState(newState);
+				storedAlarm.save();
+				IntentUtil.sendToSyncService(AlarmActivity.this, a);
+			}
+		}
+		alarm.setState(newState);
+	}
+
 	/**
 	 * 
 	 */
-	private void cancelNotification() {
+	private void cancelNotification(String operationID) {
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager notificationManager = (NotificationManager) AlarmActivity.this
 				.getSystemService(ns);
-		notificationManager.cancel(ParserUtil.parseInt(alarm.getOperationId(),
-				0));
+		notificationManager.cancel(ParserUtil.parseInt(operationID, 0));
 	}
 
 	private OnClickListener switchToClick = new OnClickListener() {
@@ -213,8 +230,11 @@ public class AlarmActivity extends Activity {
 				.entrySet()) {
 			putEntryToList(items, item.getKey(), item.getValue());
 		}
-		java.text.DateFormat dateFormatter = DateFormat.getTimeFormat(this);
+		java.text.DateFormat timeFormatter = DateFormat.getTimeFormat(this);
 		putEntryToList(items, "alarmed",
+				timeFormatter.format(alarm.getAlarmed()));
+		java.text.DateFormat dateFormatter = DateFormat.getDateFormat(this);
+		putEntryToList(items, "alarmed_date",
 				dateFormatter.format(alarm.getAlarmed()));
 
 		SimpleAdapter adapter = new SimpleAdapter(this, items,
@@ -248,6 +268,12 @@ public class AlarmActivity extends Activity {
 
 	private void makeActivityVisible() {
 		ActivityUtil.makeVisible(this);
+	}
+
+	@Override
+	public void onBackPressed() {
+		IntentUtil.displayAlarmListActivity(AlarmActivity.this);
+		finish();
 	}
 
 }
