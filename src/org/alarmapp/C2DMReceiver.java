@@ -120,12 +120,26 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Ensure.valid(AlarmData.isAlarmDataBundle(extras));
 		final Alarm alarm = AlarmData.create(extras);
 
+		if (!alarm.getState().isFinal()) {
+			alarm.setState(AlarmState.Delivered);
+			AlarmApp.getAlarmStore().put(alarm);
+			IntentUtil.sendToSyncService(this, alarm);
+		}
+
+		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
+
 		new Thread(new Runnable() {
 
 			public void run() {
 				try {
+					LogEx.verbose("Updating Alarminformations.");
 					Alarm updated_alarm = AlarmApp.getAuthWebClient()
 							.getAlarmInformations(alarm.getOperationId());
+
+					if (updated_alarm.getState().isNext(alarm.getState())) {
+						updated_alarm.setState(alarm.getState());
+					}
+
 					updated_alarm.save();
 
 					// TODO: der alte Alarm muss aktualisiert werden (Text,
@@ -133,10 +147,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 					// oder die Berechtigungen etc. müssen vom Server mit
 					// übertragen werden
 
-					// TODO: langer Text wird nicht gut dargestellt, dann
-					// verschwinden die Knöpfe unten..die Textview muss also
-					// scrollable gemacht werden
-
+					LogEx.verbose("Display Alarm Activity.");
 					IntentUtil.displayAlarmActivity(C2DMReceiver.this,
 							updated_alarm);
 				} catch (WebException e) {
@@ -147,17 +158,10 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			}
 		}).start();
 
-		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
-
 		if (!alarm.getState().isFinal()) {
-			alarm.setState(AlarmState.Delivered);
-			AlarmApp.getAlarmStore().put(alarm);
-
 			LogEx.verbose("Display Alarm Activity.");
-
 			IntentUtil.displayAlarmActivity(this, alarm);
 			IntentUtil.startAudioPlayerService(this, alarm);
-			IntentUtil.sendToSyncService(this, alarm);
 		}
 	}
 
