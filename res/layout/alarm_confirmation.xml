@@ -1,42 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="match_parent"
-	android:layout_height="match_parent" android:weightSum="1">
-	
-		<TextView android:id="@+id/tvTitle" android:layout_height="wrap_content"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:text="Title" android:layout_width="match_parent"
-			android:gravity="center" android:layout_margin="10dip"></TextView>
-		
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="2" >
 
-		<ScrollView
-		    android:id="@+id/scrollView1"
-		    android:layout_width="match_parent"
-		    android:layout_height="180dip" >
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
-		<TextView android:id="@+id/tvText" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_margin="10dip" android:text="Text" android:textAppearance="?android:attr/textAppearanceMedium" /></ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-		<TextView
-		    android:id="@+id/textView1"
-		    style="?android:attr/listSeparatorTextViewStyle"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="Details" />
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dip"
+                android:gravity="center"
+                android:text="Title"
+                android:textAppearance="?android:attr/textAppearanceLarge" >
+            </TextView>
 
-			<ListView android:layout_height="wrap_content" android:id="@+id/lvAlarmDetails"
-				android:layout_width="match_parent" android:layout_weight="1" android:layout_marginLeft="10dip" android:layout_marginRight="10dip"></ListView>
-			<LinearLayout android:id="@+id/llButtonBar" style="@android:style/ButtonBar"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:orientation="horizontal" android:background="#000000">
-				<Button android:text="Akzeptieren" android:layout_height="60dip"
-					android:id="@+id/btAccept" android:layout_weight="1" android:layout_width="0dp" android:background="@drawable/green_button" android:layout_margin="4dp"></Button>
-				<Button android:layout_height="60dip" android:text="Ablehnen"
-					android:id="@+id/btReject" android:layout_weight="1" android:layout_width="0dp" android:background="@drawable/red_button" android:layout_margin="4dp"></Button>
-			<Button android:text="Einsatzstatus" android:layout_height="60dip" android:id="@+id/btSwitchToStatus" android:layout_weight="1" android:layout_width="0dp" android:visibility="gone"></Button>
-		
-					
-			</LinearLayout>
+            <TextView
+                android:id="@+id/tvText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dip"
+                android:text="Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
+            <TextView
+                android:id="@+id/textView1"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Details" />
 
+        </LinearLayout>
+    </ScrollView>
+    
+            <ListView
+                android:id="@+id/lvAlarmDetails"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip">
+            </ListView>
+
+    <LinearLayout
+        android:id="@+id/llButtonBar"
+        style="@android:style/ButtonBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btAccept"
+            android:layout_width="0dp"
+            android:layout_height="60dip"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/green_button"
+            android:text="Akzeptieren" >
+        </Button>
+
+        <Button
+            android:id="@+id/btReject"
+            android:layout_width="0dp"
+            android:layout_height="60dip"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/red_button"
+            android:text="Ablehnen" >
+        </Button>
+
+        <Button
+            android:id="@+id/btSwitchToStatus"
+            android:layout_width="0dp"
+            android:layout_height="60dip"
+            android:layout_weight="1"
+            android:text="Einsatzstatus"
+            android:visibility="gone" >
+        </Button>
+    </LinearLayout>
 
 </LinearLayout>

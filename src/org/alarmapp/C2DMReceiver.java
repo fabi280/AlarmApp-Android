@@ -120,49 +120,46 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Ensure.valid(AlarmData.isAlarmDataBundle(extras));
 		final Alarm alarm = AlarmData.create(extras);
 
-		if (!alarm.getState().isFinal()) {
+		LogEx.info("AlarmState is " + alarm.getState().getName());
+
+		if (isNewAlarm(alarm)) {
+			LogEx.info("Alarm does not exist already. New Alarm.");
+
 			alarm.setState(AlarmState.Delivered);
-			AlarmApp.getAlarmStore().put(alarm);
+			alarm.save();
 			IntentUtil.sendToSyncService(this, alarm);
+
+			LogEx.verbose("Display Alarm Activity.");
+			IntentUtil.startAudioPlayerService(this, alarm);
+			IntentUtil.displayAlarmActivity(this, alarm);
+		} else {
+
+			try {
+				Alarm updated_alarm = AlarmApp.getAuthWebClient()
+						.getAlarmInformations(alarm.getOperationId());
+
+				if (updated_alarm.getState().isNext(alarm.getState())) {
+					updated_alarm.setState(alarm.getState());
+				}
+
+				updated_alarm.save();
+
+				IntentUtil.displayAlarmActivity(C2DMReceiver.this,
+						updated_alarm);
+			} catch (WebException e) {
+				LogEx.info("Laden der Alarminformationen fehlgeschlagen!");
+				LogEx.exception(e);
+			}
+
+			LogEx.info("Alarm already exists. Loading Alarm Update.");
 		}
 
 		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
 
-		new Thread(new Runnable() {
+	}
 
-			public void run() {
-				try {
-					LogEx.verbose("Updating Alarminformations.");
-					Alarm updated_alarm = AlarmApp.getAuthWebClient()
-							.getAlarmInformations(alarm.getOperationId());
-
-					if (updated_alarm.getState().isNext(alarm.getState())) {
-						updated_alarm.setState(alarm.getState());
-					}
-
-					updated_alarm.save();
-
-					// TODO: der alte Alarm muss aktualisiert werden (Text,
-					// Titel und Extras)
-					// oder die Berechtigungen etc. müssen vom Server mit
-					// übertragen werden
-
-					LogEx.verbose("Display Alarm Activity.");
-					IntentUtil.displayAlarmActivity(C2DMReceiver.this,
-							updated_alarm);
-				} catch (WebException e) {
-					LogEx.info("Laden der Alarminformationen fehlgeschlagen!");
-					LogEx.exception(e);
-				}
-
-			}
-		}).start();
-
-		if (!alarm.getState().isFinal()) {
-			LogEx.verbose("Display Alarm Activity.");
-			IntentUtil.displayAlarmActivity(this, alarm);
-			IntentUtil.startAudioPlayerService(this, alarm);
-		}
+	private boolean isNewAlarm(final Alarm alarm) {
+		return !AlarmApp.getAlarmStore().contains(alarm.getOperationId());
 	}
 
 	@Override

@@ -253,7 +253,7 @@ public class AlarmActivity extends Activity {
 		if (alarm.getState().isFinal()) {
 			setButtonVisibility(View.GONE, btAccept, btReject);
 
-			if (alarm.isAlarmStatusViewer()) {
+			if (isAlarmStatusViewer()) {
 				setButtonVisibility(View.VISIBLE, btSwitchToStatus);
 				setButtonBarVisibility(View.VISIBLE);
 			} else
@@ -264,6 +264,11 @@ public class AlarmActivity extends Activity {
 			setButtonVisibility(View.VISIBLE, btAccept, btReject);
 			setButtonVisibility(View.GONE, btSwitchToStatus);
 		}
+	}
+
+	private boolean isAlarmStatusViewer() {
+		return alarm.isAlarmStatusViewer()
+				|| AlarmApp.getUser().canViewAlarmStatus();
 	}
 
 	private void makeActivityVisible() {
