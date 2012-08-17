@@ -132,6 +132,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			LogEx.verbose("Display Alarm Activity.");
 			IntentUtil.startAudioPlayerService(this, alarm);
 			IntentUtil.displayAlarmActivity(this, alarm);
+			NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
 		} else {
 
 			try {
@@ -146,6 +147,10 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 				IntentUtil.displayAlarmActivity(C2DMReceiver.this,
 						updated_alarm);
+
+				NotificationUtil.notifyUserWithSound(context, updated_alarm,
+						AlarmActivity.class);
+
 			} catch (WebException e) {
 				LogEx.info("Laden der Alarminformationen fehlgeschlagen!");
 				LogEx.exception(e);
@@ -153,8 +158,6 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 			LogEx.info("Alarm already exists. Loading Alarm Update.");
 		}
-
-		NotificationUtil.notifyUser(context, alarm, AlarmActivity.class);
 
 	}
 

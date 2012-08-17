@@ -24,6 +24,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 public class NotificationUtil {
@@ -31,6 +32,12 @@ public class NotificationUtil {
 	public static void notifyUser(Context c, Alarm alarm, Class<?> cls) {
 		notifyUser(c, ParserUtil.parseInt(alarm.getOperationId(), 0),
 				alarm.getTitle(), alarm.getText(), cls, alarm.getBundle());
+	}
+
+	public static void notifyUserWithSound(Context c, Alarm alarm, Class<?> cls) {
+		notifyUser(c, ParserUtil.parseInt(alarm.getOperationId(), 0),
+				alarm.getTitle(), alarm.getText(), cls, alarm.getBundle(),
+				null, Notification.DEFAULT_ALL);
 	}
 
 	public static void notifyUser(Context c, String title, String text,
@@ -47,11 +54,16 @@ public class NotificationUtil {
 
 	public static void notifyUser(Context c, int id, String title,
 			String message, Class<?> cls, Bundle bundle) {
+		notifyUser(c, id, title, message, cls, bundle, null, 0);
+	}
+
+	public static void notifyUser(Context c, int id, String title,
+			String message, Class<?> cls, Bundle bundle, Uri sound, int defaults) {
 		String ns = Context.NOTIFICATION_SERVICE;
 		NotificationManager notificationManager = (NotificationManager) c
 				.getSystemService(ns);
 
-		Notification notification = createNotification(title);
+		Notification notification = createNotification(title, sound);
 
 		Intent notificationIntent = new Intent(c, cls);
 		if (bundle != null)
@@ -61,17 +73,17 @@ public class NotificationUtil {
 				notificationIntent, 0);
 
 		notification.setLatestEventInfo(c, title, message, contentIntent);
-
+		notification.defaults = defaults;
 		notificationManager.notify(id, notification);
 	}
 
-	private static Notification createNotification(String title) {
+	private static Notification createNotification(String title, Uri sound) {
 		int icon = R.drawable.startus_bar_icon;
 		CharSequence tickerText = title;
 		long when = System.currentTimeMillis();
 
 		Notification notification = new Notification(icon, tickerText, when);
-		notification.sound = null;
+		notification.sound = sound;
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		return notification;

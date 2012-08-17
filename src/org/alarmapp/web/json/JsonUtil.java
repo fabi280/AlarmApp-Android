@@ -17,8 +17,13 @@
 package org.alarmapp.web.json;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmGroup;
@@ -200,9 +205,19 @@ public class JsonUtil {
 		Date date = DateUtil.parse(jobj.getString("alarmed"));
 		AlarmState state = AlarmState.create(jobj.getString("my_status"));
 
-		// XXX: Achtung, hier müssen noch die Extras mit rein
+		HashSet<String> noExtras = new HashSet<String>(Arrays.asList("alarmed",
+				"my_status", "title", "text", "id"));
+		Map<String, String> extras = new HashMap<String, String>();
+
+		for (Iterator<String> iter = jobj.keys(); iter.hasNext();) {
+			String key = iter.next();
+			if (!noExtras.contains(key)) {
+				extras.put(key, jobj.getString(key));
+			}
+		}
+
 		Alarm a = new AlarmData(jobj.getString("id"), date,
-				jobj.getString("title"), jobj.getString("text"), state, null);
+				jobj.getString("title"), jobj.getString("text"), state, extras);
 		return a;
 	}
 }
