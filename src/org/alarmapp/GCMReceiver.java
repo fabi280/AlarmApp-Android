@@ -37,9 +37,9 @@ import android.os.Bundle;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
 
-public class C2DMReceiver extends C2DMBaseReceiver {
+public class GCMReceiver extends C2DMBaseReceiver {
 
-	public C2DMReceiver() {
+	public GCMReceiver() {
 		super("org.AlarmApp");
 	}
 
@@ -47,14 +47,14 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 	public void onRegistered(Context context, String registrationId)
 			throws java.io.IOException {
 
-		LogEx.verbose("Received registration id");
+		LogEx.verbose("Received registration id " + registrationId);
 
-		Broadcasts.sendC2DMRegisteredBroadcast(this, registrationId);
+		Broadcasts.sendGCMRegisteredBroadcast(this, registrationId);
 
 		try {
 			AlarmApp.getAuthWebClient().createSmartphone(registrationId,
-					Device.id(context), Device.name(context),
-					Device.platform(context), Device.version(context));
+					Device.id(context), Device.name(context), "Android_GCM",
+					Device.version(context));
 
 		} catch (WebException e) {
 			LogEx.exception(e);
@@ -68,7 +68,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 	@Override
 	public void onUnregistered(final Context context) {
-		LogEx.warning("C2DM unregister happened.");
+		LogEx.warning("GCM unregister happened.");
 		LogEx.info("Removing user Account. Login required!");
 		AlarmApp.setUser(new AnonymusUserData());
 
@@ -145,8 +145,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 				updated_alarm.save();
 
-				IntentUtil.displayAlarmActivity(C2DMReceiver.this,
-						updated_alarm);
+				IntentUtil
+						.displayAlarmActivity(GCMReceiver.this, updated_alarm);
 
 				NotificationUtil.notifyUserWithSound(context, updated_alarm,
 						AlarmActivity.class);
