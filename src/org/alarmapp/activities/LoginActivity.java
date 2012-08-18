@@ -134,7 +134,7 @@ public class LoginActivity extends Activity {
 
 						LogEx.info("C2DMessaging.Register");
 						C2DMessaging.register(LoginActivity.this,
-								"f.englert@gmail.com");
+								"108896990301");
 					} catch (final FireDepartmentMissingException e) {
 						LogEx.exception(
 								"Der Benutzer ist in keiner Feuerwehr. ", e);
