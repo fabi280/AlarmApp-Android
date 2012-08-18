@@ -76,7 +76,9 @@ public class AlarmData implements Alarm {
 		b.putString(ALARMED, DateUtil.format(this.alarmed));
 		b.putString(OPERATION_ID, this.operation_id);
 		b.putInt(OPERATION_STATUS, state.getId());
-		b.putSerializable(ALARMED_USER_LIST, this.alarmedUsers);
+		if (this.alarmedUsers != null) {
+			b.putSerializable(ALARMED_USER_LIST, this.alarmedUsers);
+		}
 		b.putString(IS_ALARMSTATUS_VIEWER,
 				Boolean.toString(isAlarmstatusViewer));
 
@@ -121,9 +123,10 @@ public class AlarmData implements Alarm {
 		a.alarmed = DateUtil.parse(extra.getString(ALARMED));
 		a.title = extra.getString(TITLE);
 		a.text = extra.getString(TEXT);
-		a.alarmedUsers = (HashSet<AlarmedUser>) extra
-				.getSerializable(ALARMED_USER_LIST);
-
+		if (extra.containsKey(ALARMED_USER_LIST)) {
+			a.alarmedUsers = (HashSet<AlarmedUser>) extra
+					.getSerializable(ALARMED_USER_LIST);
+		}
 		if (extra.containsKey(IS_ALARMSTATUS_VIEWER))
 			a.isAlarmstatusViewer = Boolean.parseBoolean(extra.getString(
 					IS_ALARMSTATUS_VIEWER).toLowerCase());

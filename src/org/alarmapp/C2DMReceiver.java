@@ -148,6 +148,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 				IntentUtil.displayAlarmActivity(C2DMReceiver.this,
 						updated_alarm);
 
+				LogEx.info(updated_alarm.getBundle().toString());
+
 				NotificationUtil.notifyUserWithSound(context, updated_alarm,
 						AlarmActivity.class);
 

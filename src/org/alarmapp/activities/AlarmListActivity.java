@@ -20,6 +20,7 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.model.Alarm;
 import org.alarmapp.util.IntentUtil;
+import org.alarmapp.util.LogEx;
 import org.alarmapp.util.adapter.BinderAdapter;
 import org.alarmapp.util.adapter.IAdapterBinder;
 
@@ -59,7 +60,9 @@ public class AlarmListActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> view, View row, int pos,
 					long arg3) {
 				Alarm a = (Alarm) view.getItemAtPosition(pos);
+				LogEx.info("Alarm clicked. OperationID: " + a.getOperationId());
 				IntentUtil.displayAlarmActivity(AlarmListActivity.this, a);
+				// finish();
 			}
 		});
 	}

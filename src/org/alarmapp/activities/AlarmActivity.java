@@ -148,9 +148,9 @@ public class AlarmActivity extends Activity {
 
 		this.btSwitchToStatus.setOnClickListener(switchToClick);
 
-		if (AlarmData.isAlarmDataBundle(savedInstanceState))
+		if (AlarmData.isAlarmDataBundle(savedInstanceState)) {
 			alarm = AlarmData.create(savedInstanceState);
-		else {
+		} else {
 			Ensure.valid(AlarmData.isAlarmDataBundle(getIntent().getExtras()));
 			alarm = AlarmData.create(getIntent().getExtras());
 		}
@@ -163,6 +163,10 @@ public class AlarmActivity extends Activity {
 		super.onResume();
 
 		LogEx.verbose("AlarmActivity onResume. State is " + alarm.getState());
+
+		LogEx.verbose("Refresh Alarm details");
+		alarm = AlarmApp.getAlarmStore().get(alarm.getOperationId());
+		displayAlarm();
 
 		if (alarm.getState().isUserActionRequired()) {
 			makeActivityVisible();
