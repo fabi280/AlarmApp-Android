@@ -107,7 +107,7 @@ public class IntentUtil {
 		Ensure.notNull(alarm);
 
 		Intent alarmIntent = new Intent(context, AlarmStatusActivity.class);
-		alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		// alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		alarmIntent.putExtras(alarm.getBundle());
 		context.startActivity(alarmIntent);
 	}
@@ -116,8 +116,7 @@ public class IntentUtil {
 		Ensure.notNull(alarm);
 
 		Intent alarmIntent = new Intent(context, AlarmActivity.class);
-		alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		alarmIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		// alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		alarmIntent.putExtras(alarm.getBundle());
 		context.startActivity(alarmIntent);
 	}
@@ -136,8 +135,8 @@ public class IntentUtil {
 
 	public static void displayMainActivity(Context context) {
 		Intent mainIntent = new Intent(context, MainActivity.class);
-		mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		// mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		// mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(mainIntent);
 	}
 
@@ -158,8 +157,8 @@ public class IntentUtil {
 
 	public static void displayLoginActivity(Context context) {
 		Intent i = new Intent(context, LoginActivity.class);
-		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		// i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		// i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(i);
 	}
 
