@@ -154,8 +154,6 @@ public class AlarmActivity extends Activity {
 			Ensure.valid(AlarmData.isAlarmDataBundle(getIntent().getExtras()));
 			alarm = AlarmData.create(getIntent().getExtras());
 		}
-
-		displayAlarm();
 	}
 
 	@Override
@@ -168,9 +166,7 @@ public class AlarmActivity extends Activity {
 		alarm = AlarmApp.getAlarmStore().get(alarm.getOperationId());
 		displayAlarm();
 
-		if (alarm.getState().isUserActionRequired()) {
-			makeActivityVisible();
-		}
+		makeActivityVisible();
 	}
 
 	private void setButtonVisibility(final int visibility,
@@ -224,9 +220,7 @@ public class AlarmActivity extends Activity {
 
 		LogEx.info("Displaying the alarm!");
 
-		if (alarm.getState().isUserActionRequired()) {
-			makeActivityVisible();
-		}
+		makeActivityVisible();
 
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
 
@@ -282,7 +276,6 @@ public class AlarmActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		IntentUtil.displayAlarmListActivity(AlarmActivity.this);
-		finish();
 	}
 
 }

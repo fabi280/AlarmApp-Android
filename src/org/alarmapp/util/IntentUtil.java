@@ -116,7 +116,8 @@ public class IntentUtil {
 		Ensure.notNull(alarm);
 
 		Intent alarmIntent = new Intent(context, AlarmActivity.class);
-		// alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		alarmIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		alarmIntent.putExtras(alarm.getBundle());
 		context.startActivity(alarmIntent);
 	}
@@ -135,7 +136,7 @@ public class IntentUtil {
 
 	public static void displayMainActivity(Context context) {
 		Intent mainIntent = new Intent(context, MainActivity.class);
-		// mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		// mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(mainIntent);
 	}
