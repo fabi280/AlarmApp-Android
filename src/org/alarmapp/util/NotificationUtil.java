@@ -70,7 +70,7 @@ public class NotificationUtil {
 			notificationIntent.putExtras(bundle);
 
 		PendingIntent contentIntent = PendingIntent.getActivity(c, 0,
-				notificationIntent, 0);
+				notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 		notification.setLatestEventInfo(c, title, message, contentIntent);
 		notification.defaults = defaults;
