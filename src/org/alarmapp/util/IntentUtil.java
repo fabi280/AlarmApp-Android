@@ -125,7 +125,7 @@ public class IntentUtil {
 	public static void sendFeedbackEmailIntent(Context context) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.putExtra(Intent.EXTRA_EMAIL,
-				new String[] { "info@alarmapp.org" });
+				new String[] { "android@alarmapp.org" });
 		intent.putExtra(Intent.EXTRA_SUBJECT,
 				"Feedback für die Android AlarmApp von "
 						+ AlarmApp.getUser().getFullName());
