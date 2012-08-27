@@ -276,6 +276,7 @@ public class AlarmActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		IntentUtil.displayAlarmListActivity(AlarmActivity.this);
+		finish();
 	}
 
 }

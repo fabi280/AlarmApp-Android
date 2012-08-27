@@ -62,7 +62,6 @@ public class AlarmListActivity extends ListActivity {
 				Alarm a = (Alarm) view.getItemAtPosition(pos);
 				LogEx.info("Alarm clicked. OperationID: " + a.getOperationId());
 				IntentUtil.displayAlarmActivity(AlarmListActivity.this, a);
-				// finish();
 			}
 		});
 	}
