@@ -158,7 +158,7 @@ public class IntentUtil {
 
 	public static void displayLoginActivity(Context context) {
 		Intent i = new Intent(context, LoginActivity.class);
-		// i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		// i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(i);
 	}
