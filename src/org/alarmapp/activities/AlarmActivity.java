@@ -36,6 +36,7 @@ import org.alarmapp.util.ParserUtil;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -221,6 +222,7 @@ public class AlarmActivity extends Activity {
 		LogEx.info("Displaying the alarm!");
 
 		makeActivityVisible();
+		cancelNotification(this.alarm.getOperationId());
 
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
 
@@ -277,6 +279,15 @@ public class AlarmActivity extends Activity {
 	public void onBackPressed() {
 		IntentUtil.displayAlarmListActivity(AlarmActivity.this);
 		finish();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+
+		if (AlarmData.isAlarmDataBundle(intent.getExtras())) {
+			this.alarm = AlarmData.create(intent.getExtras());
+		}
 	}
 
 }

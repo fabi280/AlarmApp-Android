@@ -72,7 +72,7 @@ android:versionName="1.1.8">
 		<activity android:name=".activities.InformationActivity"></activity>
 		<activity android:name=".activities.AlarmListActivity"></activity>
 		<activity android:name=".activities.LoginActivity" android:configChanges="orientation" android:launchMode="singleInstance"></activity>
-		<activity android:name=".activities.AlarmActivity" android:launchMode="singleInstance"></activity>
+		<activity android:name=".activities.AlarmActivity" android:launchMode="singleTask"></activity>
 		<activity android:name=".activities.AlarmStatusActivity"></activity>
 		<activity android:name=".activities.AlarmPreferenceActivity"></activity>
 		<activity android:name=".activities.AccountCreateActivity"  android:theme="@android:style/Theme.NoTitleBar" android:configChanges="orientation"></activity>

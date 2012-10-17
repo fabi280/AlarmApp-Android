@@ -117,7 +117,9 @@ public class IntentUtil {
 
 		Intent alarmIntent = new Intent(context, AlarmActivity.class);
 		alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		alarmIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		// alarmIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		// alarmIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		// alarmIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		alarmIntent.putExtras(alarm.getBundle());
 		context.startActivity(alarmIntent);
 	}
