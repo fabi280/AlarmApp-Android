@@ -210,7 +210,7 @@ public class MainActivity extends Activity {
 				"Zeigt Ihnen eine Liste mit den letzten Einsätzen an.",
 				MenuEntry.COLOR_BLUE, alarmListClick));
 		entries.add(new MenuEntry("Informationen",
-				"Zeigt Infos zu Ihrere Feuerwehr und Ihrem Benutzeraccount ",
+				"Zeigt Infos zu Ihrer Feuerwehr und Ihrem Benutzeraccount ",
 				MenuEntry.COLOR_GREEN, infoClick));
 		entries.add(new MenuEntry(getString(R.string.einstellungen_menu_title),
 				getString(R.string.einstellungen_menu_desc),
