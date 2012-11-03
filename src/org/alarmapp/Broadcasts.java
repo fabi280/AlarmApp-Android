@@ -29,7 +29,7 @@ public class Broadcasts {
 	public static String C2DM_REGISTERED = "org.alarmapp.c2dm_registered";
 	public static String SMARTPHONE_CREATED = "org.alarmapp.smartphone_created";
 
-	public static void sendC2DMRegisteredBroadcast(Context ctxt,
+	public static void sendGCMRegisteredBroadcast(Context ctxt,
 			String registrationId) {
 		Intent intent = new Intent(C2DM_REGISTERED);
 		intent.putExtra("registration_id", registrationId);

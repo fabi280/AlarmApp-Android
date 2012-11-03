@@ -140,7 +140,7 @@ public abstract class C2DMBaseReceiver extends IntentService {
 		// Use a naming convention, similar with how permissions and intents are
 		// used. Alternatives are introspection or an ugly use of statics.
 		Log.i(TAG, "runIntentInService");
-		String receiver = context.getPackageName() + ".C2DMReceiver";
+		String receiver = context.getPackageName() + ".GCMReceiver";
 		intent.setClassName(context, receiver);
 
 		context.startService(intent);
