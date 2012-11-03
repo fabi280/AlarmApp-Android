@@ -30,10 +30,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class AlarmListActivity extends ListActivity {
+
+	private BinderAdapter<Alarm> adapter;
 
 	private IAdapterBinder<Alarm> binder = new IAdapterBinder<Alarm>() {
 
@@ -64,13 +67,24 @@ public class AlarmListActivity extends ListActivity {
 				IntentUtil.displayAlarmActivity(AlarmListActivity.this, a);
 			}
 		});
+		this.getListView().setOnItemLongClickListener(
+				new OnItemLongClickListener() {
+					public boolean onItemLongClick(AdapterView<?> view,
+							View row, int pos, long arg3) {
+						Alarm a = (Alarm) view.getItemAtPosition(pos);
+						AlarmApp.getAlarmStore().remove(a);
+						adapter.remove(a);
+						adapter.notifyDataSetChanged();
+						return true;
+					}
+				});
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		BinderAdapter<Alarm> adapter = new BinderAdapter<Alarm>(this,
+		this.adapter = new BinderAdapter<Alarm>(this,
 				R.layout.list_layout_alarm_list, binder, AlarmApp
 						.getAlarmStore().getLastAlarms());
 		setListAdapter(adapter);

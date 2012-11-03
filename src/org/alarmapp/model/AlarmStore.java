@@ -28,4 +28,6 @@ public interface AlarmStore {
 	public List<Alarm> getLastAlarms();
 
 	public void save();
+
+	public void remove(Alarm alarm);
 }

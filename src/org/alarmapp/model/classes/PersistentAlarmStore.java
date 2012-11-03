@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.alarmapp.model.Alarm;
 import org.alarmapp.model.AlarmStore;
+import org.alarmapp.util.LogEx;
 import org.alarmapp.util.store.PersistentMap;
 
 import android.content.Context;
@@ -65,5 +66,15 @@ public class PersistentAlarmStore implements AlarmStore {
 		ArrayList<Alarm> alarms = new ArrayList<Alarm>(alarmStore.values());
 		Collections.sort(alarms, alarmComparer);
 		return alarms;
+	}
+
+	public void remove(Alarm alarm) {
+		Alarm result = this.alarmStore.remove(alarm.getOperationId());
+		this.save();
+
+		if (result != null) {
+			LogEx.info("Der Alarm " + result.getOperationId()
+					+ " wurde gelöscht");
+		}
 	}
 }
