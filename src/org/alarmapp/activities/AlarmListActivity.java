@@ -72,9 +72,10 @@ public class AlarmListActivity extends ListActivity {
 					public boolean onItemLongClick(AdapterView<?> view,
 							View row, int pos, long arg3) {
 						Alarm a = (Alarm) view.getItemAtPosition(pos);
-						AlarmApp.getAlarmStore().remove(a);
-						adapter.remove(a);
-						adapter.notifyDataSetChanged();
+						// TODO: hier muss die View angepasst werden, damit man
+						// dann den Button drücken kann, der dann löscht, oder
+						// nicht
+						removeAlarm(a);
 						return true;
 					}
 				});
@@ -94,5 +95,11 @@ public class AlarmListActivity extends ListActivity {
 	public void onBackPressed() {
 		IntentUtil.displayMainActivity(AlarmListActivity.this);
 		finish();
+	}
+
+	private void removeAlarm(Alarm alarm) {
+		AlarmApp.getAlarmStore().remove(alarm);
+		adapter.remove(alarm);
+		adapter.notifyDataSetChanged();
 	}
 }
