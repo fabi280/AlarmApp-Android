@@ -16,6 +16,8 @@
 
 package org.alarmapp.activities;
 
+import java.util.HashSet;
+
 import org.alarmapp.AlarmApp;
 import org.alarmapp.R;
 import org.alarmapp.model.Alarm;
@@ -26,11 +28,14 @@ import org.alarmapp.util.adapter.IAdapterBinder;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,10 +43,40 @@ public class AlarmListActivity extends ListActivity {
 
 	private BinderAdapter<Alarm> adapter;
 
+	private HashSet<Alarm> alarmsLongPressed;
+
 	private IAdapterBinder<Alarm> binder = new IAdapterBinder<Alarm>() {
 
 		public View getView(Alarm item, View row, ViewGroup parent) {
+
+			if (alarmsLongPressed.contains(item)) {
+				final Alarm alarm = item;
+				row = LayoutInflater.from(AlarmApp.getInstance()).inflate(
+						R.layout.list_layout_alarm_list_delete, null);
+				Button ok = (Button) row.findViewById(R.id.delete_ok);
+				ok.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						removeAlarm(alarm);
+					}
+				});
+
+				Button cancel = (Button) row.findViewById(R.id.delete_abbr);
+				cancel.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						alarmsLongPressed.remove(alarm);
+						adapter.notifyDataSetChanged();
+					}
+				});
+
+				return row;
+			}
+
 			TextView tvTitle = (TextView) row.findViewById(R.id.tvTitle);
+			if (tvTitle == null) {
+				row = LayoutInflater.from(AlarmApp.getInstance()).inflate(
+						R.layout.list_layout_alarm_list, null);
+				tvTitle = (TextView) row.findViewById(R.id.tvTitle);
+			}
 			TextView tvText = (TextView) row.findViewById(R.id.tvText);
 			ImageView ivStatus = (ImageView) row.findViewById(R.id.ivStatus);
 
@@ -67,15 +102,18 @@ public class AlarmListActivity extends ListActivity {
 				IntentUtil.displayAlarmActivity(AlarmListActivity.this, a);
 			}
 		});
+		alarmsLongPressed = new HashSet<Alarm>();
 		this.getListView().setOnItemLongClickListener(
 				new OnItemLongClickListener() {
 					public boolean onItemLongClick(AdapterView<?> view,
 							View row, int pos, long arg3) {
 						Alarm a = (Alarm) view.getItemAtPosition(pos);
+						alarmsLongPressed.add(a);
 						// TODO: hier muss die View angepasst werden, damit man
 						// dann den Button drücken kann, der dann löscht, oder
 						// nicht
-						removeAlarm(a);
+						// removeAlarm(a);
+						adapter.notifyDataSetChanged();
 						return true;
 					}
 				});
