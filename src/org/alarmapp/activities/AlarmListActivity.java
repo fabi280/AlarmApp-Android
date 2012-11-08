@@ -109,10 +109,6 @@ public class AlarmListActivity extends ListActivity {
 							View row, int pos, long arg3) {
 						Alarm a = (Alarm) view.getItemAtPosition(pos);
 						alarmsLongPressed.add(a);
-						// TODO: hier muss die View angepasst werden, damit man
-						// dann den Button drücken kann, der dann löscht, oder
-						// nicht
-						// removeAlarm(a);
 						adapter.notifyDataSetChanged();
 						return true;
 					}
