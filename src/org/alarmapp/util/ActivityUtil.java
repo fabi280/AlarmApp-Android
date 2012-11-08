@@ -42,26 +42,29 @@ public class ActivityUtil {
 
 	public static void showAlertDialog(final Activity activity,
 			final String titel, final String text) {
-		activity.runOnUiThread(new Runnable() {
 
-			public void run() {
-				aDialogBuilder = new AlertDialog.Builder(activity);
-				aDialogBuilder.setMessage(text);
-				aDialogBuilder.setTitle(titel);
-				aDialogBuilder.setCancelable(false);
-				aDialogBuilder.setPositiveButton("OK",
-						new DialogInterface.OnClickListener() {
+		if (!activity.isFinishing()) {
+			activity.runOnUiThread(new Runnable() {
 
-							public void onClick(DialogInterface dialog,
-									int which) {
-								dialog.cancel();
+				public void run() {
+					aDialogBuilder = new AlertDialog.Builder(activity);
+					aDialogBuilder.setMessage(text);
+					aDialogBuilder.setTitle(titel);
+					aDialogBuilder.setCancelable(false);
+					aDialogBuilder.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
 
-							}
-						});
-				aDialog = aDialogBuilder.create();
-				aDialog.show();
-			}
-		});
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.cancel();
+
+								}
+							});
+					aDialog = aDialogBuilder.create();
+					aDialog.show();
+				}
+			});
+		}
 
 	}
 
