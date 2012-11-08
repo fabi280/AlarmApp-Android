@@ -179,8 +179,10 @@ public class AlarmStatusActivity extends Activity {
 	};
 
 	private void fillAlarmStatusView() {
-		ArrayList<AlarmedUser> usersList = new ArrayList<AlarmedUser>(
-				this.alarm.getAlarmedUsers());
+		ArrayList<AlarmedUser> usersList = new ArrayList<AlarmedUser>();
+		if (!this.alarm.getAlarmedUsers().isEmpty()) {
+			usersList.addAll(this.alarm.getAlarmedUsers());
+		}
 		Collections.sort(usersList, AlarmedUserData.StatusComparator);
 		AlarmedUserAdapter adapter = new AlarmedUserAdapter(this, usersList);
 
