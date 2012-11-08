@@ -22,6 +22,7 @@ import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -57,8 +58,10 @@ public class AccountCreateActivity extends Activity {
 
 		webView = (WebView) findViewById(R.id.wvCreateAccount);
 		webView.getSettings().setJavaScriptEnabled(true);
-		webView.setWebViewClient(new AccountCreateWebViewClient());
-		ActivityUtil.startProgressBar(this);
+		ProgressDialog dialog = ActivityUtil.startProgressBar(this);
+		AccountCreateWebViewClient acwvclient = new AccountCreateWebViewClient();
+		acwvclient.setProgressDialog(dialog);
+		webView.setWebViewClient(acwvclient);
 		webView.loadUrl("http://alarmnotificationservice.appspot.com/mobile/register");
 	}
 

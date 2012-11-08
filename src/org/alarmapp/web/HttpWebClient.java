@@ -164,8 +164,9 @@ public class HttpWebClient implements WebClient {
 			throws WebException {
 		HashMap<String, String> data = new HashMap<String, String>();
 		data.put("uuid", uuid);
-		String response = HttpUtil.request("web_service/smartphone/remove/",
-				data, createAuthHeader(token));
+		String response = HttpUtil.request(
+				url("web_service/smartphone/remove/"), data,
+				createAuthHeader(token));
 		LogEx.verbose("Smartphone abgemeldet.");
 	}
 

@@ -20,10 +20,13 @@ import org.alarmapp.AlarmApp;
 import org.alarmapp.util.ActivityUtil;
 import org.alarmapp.util.IntentUtil;
 
+import android.app.ProgressDialog;
 import android.view.KeyEvent;
 import android.webkit.WebView;
 
 public class AccountCreateWebViewClient extends android.webkit.WebViewClient {
+
+	private ProgressDialog pDialog;
 
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -36,7 +39,7 @@ public class AccountCreateWebViewClient extends android.webkit.WebViewClient {
 
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		ActivityUtil.stopProgressBar();
+		ActivityUtil.stopProgressBar(this.pDialog);
 		super.onPageFinished(view, url);
 	}
 
@@ -51,5 +54,9 @@ public class AccountCreateWebViewClient extends android.webkit.WebViewClient {
 
 	private boolean isRegistrationDone(String url) {
 		return url.endsWith("/register/done");
+	}
+
+	public void setProgressDialog(ProgressDialog dialog) {
+		this.pDialog = dialog;
 	}
 }

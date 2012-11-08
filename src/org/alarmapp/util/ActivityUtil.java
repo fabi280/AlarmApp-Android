@@ -67,7 +67,7 @@ public class ActivityUtil {
 
 	private static ProgressDialog pDialog;
 
-	public static void startProgressBar(final Activity activity) {
+	public static ProgressDialog startProgressBar(final Activity activity) {
 		activity.runOnUiThread(new Runnable() {
 
 			public void run() {
@@ -79,10 +79,12 @@ public class ActivityUtil {
 				pDialog.show();
 			}
 		});
+
+		return pDialog;
 	}
 
-	public static void stopProgressBar() {
-		pDialog.dismiss();
+	public static void stopProgressBar(ProgressDialog dialog) {
+		dialog.dismiss();
 	}
 
 	public static void makeVisible(Activity activity) {
