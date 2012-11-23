@@ -77,7 +77,7 @@ public class AlarmData implements Alarm {
 		b.putString(OPERATION_ID, this.operation_id);
 		b.putInt(OPERATION_STATUS, state.getId());
 		if (this.alarmedUsers != null) {
-			b.putSerializable(ALARMED_USER_LIST, this.alarmedUsers);
+			b.putSerializable(ALARMED_USER_LIST, this.alarmedUsers); //todo: Wrap this in a new HashSet<AlarmedUsers>()
 		}
 		b.putString(IS_ALARMSTATUS_VIEWER,
 				Boolean.toString(isAlarmstatusViewer));
