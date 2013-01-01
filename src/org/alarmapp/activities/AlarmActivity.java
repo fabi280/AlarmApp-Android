@@ -160,14 +160,16 @@ public class AlarmActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		LogEx.verbose("AlarmActivity onResume.");
 
-		LogEx.verbose("AlarmActivity onResume. State is " + alarm.getState());
-
-		LogEx.verbose("Refresh Alarm details");
-		alarm = AlarmApp.getAlarmStore().get(alarm.getOperationId());
-		displayAlarm();
-
-		makeActivityVisible();
+		if (alarm != null) {
+			LogEx.verbose("Refresh Alarm details");
+			alarm = AlarmApp.getAlarmStore().get(alarm.getOperationId());
+			displayAlarm();
+		} else {
+			LogEx.warning("Alarm ist null. Beende AlarmActivity");
+			this.finish();
+		}
 	}
 
 	private void setButtonVisibility(final int visibility,
