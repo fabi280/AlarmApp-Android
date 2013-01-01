@@ -43,7 +43,7 @@ public class HttpWebClient implements WebClient {
 
 	private static final String USER_ACCOUNT_NOT_CREATED = "Das Erzeugen des Benutzers ist fehlgeschlagen.";
 	private static final String AUTH_TOKEN_INVALID = "Das vom Webservice erzeugte Authentifizierungstoken ist nicht gültig.";
-	private static String WEBSERVICE_URL = "http://alarmnotificationservice.appspot.com/";
+	private static String WEBSERVICE_URL = "https://alarmnotificationservice.appspot.com/";
 	private static String JSON_ERROR = "Fehler beim Verarbeiten der Web-Server-Antwort.";
 
 	private static String url(String relativePart) {
